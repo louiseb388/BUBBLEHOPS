@@ -42,7 +42,7 @@ export default function GalleryPage() {
 
       <div style={{ textAlign: 'center' }}>
         <h2 className="h-display h2" style={{ marginBottom: 20 }}>Seen one you like?</h2>
-        <Link href="/create-your-own" className="btn btn-lime">Create your own →</Link>
+        <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export default function Footer() {
             Just for you.
           </h2>
           <Link href="/create-your-own" className="btn">
-            Create your own →
+            Create your own
           </Link>
         </div>
       </section>

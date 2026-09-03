@@ -24,7 +24,7 @@ export default function HomePage() {
             <h2 className={`h-display h2 ${styles.sectionTitle}`}>You pick. We paint.</h2>
           </div>
           <Link href="/create-your-own" className="btn btn-lime">
-            Create your own →
+            Create your own
           </Link>
         </div>
         <ProductGrid />

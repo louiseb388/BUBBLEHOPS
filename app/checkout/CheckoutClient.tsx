@@ -79,7 +79,7 @@ export default function CheckoutClient() {
     return (
       <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
         <h1 className="h-display h1" style={{ marginBottom: 20 }}>Nothing to check out yet.</h1>
-        <Link href="/create-your-own" className="btn btn-lime">Create your own →</Link>
+        <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
       </div>
     );
   }

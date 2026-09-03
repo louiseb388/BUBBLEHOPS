@@ -67,7 +67,7 @@ export default function HeroCarousel() {
               <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeTrack} />
               <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeDash} />
             </svg>
-            <span className={styles.snakeBtnInner}>Create your own →</span>
+            <span className={styles.snakeBtnInner}>Create your own</span>
           </Link>
         </div>
       </div>
