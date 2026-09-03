@@ -10,4 +10,5 @@
   border-bottom: var(--border);
 }
 .sectionTitle { font-size: clamp(45px, 5.1vw, 72px); }
+.noBorder { border: none; }
 
