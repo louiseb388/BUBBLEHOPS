@@ -138,17 +138,36 @@ export default function ShoeStage({
           <div className={styles.paintLayer} style={{ clipPath: SOLE_ABOVE_CLIP[base.panel] }}>
             {!side.blank && side.word && (
               <div
-                className={`${styles.word} ${styles.wordGraffiti}`}
+                className={styles.wordWrap}
                 style={{
                   left: `${side.x}%`,
                   top: `${side.y}%`,
-                  color: wordColour,
-                  WebkitTextStroke: side.outline === 'none' ? undefined : `3px ${outlineColour}`,
-                  paintOrder: 'stroke fill',
                   transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
-                } as React.CSSProperties}
+                }}
               >
-                {side.word}
+                {side.outline !== 'none' && (
+                  <span
+                    className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
+                    style={{
+                      color: outlineColour,
+                      WebkitTextStroke: `14px ${outlineColour}`,
+                      paintOrder: 'stroke fill'
+                    } as React.CSSProperties}
+                    aria-hidden="true"
+                  >
+                    {side.word}
+                  </span>
+                )}
+                <span
+                  className={`${styles.word} ${styles.wordGraffiti}`}
+                  style={{
+                    color: wordColour,
+                    WebkitTextStroke: '3px var(--ink)',
+                    paintOrder: 'stroke fill'
+                  } as React.CSSProperties}
+                >
+                  {side.word}
+                </span>
               </div>
             )}
 

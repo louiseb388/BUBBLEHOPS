@@ -94,15 +94,28 @@
   pointer-events: none;
 }
 
-.word {
+.wordWrap {
   position: absolute;
   white-space: nowrap;
   cursor: grab;
+  pointer-events: none;
+}
+
+.word {
+  position: relative;
+  z-index: 0;
+  display: block;
+  white-space: nowrap;
   font-weight: 800;
   line-height: 1;
   font-size: clamp(28px, 6cqw, 128px);
   text-transform: uppercase;
   pointer-events: none;
+}
+.wordOutlineLayer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 }
 .wordGraffiti { font-family: 'Gloze', var(--font-archivo), sans-serif; letter-spacing: 0.01em; }
 .wordRegular { font-family: var(--font-poppins), sans-serif; font-weight: 700; }
