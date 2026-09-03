@@ -26,7 +26,7 @@
   text-transform: uppercase;
   color: var(--lime);
 }
-.col a {
+.navLink {
   display: block;
   padding: 6px 0;
   text-decoration: none;
@@ -34,7 +34,7 @@
   font-size: 14px;
   opacity: 0.9;
 }
-.col a:hover { opacity: 1; text-decoration: underline; }
+.navLink:hover { opacity: 1; text-decoration: underline; }
 
 .mailingCopy { margin: 0 0 14px; font-size: 14px; color: #fff; opacity: 0.9; }
 .mailingForm { display: flex; }

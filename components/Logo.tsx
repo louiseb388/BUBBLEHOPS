@@ -2,14 +2,14 @@ import Link from 'next/link';
 import BubbleMark from './BubbleMark';
 import styles from './Logo.module.css';
 
-export default function Logo({ small = false }: { small?: boolean }) {
+export default function Logo() {
   return (
     <Link href="/" className={styles.mark} aria-label="BUBBLEHOPS home">
-      <span className={`${styles.bubbles} ${small ? styles.bubblesSm : ''}`}>
-        <BubbleMark size={small ? 24 : 40} className={styles.bubbleBig} />
-        <BubbleMark size={small ? 14 : 22} mark={false} className={styles.bubbleSmall} />
+      <span className={styles.bubbles}>
+        <BubbleMark size={40} className={styles.bubbleBig} />
+        <BubbleMark size={22} mark={false} className={styles.bubbleSmall} />
       </span>
-      <span className={`${styles.word} ${small ? styles.wordSm : ''}`}>
+      <span className={styles.word}>
         <span className={styles.wordOutline} aria-hidden="true">BUBBLEHOPS</span>
         BUBBLEHOPS
       </span>
