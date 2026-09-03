@@ -14,15 +14,15 @@
   gap: 12px;
 }
 .left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.baseName { font-weight: 800; text-transform: uppercase; font-size: 14px; }
-.status { font-size: 12px; color: rgba(255,255,255,0.65); }
+.baseName { font-weight: 800; text-transform: uppercase; font-size: 12px; }
+.status { font-size: 11px; color: rgba(255,255,255,0.65); }
 
 .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .iconBtn {
   border: 2px solid #fff;
   background: transparent;
   color: #fff;
-  width: 36px; height: 36px;
+  width: 30px; height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -32,8 +32,8 @@
   border: 2px solid #fff;
   background: transparent;
   color: #fff;
-  padding: 8px 14px;
-  font-size: 12px;
+  padding: 7px 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -65,7 +65,7 @@
   background: transparent;
 }
 .dropdownItem:hover { border-color: var(--ink); }
-.dropdownItem img { width: 44px; height: 44px; object-fit: cover; flex: none; }
-.dropdownItem .name { font-weight: 700; font-size: 12px; text-transform: uppercase; }
-.dropdownItem .price { font-size: 11px; color: var(--muted); }
+.dropdownItem img { width: 36px; height: 36px; object-fit: cover; flex: none; }
+.dropdownItem .name { font-weight: 700; font-size: 11px; text-transform: uppercase; }
+.dropdownItem .price { font-size: 10px; color: var(--muted); }
 .dropdownItem[data-sold="true"] { opacity: 0.45; }

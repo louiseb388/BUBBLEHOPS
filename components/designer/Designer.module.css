@@ -5,7 +5,7 @@
   position: relative;
 }
 .stageGrid {
-  max-width: var(--max-w);
+  max-width: 1000px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -17,7 +17,7 @@
 .disclaimer {
   max-width: var(--max-w);
   margin: 6px auto 0;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
 }
 
@@ -47,7 +47,7 @@
 }
 .actionBarLabel {
   font-weight: 800;
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: #fff;

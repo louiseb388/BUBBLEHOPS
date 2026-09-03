@@ -3,7 +3,7 @@
   display: block;
   margin: 0 0 4px;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -13,14 +13,14 @@
 .input {
   width: 100%;
   border: 2px solid var(--ink);
-  padding: 8px 14px;
-  font-size: 16px;
+  padding: 7px 12px;
+  font-size: 14px;
   font-family: var(--font-poppins), sans-serif;
 }
 
-.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 6px; }
 .swatch {
-  width: 26px; height: 26px;
+  width: 18px; height: 18px;
   border-radius: 999px;
   border: 2px solid var(--ink);
   cursor: pointer;
@@ -29,12 +29,12 @@
 .swatch.active::after {
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: -4px;
   border: 2px solid var(--lime);
   border-radius: 999px;
 }
 .swatchNone {
-  width: 26px; height: 26px;
+  width: 18px; height: 18px;
   border-radius: 999px;
   border: 2px solid var(--ink);
   background: #fff;
