@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
 import styles from './ShoeControls.module.css';
@@ -13,8 +12,6 @@ type Props = {
 };
 
 export default function ShoeControls({ label, side, onChange, onBeginChange }: Props) {
-  const [confirmReset, setConfirmReset] = useState(false);
-
   function discrete(patch: Partial<Side>) {
     onBeginChange();
     onChange(patch);
@@ -103,26 +100,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
             />
           </div>
         </>
-      )}
-
-      {!confirmReset ? (
-        <button className="btn btn-outline btn-sm" style={{ marginTop: 20 }} onClick={() => setConfirmReset(true)}>
-          Reset this shoe
-        </button>
-      ) : (
-        <div style={{ marginTop: 20, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 13, fontWeight: 700 }}>Reset {label.toLowerCase()} shoe?</span>
-          <button
-            className="btn btn-lime btn-sm"
-            onClick={() => {
-              discrete({ word: '', blank: false, colour: 'ink', outline: 'white', font: 'graffiti', size: 1.2, rot: 0, x: 50, y: 50, stickers: [] });
-              setConfirmReset(false);
-            }}
-          >
-            Yes, reset
-          </button>
-          <button className="btn btn-outline btn-sm" onClick={() => setConfirmReset(false)}>Cancel</button>
-        </div>
       )}
     </div>
   );

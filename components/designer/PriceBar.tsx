@@ -25,13 +25,13 @@ export default function PriceBar({ price, bothPainted, baseName, onAddToBasket, 
     <>
       <div className={styles.bar}>
         <div className={styles.inner}>
-          <div>
-            <div className={styles.price}>£{price}</div>
+          <div className={styles.priceGroup}>
+            <div className={styles.price}>Total £{price}</div>
             <div className={styles.priceNote}>{bothPainted ? 'Both shoes painted' : 'Single shoe painted'}</div>
           </div>
           <div className={styles.actions}>
+            <button className="btn btn-lime" onClick={handleAdd}>Add to basket →</button>
             <button className="btn btn-outline-white" onClick={onSaveDesign}>Save design</button>
-            <button className="btn btn-lime" onClick={handleAdd}>Add to basket</button>
           </div>
         </div>
       </div>

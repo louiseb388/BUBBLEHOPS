@@ -163,7 +163,7 @@ export default function ShoeStage({
                   transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`,
                   isolation: 'isolate',
                   mixBlendMode: 'multiply',
-                  opacity: 0.9
+                  opacity: 0.8
                 } as React.CSSProperties}
               >
                 {/* The colour ring, fill and black outline render normally relative to each

@@ -1,19 +1,19 @@
-.panel { padding: 24px 0; }
+.panel { padding: 8px 0; }
 .label {
   display: block;
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.row { margin-bottom: 20px; }
+.row { margin-bottom: 8px; }
 
 .input {
   width: 100%;
   border: 2px solid var(--ink);
-  padding: 12px 14px;
+  padding: 8px 14px;
   font-size: 16px;
   font-family: var(--font-poppins), sans-serif;
 }
