@@ -12,6 +12,8 @@ function colourValue(id: string) {
   return WORD_COLOURS.find((c) => c.id === id)?.value || id;
 }
 
+export const MAX_STICKERS = 5;
+
 type Props = {
   base: BaseTrainer;
   side: Side;
@@ -19,11 +21,25 @@ type Props = {
   active: boolean;
   onMoveWord: (x: number, y: number) => void;
   onMoveSticker: (id: string, x: number, y: number) => void;
+  onAddSticker?: () => void;
+  onRemoveSticker?: (id: string) => void;
   onFocus: () => void;
+  showStickerBadge?: boolean;
 };
 
-export default function ShoeStage({ base, side, which, active, onMoveWord, onMoveSticker, onFocus }: Props) {
-  const flip = which === 'right';
+export default function ShoeStage({
+  base,
+  side,
+  which,
+  active,
+  onMoveWord,
+  onMoveSticker,
+  onAddSticker,
+  onRemoveSticker,
+  onFocus,
+  showStickerBadge = true
+}: Props) {
+  const flip = which === 'left';
   const ref = useRef<HTMLDivElement>(null);
   const [dragStickerId, setDragStickerId] = useState<string | null>(null);
 
@@ -68,60 +84,87 @@ export default function ShoeStage({ base, side, which, active, onMoveWord, onMov
   const wordColour = colourValue(side.colour);
   const outlineColour = side.outline === 'none' ? 'transparent' : colourValue(side.outline);
 
+  const atMaxStickers = side.stickers.length >= MAX_STICKERS;
+
   return (
-    <div
-      ref={ref}
-      className={`${styles.shoe} ${flip ? styles.flip : ''}`}
-      style={{ aspectRatio: String(base.ar), containerType: 'inline-size' } as React.CSSProperties}
-      onPointerMove={onStickerPointerMove}
-      onPointerUp={onStickerPointerUp}
-    >
-      <img src={base.img} alt="" className={styles.photo} draggable={false} />
-
-      {base.placeholderPhoto && <span className={styles.placeholderPhoto}>Placeholder photo</span>}
-
-      {showGuide && (
-        <svg className={styles.outlineSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d={panelPathD(base.id)} className={styles.outlinePath} />
-        </svg>
+    <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
+      {showStickerBadge && (
+        <div className={styles.badgeRow}>
+          <button
+            type="button"
+            className={styles.stickerBadge}
+            onClick={onAddSticker}
+            disabled={atMaxStickers}
+            aria-label="Add a BUBBLEHOPS sticker"
+          >
+            <BubbleMark size={64} ring={wordColour} />
+          </button>
+          <div className={styles.badgeLabel}>
+            <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
+            <span>Drag to move · Double-click to remove</span>
+          </div>
+        </div>
       )}
 
-      <div className={styles.paintLayer} style={{ clipPath: SOLE_ABOVE_CLIP[base.panel] }}>
-        {!side.blank && side.word && (
-          <div
-            className={`${styles.word} ${side.font === 'graffiti' ? styles.wordGraffiti : styles.wordRegular}`}
-            style={{
-              left: `${side.x}%`,
-              top: `${side.y}%`,
-              color: wordColour,
-              WebkitTextStroke: side.outline === 'none' ? undefined : `3px ${outlineColour}`,
-              paintOrder: 'stroke fill',
-              transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
-            } as React.CSSProperties}
-          >
-            {side.word}
-          </div>
-        )}
+      <div className={styles.shoeWrap}>
+        <div
+          ref={ref}
+          className={`${styles.shoe} ${flip ? styles.flip : ''}`}
+          style={{ aspectRatio: String(base.ar), containerType: 'inline-size' } as React.CSSProperties}
+          onPointerMove={onStickerPointerMove}
+          onPointerUp={onStickerPointerUp}
+        >
+          <img src={base.img} alt="" className={styles.photo} draggable={false} />
 
-        {side.stickers.map((s) => (
-          <div
-            key={s.id}
-            className={styles.sticker}
-            style={{
-              left: `${s.x}%`,
-              top: `${s.y}%`,
-              transform: `translate(-50%, -50%) scale(${s.scale})`
-            }}
-            onPointerDown={(e) => onStickerPointerDown(s.id, e)}
-          >
-            <BubbleMark size={30} ring={wordColour} />
+          {showGuide && (
+            <svg className={styles.outlineSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d={panelPathD(base.id)} className={styles.outlinePath} />
+            </svg>
+          )}
+
+          <div className={styles.paintLayer} style={{ clipPath: SOLE_ABOVE_CLIP[base.panel] }}>
+            {!side.blank && side.word && (
+              <div
+                className={`${styles.word} ${styles.wordGraffiti}`}
+                style={{
+                  left: `${side.x}%`,
+                  top: `${side.y}%`,
+                  color: wordColour,
+                  WebkitTextStroke: side.outline === 'none' ? undefined : `3px ${outlineColour}`,
+                  paintOrder: 'stroke fill',
+                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
+                } as React.CSSProperties}
+              >
+                {side.word}
+              </div>
+            )}
+
+            {side.stickers.map((s) => (
+              <div
+                key={s.id}
+                className={styles.sticker}
+                style={{
+                  left: `${s.x}%`,
+                  top: `${s.y}%`,
+                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}scale(${s.scale})`
+                }}
+                onPointerDown={(e) => onStickerPointerDown(s.id, e)}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  onRemoveSticker?.(s.id);
+                }}
+              >
+                <BubbleMark size={30} ring={wordColour} />
+              </div>
+            ))}
           </div>
-        ))}
+
+          <div className={styles.hit} onClick={onStageClick} aria-hidden="true" />
+        </div>
+
+        {base.placeholderPhoto && <span className={styles.placeholderPhoto}>Placeholder photo</span>}
+        {showGuide && <span className={styles.guideCaption}>Keep your text on the shoe</span>}
       </div>
-
-      <div className={styles.hit} onClick={onStageClick} aria-hidden="true" />
-
-      {showGuide && <span className={styles.guideCaption}>Keep your text on the shoe</span>}
     </div>
   );
 }

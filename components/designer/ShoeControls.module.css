@@ -18,17 +18,6 @@
   font-family: var(--font-poppins), sans-serif;
 }
 
-.fontRow { display: flex; gap: 8px; }
-.fontBtn {
-  flex: 1;
-  border: 2px solid var(--ink);
-  background: #fff;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.fontBtn.active { background: var(--ink); color: #fff; }
-
 .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
 .swatch {
   width: 26px; height: 26px;

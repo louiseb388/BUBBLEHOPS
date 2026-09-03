@@ -15,7 +15,7 @@ import {
   type DesignState,
   type Side
 } from '@/lib/designer-types';
-import ShoeStage from './ShoeStage';
+import ShoeStage, { MAX_STICKERS } from './ShoeStage';
 import ShoeControls from './ShoeControls';
 import Toolbar from './Toolbar';
 import PriceBar from './PriceBar';
@@ -117,7 +117,7 @@ export default function DesignerClient() {
       word: SAMPLE_WORDS[Math.floor(Math.random() * SAMPLE_WORDS.length)],
       colour: colourPool[Math.floor(Math.random() * colourPool.length)].id,
       outline: Math.random() > 0.2 ? WORD_COLOURS[Math.floor(Math.random() * WORD_COLOURS.length)].id : 'none',
-      font: Math.random() > 0.5 ? 'graffiti' : 'regular',
+      font: 'graffiti',
       size: 0.8 + Math.random() * 0.6,
       rot: Math.round((Math.random() - 0.5) * 40),
       x: 40 + Math.random() * 20,
@@ -209,6 +209,17 @@ export default function DesignerClient() {
                 d ? { ...d, left: { ...d.left, stickers: d.left.stickers.map((s) => (s.id === id ? { ...s, x, y } : s)) } } : d
               );
             }}
+            onAddSticker={() => {
+              beginChange();
+              setDesign((d) => {
+                if (!d || d.left.stickers.length >= MAX_STICKERS) return d;
+                return { ...d, left: { ...d.left, stickers: [...d.left.stickers, { id: `st_${Date.now()}`, x: 50, y: 50, scale: 1 }] } };
+              });
+            }}
+            onRemoveSticker={(id) => {
+              beginChange();
+              setDesign((d) => (d ? { ...d, left: { ...d.left, stickers: d.left.stickers.filter((s) => s.id !== id) } } : d));
+            }}
           />
           <ShoeStage
             base={base}
@@ -223,6 +234,17 @@ export default function DesignerClient() {
               setDesign((d) =>
                 d ? { ...d, right: { ...d.right, stickers: d.right.stickers.map((s) => (s.id === id ? { ...s, x, y } : s)) } } : d
               );
+            }}
+            onAddSticker={() => {
+              beginChange();
+              setDesign((d) => {
+                if (!d || d.right.stickers.length >= MAX_STICKERS) return d;
+                return { ...d, right: { ...d.right, stickers: [...d.right.stickers, { id: `st_${Date.now()}`, x: 50, y: 50, scale: 1 }] } };
+              });
+            }}
+            onRemoveSticker={(id) => {
+              beginChange();
+              setDesign((d) => (d ? { ...d, right: { ...d.right, stickers: d.right.stickers.filter((s) => s.id !== id) } } : d));
             }}
           />
         </div>

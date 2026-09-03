@@ -1,3 +1,49 @@
+.stageOuter { position: relative; }
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.stageOuterRight .badgeRow { flex-direction: row-reverse; }
+.stageOuterRight .badgeLabel { text-align: right; }
+
+.stickerBadge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+.stickerBadge:hover:not(:disabled) { transform: scale(1.06); }
+.stickerBadge:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.badgeLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.badgeLabel strong {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.badgeLabel span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shoeWrap { position: relative; }
+
 .shoe {
   position: relative;
   width: 100%;

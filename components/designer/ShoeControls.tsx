@@ -52,25 +52,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange, onR
           </div>
 
           <div className={styles.row}>
-            <span className={styles.label}>Lettering style</span>
-            <div className={styles.fontRow}>
-              <button
-                className={`${styles.fontBtn} ${side.font === 'graffiti' ? styles.active : ''}`}
-                onClick={() => discrete({ font: 'graffiti' })}
-                style={{ fontFamily: 'Gloze' }}
-              >
-                Graffiti
-              </button>
-              <button
-                className={`${styles.fontBtn} ${side.font === 'regular' ? styles.active : ''}`}
-                onClick={() => discrete({ font: 'regular' })}
-              >
-                Regular
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.row}>
             <span className={styles.label}>Word colour</span>
             <div className={styles.swatches}>
               {WORD_COLOURS.map((c) => (
@@ -136,9 +117,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange, onR
           </div>
 
           <div className={styles.miniActions}>
-            <button className="btn btn-outline btn-sm" onClick={() => discrete({ stickers: [...side.stickers, { id: `st_${Date.now()}`, x: 50, y: 50, scale: 1 }] })}>
-              + Bubble sticker
-            </button>
             <button className="btn btn-outline btn-sm" onClick={onResetSpot}>Reset spot</button>
             <button className="btn btn-outline btn-sm" onClick={onCopyToOther}>Copy to other shoe</button>
           </div>
