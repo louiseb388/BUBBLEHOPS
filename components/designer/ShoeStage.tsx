@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import type { BaseTrainer } from '@/lib/data';
 import { SOLE_ABOVE_CLIP, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
@@ -54,6 +54,21 @@ export default function ShoeStage({
   const flip = which === 'left';
   const ref = useRef<HTMLDivElement>(null);
   const [dragStickerId, setDragStickerId] = useState<string | null>(null);
+  const [shoeWidth, setShoeWidth] = useState(420);
+
+  // Tracked in JS rather than via CSS container queries: `container-type` establishes
+  // a blend-isolation boundary in Chromium, which cuts the word's mix-blend-mode off
+  // from the shoe photo behind it.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width;
+      if (w) setShoeWidth(w);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const toLocalPoint = useCallback(
     (clientX: number, clientY: number) => {
@@ -99,6 +114,10 @@ export default function ShoeStage({
 
   const atMaxStickers = side.stickers.length >= MAX_STICKERS;
 
+  const wordFontSize = Math.min(128, Math.max(28, shoeWidth * 0.06));
+  const strokeThick = Math.min(14, Math.max(4, shoeWidth * 0.022));
+  const strokeThin = Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
+
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
       {showStickerBadge && (
@@ -123,7 +142,7 @@ export default function ShoeStage({
         <div
           ref={ref}
           className={`${styles.shoe} ${flip ? styles.flip : ''}`}
-          style={{ aspectRatio: String(base.ar), containerType: 'inline-size' } as React.CSSProperties}
+          style={{ aspectRatio: String(base.ar), opacity: side.blank ? 0.5 : 1 } as React.CSSProperties}
           onPointerMove={onStickerPointerMove}
           onPointerUp={onStickerPointerUp}
         >
@@ -142,15 +161,24 @@ export default function ShoeStage({
                 style={{
                   left: `${side.x}%`,
                   top: `${side.y}%`,
-                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
-                }}
+                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`,
+                  isolation: 'isolate',
+                  mixBlendMode: 'multiply',
+                  opacity: 0.9
+                } as React.CSSProperties}
               >
+                {/* The colour ring, fill and black outline render normally relative to each
+                    other (no per-layer blending — the ring layers self-fill into solid
+                    silhouettes at this font weight, which would otherwise contaminate or
+                    hide a blended layer next to them). The whole word is blended as one
+                    isolated group against the shoe photo via .wordWrap instead. */}
                 {side.outline !== 'none' && (
                   <span
                     className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
                     style={{
+                      fontSize: wordFontSize,
                       color: outlineColour,
-                      WebkitTextStroke: `clamp(4px, 2.2cqw, 14px) ${outlineColour}`,
+                      WebkitTextStroke: `${strokeThick}px ${outlineColour}`,
                       paintOrder: 'stroke fill'
                     } as React.CSSProperties}
                     aria-hidden="true"
@@ -161,8 +189,9 @@ export default function ShoeStage({
                 <span
                   className={`${styles.word} ${styles.wordGraffiti}`}
                   style={{
+                    fontSize: wordFontSize,
                     color: wordColour,
-                    WebkitTextStroke: 'clamp(1px, 0.5cqw, 3px) var(--ink)',
+                    WebkitTextStroke: `${strokeThin}px var(--ink)`,
                     paintOrder: 'stroke fill'
                   } as React.CSSProperties}
                 >

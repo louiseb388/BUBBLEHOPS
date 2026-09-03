@@ -127,7 +127,7 @@ export default function DesignerClient() {
       colour: colourPool[Math.floor(Math.random() * colourPool.length)].id,
       outline: Math.random() > 0.2 ? WORD_COLOURS[Math.floor(Math.random() * WORD_COLOURS.length)].id : 'none',
       font: 'graffiti',
-      size: 0.8 + Math.random() * 0.6,
+      size: 1.2 + Math.random() * 0.4,
       rot: Math.round((Math.random() - 0.5) * 40),
       x: 40 + Math.random() * 20,
       y: 40 + Math.random() * 20,
@@ -269,7 +269,8 @@ export default function DesignerClient() {
                 className={`btn btn-outline-white btn-sm ${design.left.blank ? styles.actionBarActive : ''}`}
                 onClick={() => {
                   beginChange();
-                  patchSide('left', { blank: !design.left.blank });
+                  const nextBlank = !design.left.blank;
+                  patchSide('left', nextBlank ? { blank: true, stickers: [] } : { blank: false });
                 }}
               >
                 Leave blank
@@ -301,7 +302,8 @@ export default function DesignerClient() {
                 className={`btn btn-outline-white btn-sm ${design.right.blank ? styles.actionBarActive : ''}`}
                 onClick={() => {
                   beginChange();
-                  patchSide('right', { blank: !design.right.blank });
+                  const nextBlank = !design.right.blank;
+                  patchSide('right', nextBlank ? { blank: true, stickers: [] } : { blank: false });
                 }}
               >
                 Leave blank

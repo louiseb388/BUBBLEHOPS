@@ -79,7 +79,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
               id={`${label}-size`}
               className={styles.slider}
               type="range"
-              min={0.6}
+              min={1.2}
               max={1.6}
               step={0.02}
               value={side.size}
@@ -115,7 +115,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
           <button
             className="btn btn-lime btn-sm"
             onClick={() => {
-              discrete({ word: '', blank: false, colour: 'ink', outline: 'white', font: 'graffiti', size: 1, rot: 0, x: 50, y: 50, stickers: [] });
+              discrete({ word: '', blank: false, colour: 'ink', outline: 'white', font: 'graffiti', size: 1.2, rot: 0, x: 50, y: 50, stickers: [] });
               setConfirmReset(false);
             }}
           >

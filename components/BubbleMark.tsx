@@ -8,11 +8,10 @@ type Props = {
 };
 
 /**
- * The BUBBLEHOPS "bubble" mark: a ringed circle with an abstract face glyph
- * (two pill "eyes" and a curved smile) paired with a plain black-ringed
- * companion bubble (mark=false). Reused as the logo (white ring/fill), a
- * placeable designer sticker (colour-matched to the selected word/outline
- * colours) and the account icon's motif.
+ * The BUBBLEHOPS "bubble" mark: a ringed circle with a two-eye glyph, paired
+ * with a plain black-ringed companion bubble (mark=false). Reused as the
+ * logo (white ring/fill), a placeable designer sticker (colour-matched to
+ * the selected word/outline colours) and the account icon's motif.
  */
 export default function BubbleMark({ size = 40, ring = 'var(--lime)', fill = '#fff', glyph = 'var(--ink)', mark = true, className }: Props) {
   const s = size;
@@ -23,9 +22,8 @@ export default function BubbleMark({ size = 40, ring = 'var(--lime)', fill = '#f
           <circle cx="50" cy="50" r="44" style={{ fill: ring }} />
           <circle cx="50" cy="50" r="39" style={{ fill: 'var(--ink)' }} />
           <circle cx="50" cy="50" r="34" style={{ fill }} />
-          <rect x="39" y="26" width="11" height="21" rx="5.5" style={{ fill: glyph }} transform="rotate(-25 44.5 36.5)" />
-          <rect x="54" y="38" width="11" height="21" rx="5.5" style={{ fill: glyph }} transform="rotate(20 59.5 48.5)" />
-          <path d="M34,57 Q43,72 61,67" stroke={glyph} strokeWidth="7" strokeLinecap="round" fill="none" />
+          <path d="M 34,38 A 9,9 0 0 1 52,34 Z" style={{ fill: glyph }} transform="rotate(-25 43 36)" />
+          <path d="M 49,52 A 11,11 0 0 1 71,48 Z" style={{ fill: glyph }} transform="rotate(15 60 50)" />
         </>
       ) : (
         <>

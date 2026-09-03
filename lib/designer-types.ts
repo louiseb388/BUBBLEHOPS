@@ -27,7 +27,7 @@ export const DEFAULT_SIDE: Side = {
   colour: 'ink',
   outline: 'white',
   font: 'graffiti',
-  size: 1,
+  size: 1.2,
   rot: 0,
   x: 50,
   y: 50,
