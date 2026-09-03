@@ -6,7 +6,7 @@
   background: #fff;
   border: var(--border);
 }
-.imgWrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface); }
+.imgWrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface); border-bottom: 1px solid #ddd; }
 .img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
 .card:hover .img { transform: scale(1.05); }
 .soldOut .img { filter: grayscale(1); opacity: 0.6; }
@@ -16,7 +16,7 @@
   top: 12px;
   left: 12px;
 }
-.badgeSoldOut { left: auto; right: 12px; }
+.badgeSoldOut { background: var(--muted); border-color: var(--muted); color: #fff; }
 
 .sizes {
   position: absolute;
@@ -24,23 +24,28 @@
   background: rgba(32, 30, 29, 0.92);
   color: #fff;
   padding: 10px 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
   transform: translateY(100%);
   transition: transform 0.25s ease;
 }
 .card:hover .sizes { transform: translateY(0); }
-.sizeChip {
-  font-size: 11px;
+.sizesLabel {
+  display: block;
+  font-size: 10px;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 3px 6px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.sizeChips { display: flex; flex-wrap: wrap; gap: 6px; }
+.sizeChip {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--lime);
+  padding: 3px 8px;
 }
 
 .body { padding: 16px 18px 20px; }
 .name { margin: 0 0 4px; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: -0.01em; }
 .meta { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
-.foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .price { margin: 0; font-weight: 800; font-size: 16px; }
-.designBtn { pointer-events: none; }

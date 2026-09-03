@@ -9,7 +9,6 @@ import { useAuth } from '@/lib/auth-context';
 import styles from './Header.module.css';
 
 const NAV = [
-  { href: '/base-trainers', label: 'Base trainers' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/about', label: 'About' }
 ];
@@ -40,24 +39,24 @@ export default function Header() {
           <Logo />
         </div>
 
-        <nav className={styles.nav} aria-label="Primary">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
         <div className={styles.right}>
           <div className={`${styles.ctaWrap} ${scrolled ? styles.show : ''}`}>
             <Link href="/create-your-own" className="btn btn-lime btn-sm">
               Create your own →
             </Link>
           </div>
+
+          <nav className={styles.nav} aria-label="Primary">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
           <Link
             href={session ? '/account' : '/sign-in'}

@@ -17,8 +17,7 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 32px;
-  margin: 0 auto;
+  gap: 28px;
 }
 .navLink {
   text-decoration: none;

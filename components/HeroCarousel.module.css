@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 96px var(--pad) 0;
+  padding: 56px var(--pad) 0;
   max-width: var(--max-w);
   margin: 0 auto;
   color: #fff;
@@ -37,15 +37,29 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(48px, 8.6vw, 128px);
+  font-size: clamp(44px, 7.6vw, 112px);
   margin: 0;
   color: #fff;
 }
 .sub {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  transform: rotate(-5deg);
   font-family: 'Maximback', var(--font-archivo), sans-serif;
   color: var(--lime);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
   font-size: clamp(20px, 2.2vw, 30px);
-  margin: 10px 0 28px;
+  margin: 8px 0 44px;
+}
+.subOutline {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: #fff;
+  -webkit-text-stroke: 7px #fff;
+  pointer-events: none;
 }
 
 .bottomBar {
