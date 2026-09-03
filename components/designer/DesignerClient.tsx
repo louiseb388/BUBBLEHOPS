@@ -280,7 +280,7 @@ export default function DesignerClient() {
                 className="btn btn-outline-white btn-sm"
                 onClick={() => {
                   beginChange();
-                  patchSide('left', { x: 50, y: 50 });
+                  patchSide('left', { x: 50, y: 50, stickers: [] });
                 }}
               >
                 Reset
@@ -313,7 +313,7 @@ export default function DesignerClient() {
                 className="btn btn-outline-white btn-sm"
                 onClick={() => {
                   beginChange();
-                  patchSide('right', { x: 50, y: 50 });
+                  patchSide('right', { x: 50, y: 50, stickers: [] });
                 }}
               >
                 Reset
