@@ -62,8 +62,8 @@ export default function HeroCarousel() {
           &ldquo;What do yours say?&rdquo;
         </p>
         <div>
-          <Link href="/create-your-own" className="btn btn-lime">
-            Create your own →
+          <Link href="/create-your-own" className={styles.snakeBtn}>
+            <span className={styles.snakeBtnInner}>Create your own →</span>
           </Link>
         </div>
       </div>
