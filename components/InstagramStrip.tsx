@@ -15,7 +15,7 @@ export default function InstagramStrip() {
     <section className={styles.section}>
       <div className="container">
         <div className={styles.head}>
-          <h2 className="h-display h2">Follow along</h2>
+          <h2 className="h-display h2">Inspiration from other Bubblehoppers</h2>
           <div className={styles.arrows}>
             <button className={styles.arrowBtn} onClick={() => scroll(-1)} aria-label="Scroll left">←</button>
             <button className={styles.arrowBtn} onClick={() => scroll(1)} aria-label="Scroll right">→</button>
