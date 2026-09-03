@@ -1,0 +1,116 @@
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: #fff;
+  border-bottom: var(--border);
+}
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+  gap: 24px;
+}
+.left { display: flex; align-items: center; }
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin: 0 auto;
+}
+.navLink {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.navLink.active { color: var(--lime); }
+
+.right { display: flex; align-items: center; gap: 16px; }
+
+.ctaWrap {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-width 0.35s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.ctaWrap.show { max-width: 260px; opacity: 1; transform: translateY(0); }
+
+.iconBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+}
+.avatar {
+  background: var(--lime);
+  color: var(--ink);
+  border-color: var(--ink);
+  font-weight: 800;
+  font-size: 13px;
+}
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--lime);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  min-width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.burger {
+  display: none;
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 860px) {
+  .nav { display: none; }
+  .ctaWrap { display: none; }
+  .burger { display: inline-flex; }
+}
+
+.mobileNav {
+  display: none;
+  flex-direction: column;
+  border-top: var(--border);
+  background: var(--ink);
+}
+.mobileNav.open { display: flex; }
+.mobileNav a {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 14px;
+}
+.mobileNav a.active { color: var(--lime); }

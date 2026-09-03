@@ -1,0 +1,57 @@
+.footer { background: var(--ink); color: #fff; border-top: var(--border); }
+
+.appBand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 48px 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+}
+.appBadges { display: flex; gap: 12px; }
+.storeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid #fff;
+  padding: 10px 16px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 32px;
+  padding: 56px 0 40px;
+}
+.col h3 {
+  margin: 0 0 16px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+.col a {
+  display: block;
+  padding: 6px 0;
+  text-decoration: none;
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.9;
+}
+.col a:hover { opacity: 1; text-decoration: underline; }
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 0 40px;
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  font-size: 13px;
+  opacity: 0.75;
+}

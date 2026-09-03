@@ -1,0 +1,22 @@
+.banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  background: var(--ink);
+  color: #fff;
+  border-top: 4px solid var(--lime);
+  padding: 18px var(--pad);
+}
+.inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.text { font-size: 14px; max-width: 60ch; margin: 0; }
+.actions { display: flex; gap: 12px; flex: none; }
