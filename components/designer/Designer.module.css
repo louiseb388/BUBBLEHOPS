@@ -39,11 +39,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 0;
-}
-.actionBarCol:first-child { border-right: 2px solid rgba(255,255,255,0.15); padding-right: 20px; }
-@media (max-width: 720px) {
-  .actionBarCol:first-child { border-right: none; border-bottom: 2px solid rgba(255,255,255,0.15); padding-right: 0; }
+  padding: 5px 0;
 }
 .actionBarLabel {
   font-weight: 800;
@@ -53,6 +49,7 @@
   color: #fff;
 }
 .actionBarBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.actionBarBtns :global(.btn) { padding: 6px 11px; font-size: 8px; }
 .actionBarActive { background: var(--lime); color: var(--ink); border-color: var(--lime); }
 
 .controlsWrap { background: var(--bg); border-bottom: var(--border); }
@@ -66,8 +63,4 @@
 }
 @media (max-width: 720px) {
   .controlsGrid { grid-template-columns: 1fr; }
-}
-.controlsGrid > div:first-child { border-right: 2px solid rgba(32,30,29,0.2); }
-@media (max-width: 720px) {
-  .controlsGrid > div:first-child { border-right: none; border-bottom: 2px solid rgba(32,30,29,0.2); }
 }

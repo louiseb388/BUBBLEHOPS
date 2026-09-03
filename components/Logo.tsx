@@ -6,7 +6,7 @@ export default function Logo() {
   return (
     <Link href="/" className={styles.mark} aria-label="BUBBLEHOPS home">
       <span className={styles.bubbles}>
-        <BubbleMark size={40} ring="var(--ink)" fill="#fff" outerRing="var(--lime)" className={styles.bubbleBig} />
+        <BubbleMark size={40} fill="#fff" className={styles.bubbleBig} />
       </span>
       <span className={styles.word}>
         <span className={styles.wordOutline} aria-hidden="true">BUBBLEHOPS</span>
