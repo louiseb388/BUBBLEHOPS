@@ -12,7 +12,6 @@ export default function Logo({ small = false }: { small?: boolean }) {
       <span className={`${styles.word} ${small ? styles.wordSm : ''}`}>
         <span className={styles.wordOutline} aria-hidden="true">BUBBLEHOPS</span>
         BUBBLEHOPS
-        <span className={styles.wordHighlight} aria-hidden="true">BUBBLEHOPS</span>
       </span>
     </Link>
   );
