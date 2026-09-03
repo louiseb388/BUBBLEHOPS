@@ -142,7 +142,7 @@ export default function ShoeStage({
             disabled={atMaxStickers}
             aria-label="Add a BUBBLEHOPS sticker"
           >
-            <BubbleMark size={44} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
+            <BubbleMark size={44} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={27} />
           </button>
           <div className={styles.badgeLabel}>
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
@@ -241,7 +241,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
+                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={27} />
               </div>
             ))}
           </div>
