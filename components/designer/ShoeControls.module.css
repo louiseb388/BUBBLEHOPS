@@ -50,6 +50,3 @@
 }
 
 .slider { width: 100%; accent-color: var(--lime); }
-
-.toggleRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.miniActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }

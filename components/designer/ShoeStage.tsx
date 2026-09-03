@@ -12,6 +12,18 @@ function colourValue(id: string) {
   return WORD_COLOURS.find((c) => c.id === id)?.value || id;
 }
 
+/** Black glyph on light fills, white glyph on dark/non-hex (e.g. oklch) fills, so the sticker face stays visible against any selected colour. */
+function glyphFor(hex: string) {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return '#fff';
+  const n = parseInt(m[1], 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? 'var(--ink)' : '#fff';
+}
+
 export const MAX_STICKERS = 5;
 
 type Props = {
@@ -83,6 +95,7 @@ export default function ShoeStage({
 
   const wordColour = colourValue(side.colour);
   const outlineColour = side.outline === 'none' ? 'transparent' : colourValue(side.outline);
+  const stickerGlyph = glyphFor(wordColour);
 
   const atMaxStickers = side.stickers.length >= MAX_STICKERS;
 
@@ -97,7 +110,7 @@ export default function ShoeStage({
             disabled={atMaxStickers}
             aria-label="Add a BUBBLEHOPS sticker"
           >
-            <BubbleMark size={64} ring={wordColour} />
+            <BubbleMark size={64} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
           </button>
           <div className={styles.badgeLabel}>
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
@@ -154,7 +167,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={30} ring={wordColour} />
+                <BubbleMark size={30} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
               </div>
             ))}
           </div>

@@ -1,23 +1,31 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import MailingListForm from './MailingListForm';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const pathname = usePathname();
+  const hideBanner = pathname?.startsWith('/create-your-own');
+
   return (
     <>
-      <section className={styles.oneOfOne}>
-        <div className={`container ${styles.oneOfOneInner}`}>
-          <h2 className="h-display h2">
-            One of one.
-            <br />
-            Just for you.
-          </h2>
-          <Link href="/create-your-own" className="btn">
-            Create your own
-          </Link>
-        </div>
-      </section>
+      {!hideBanner && (
+        <section className={styles.oneOfOne}>
+          <div className={`container ${styles.oneOfOneInner}`}>
+            <h2 className="h-display h2">
+              One of one.
+              <br />
+              Just for you.
+            </h2>
+            <Link href="/create-your-own" className="btn">
+              Create your own
+            </Link>
+          </div>
+        </section>
+      )}
 
       <footer className={styles.footer}>
         <div className={`container ${styles.grid}`}>

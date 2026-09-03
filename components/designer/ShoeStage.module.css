@@ -91,6 +91,7 @@
   position: absolute;
   inset: 0;
   z-index: 4;
+  pointer-events: none;
 }
 
 .word {
@@ -99,7 +100,7 @@
   cursor: grab;
   font-weight: 800;
   line-height: 1;
-  font-size: clamp(14px, 6cqw, 64px);
+  font-size: clamp(28px, 6cqw, 128px);
   text-transform: uppercase;
   pointer-events: none;
 }

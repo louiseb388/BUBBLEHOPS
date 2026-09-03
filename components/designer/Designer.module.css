@@ -21,6 +21,40 @@
   color: var(--muted);
 }
 
+.actionBar { background: var(--ink); border-bottom: var(--border); }
+.actionBarGrid {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad-narrow);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 720px) {
+  .actionBarGrid { grid-template-columns: 1fr; }
+}
+.actionBarCol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+}
+.actionBarCol:first-child { border-right: 2px solid rgba(255,255,255,0.15); padding-right: 20px; }
+@media (max-width: 720px) {
+  .actionBarCol:first-child { border-right: none; border-bottom: 2px solid rgba(255,255,255,0.15); padding-right: 0; }
+}
+.actionBarLabel {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.actionBarBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.actionBarActive { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+
 .controlsWrap { background: var(--bg); border-bottom: var(--border); }
 .controlsGrid {
   max-width: var(--max-w);

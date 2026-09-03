@@ -10,11 +10,9 @@ type Props = {
   side: Side;
   onChange: (patch: Partial<Side>) => void;
   onBeginChange: () => void;
-  onResetSpot: () => void;
-  onCopyToOther: () => void;
 };
 
-export default function ShoeControls({ label, side, onChange, onBeginChange, onResetSpot, onCopyToOther }: Props) {
+export default function ShoeControls({ label, side, onChange, onBeginChange }: Props) {
   const [confirmReset, setConfirmReset] = useState(false);
 
   function discrete(patch: Partial<Side>) {
@@ -25,17 +23,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange, onR
   return (
     <div className={styles.panel}>
       <h3 style={{ margin: '0 0 16px', fontWeight: 800, fontSize: 14, textTransform: 'uppercase' }}>{label} shoe</h3>
-
-      <div className={styles.row}>
-        <div className={styles.toggleRow}>
-          <label className={styles.label} style={{ margin: 0 }}>Leave blank</label>
-          <input
-            type="checkbox"
-            checked={side.blank}
-            onChange={(e) => discrete({ blank: e.target.checked })}
-          />
-        </div>
-      </div>
 
       {!side.blank && (
         <>
@@ -114,11 +101,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange, onR
               onPointerDown={onBeginChange}
               onChange={(e) => onChange({ rot: parseInt(e.target.value, 10) })}
             />
-          </div>
-
-          <div className={styles.miniActions}>
-            <button className="btn btn-outline btn-sm" onClick={onResetSpot}>Reset spot</button>
-            <button className="btn btn-outline btn-sm" onClick={onCopyToOther}>Copy to other shoe</button>
           </div>
         </>
       )}

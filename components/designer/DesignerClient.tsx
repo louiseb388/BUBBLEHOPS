@@ -25,6 +25,15 @@ const STORAGE_KEY = 'bubblehops_design';
 const HISTORY_LIMIT = 5;
 const SAMPLE_WORDS = ['ARLO', 'MILO', 'ZARA', 'REX', 'IVY', 'FINN', 'NOVA', 'JAX'];
 
+function randomSticker() {
+  return {
+    id: `st_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    x: 30 + Math.random() * 40,
+    y: 35 + Math.random() * 30,
+    scale: 1.8 + Math.random() * 0.4 // ~100% bigger than baseline (1.0), with slight variance
+  };
+}
+
 export default function DesignerClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -213,7 +222,7 @@ export default function DesignerClient() {
               beginChange();
               setDesign((d) => {
                 if (!d || d.left.stickers.length >= MAX_STICKERS) return d;
-                return { ...d, left: { ...d.left, stickers: [...d.left.stickers, { id: `st_${Date.now()}`, x: 50, y: 50, scale: 1 }] } };
+                return { ...d, left: { ...d.left, stickers: [...d.left.stickers, randomSticker()] } };
               });
             }}
             onRemoveSticker={(id) => {
@@ -239,7 +248,7 @@ export default function DesignerClient() {
               beginChange();
               setDesign((d) => {
                 if (!d || d.right.stickers.length >= MAX_STICKERS) return d;
-                return { ...d, right: { ...d.right, stickers: [...d.right.stickers, { id: `st_${Date.now()}`, x: 50, y: 50, scale: 1 }] } };
+                return { ...d, right: { ...d.right, stickers: [...d.right.stickers, randomSticker()] } };
               });
             }}
             onRemoveSticker={(id) => {
@@ -251,6 +260,75 @@ export default function DesignerClient() {
         <p className={styles.disclaimer}>* A preview, not the finished pair — we hand-letter every word.</p>
       </div>
 
+      <div className={styles.actionBar}>
+        <div className={styles.actionBarGrid}>
+          <div className={styles.actionBarCol}>
+            <span className={styles.actionBarLabel}>Left shoe · Outer side</span>
+            <div className={styles.actionBarBtns}>
+              <button
+                className={`btn btn-outline-white btn-sm ${design.left.blank ? styles.actionBarActive : ''}`}
+                onClick={() => {
+                  beginChange();
+                  patchSide('left', { blank: !design.left.blank });
+                }}
+              >
+                Leave blank
+              </button>
+              <button
+                className="btn btn-outline-white btn-sm"
+                onClick={() => {
+                  beginChange();
+                  patchSide('left', { x: 50, y: 50 });
+                }}
+              >
+                Reset
+              </button>
+              <button
+                className="btn btn-outline-white btn-sm"
+                onClick={() => {
+                  beginChange();
+                  setDesign((d) => (d ? { ...d, right: { ...d.left, stickers: [...d.left.stickers] } } : d));
+                }}
+              >
+                Copy to right
+              </button>
+            </div>
+          </div>
+          <div className={styles.actionBarCol}>
+            <span className={styles.actionBarLabel}>Right shoe · Outer side</span>
+            <div className={styles.actionBarBtns}>
+              <button
+                className={`btn btn-outline-white btn-sm ${design.right.blank ? styles.actionBarActive : ''}`}
+                onClick={() => {
+                  beginChange();
+                  patchSide('right', { blank: !design.right.blank });
+                }}
+              >
+                Leave blank
+              </button>
+              <button
+                className="btn btn-outline-white btn-sm"
+                onClick={() => {
+                  beginChange();
+                  patchSide('right', { x: 50, y: 50 });
+                }}
+              >
+                Reset
+              </button>
+              <button
+                className="btn btn-outline-white btn-sm"
+                onClick={() => {
+                  beginChange();
+                  setDesign((d) => (d ? { ...d, left: { ...d.right, stickers: [...d.right.stickers] } } : d));
+                }}
+              >
+                Copy to left
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.controlsWrap}>
         <div className={styles.controlsGrid}>
           <div>
@@ -259,14 +337,6 @@ export default function DesignerClient() {
               side={design.left}
               onBeginChange={beginChange}
               onChange={(patch) => patchSide('left', patch)}
-              onResetSpot={() => {
-                beginChange();
-                patchSide('left', { x: 50, y: 50 });
-              }}
-              onCopyToOther={() => {
-                beginChange();
-                setDesign((d) => (d ? { ...d, right: { ...d.left, stickers: [...d.left.stickers] } } : d));
-              }}
             />
           </div>
           <div>
@@ -275,14 +345,6 @@ export default function DesignerClient() {
               side={design.right}
               onBeginChange={beginChange}
               onChange={(patch) => patchSide('right', patch)}
-              onResetSpot={() => {
-                beginChange();
-                patchSide('right', { x: 50, y: 50 });
-              }}
-              onCopyToOther={() => {
-                beginChange();
-                setDesign((d) => (d ? { ...d, left: { ...d.right, stickers: [...d.right.stickers] } } : d));
-              }}
             />
           </div>
         </div>

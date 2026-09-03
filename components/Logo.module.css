@@ -8,12 +8,11 @@
 
 .bubbles {
   position: relative;
-  width: 56px;
-  height: 42px;
+  width: 44px;
+  height: 40px;
   flex: none;
 }
 .bubbleBig { position: absolute; left: 4px; top: 0; }
-.bubbleSmall { position: absolute; left: 30px; top: 16px; }
 
 .word {
   position: relative;
@@ -37,17 +36,15 @@
 }
 
 @media (max-width: 520px) {
-  .bubbles { width: 38px; height: 28px; }
+  .bubbles { width: 32px; height: 28px; }
   .bubbleBig { width: 28px; height: 28px; left: 2px; top: 0; }
-  .bubbleSmall { width: 15px; height: 15px; left: 17px; top: 9px; }
   .word { font-size: 26px; -webkit-text-stroke: 3px var(--ink); }
   .wordOutline { -webkit-text-stroke: 7.5px var(--lime); }
 }
 
 @media (max-width: 420px) {
-  .bubbles { width: 30px; height: 22px; }
+  .bubbles { width: 24px; height: 22px; }
   .bubbleBig { width: 22px; height: 22px; left: 1px; top: 0; }
-  .bubbleSmall { width: 12px; height: 12px; left: 13px; top: 7px; }
   .word { font-size: 19px; -webkit-text-stroke: 2.25px var(--ink); }
   .wordOutline { -webkit-text-stroke: 6px var(--lime); }
 }

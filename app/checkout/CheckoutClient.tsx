@@ -131,7 +131,8 @@ export default function CheckoutClient() {
 
           {step === 'size' && (
             <div>
-              <h2 className="h-display h3" style={{ marginBottom: 20 }}>Size</h2>
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size</h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 20 }}>UK kids&rsquo; sizes 10 through 6. Need an adult size? Get in touch.</p>
               {lines.map((l) => (
                 <div key={l.id} style={{ marginBottom: 28 }}>
                   <p style={{ fontWeight: 700, marginBottom: 10 }}>{l.baseName}</p>

@@ -20,6 +20,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isHome = pathname === '/';
+  const onCreatePage = pathname?.startsWith('/create-your-own');
 
   useEffect(() => {
     if (!isHome) {
@@ -40,11 +41,13 @@ export default function Header() {
         </div>
 
         <div className={styles.right}>
-          <div className={`${styles.ctaWrap} ${scrolled ? styles.show : ''}`}>
-            <Link href="/create-your-own" className="btn btn-lime btn-sm">
-              Create your own
-            </Link>
-          </div>
+          {!onCreatePage && (
+            <div className={`${styles.ctaWrap} ${scrolled ? styles.show : ''}`}>
+              <Link href="/create-your-own" className="btn btn-lime btn-sm">
+                Create your own
+              </Link>
+            </div>
+          )}
 
           <nav className={styles.nav} aria-label="Primary">
             {NAV.map((item) => (
@@ -93,9 +96,11 @@ export default function Header() {
             {item.label}
           </Link>
         ))}
-        <Link href="/create-your-own" onClick={() => setMobileOpen(false)}>
-          Create your own
-        </Link>
+        {!onCreatePage && (
+          <Link href="/create-your-own" onClick={() => setMobileOpen(false)}>
+            Create your own
+          </Link>
+        )}
       </div>
     </header>
   );
