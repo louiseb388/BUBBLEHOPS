@@ -96,6 +96,11 @@
   .burger { display: inline-flex; }
 }
 
+@media (max-width: 420px) {
+  .right { gap: 8px; }
+  .iconBtn, .burger { width: 34px; height: 34px; }
+}
+
 .mobileNav {
   display: none;
   flex-direction: column;

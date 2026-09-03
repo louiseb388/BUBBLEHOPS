@@ -14,8 +14,9 @@ export default function BaseTrainerCard({ base, stock }: { base: BaseTrainer; st
     <Link href={href} className={`${styles.card} ${soldOut ? styles.soldOut : ''}`}>
       <div className={styles.imgWrap}>
         <img src={base.img} alt={`${base.name} — blank base trainer ready to hand-paint`} className={styles.img} loading="lazy" />
+        <span className={`tag tag-lime ${styles.badge}`}>Blank base</span>
         {soldOut && (
-          <span className={`tag tag-warn ${styles.badge}`}>Sold out</span>
+          <span className={`tag tag-warn ${styles.badge} ${styles.badgeSoldOut}`}>Sold out</span>
         )}
         {!soldOut && (
           <div className={styles.sizes}>
@@ -28,7 +29,12 @@ export default function BaseTrainerCard({ base, stock }: { base: BaseTrainer; st
       <div className={styles.body}>
         <p className={styles.name}>{base.name}</p>
         <p className={styles.meta}>{base.meta}</p>
-        <p className={styles.price}>From £{base.price}</p>
+        <div className={styles.foot}>
+          <p className={styles.price}>From £{base.price}</p>
+          <span className={`btn btn-outline btn-sm ${styles.designBtn}`} aria-hidden="true">
+            {soldOut ? 'Notify me →' : 'Design it →'}
+          </span>
+        </div>
       </div>
     </Link>
   );

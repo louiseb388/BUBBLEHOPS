@@ -16,6 +16,7 @@
   top: 12px;
   left: 12px;
 }
+.badgeSoldOut { left: auto; right: 12px; }
 
 .sizes {
   position: absolute;
@@ -39,5 +40,7 @@
 
 .body { padding: 16px 18px 20px; }
 .name { margin: 0 0 4px; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: -0.01em; }
-.meta { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+.meta { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .price { margin: 0; font-weight: 800; font-size: 16px; }
+.designBtn { pointer-events: none; }

@@ -37,7 +37,7 @@ export default function Header() {
     <header className={styles.bar}>
       <div className={`container ${styles.inner}`}>
         <div className={styles.left}>
-          <Logo small />
+          <Logo />
         </div>
 
         <nav className={styles.nav} aria-label="Primary">
