@@ -58,7 +58,7 @@
   inset: 0;
   z-index: -1;
   color: #fff;
-  -webkit-text-stroke: 18px #fff;
+  -webkit-text-stroke: 10px #fff;
   pointer-events: none;
 }
 
