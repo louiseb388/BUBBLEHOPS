@@ -106,7 +106,6 @@ export default function ShoeStage({
   }
 
   const wordOutside = side.word && !isInsidePolygon({ x: side.x, y: side.y }, panelForBase(base.id));
-  const showGuide = active || wordOutside;
 
   const wordColour = colourValue(side.colour);
   const outlineColour = side.outline === 'none' ? 'transparent' : colourValue(side.outline);
@@ -148,7 +147,7 @@ export default function ShoeStage({
         >
           <img src={base.img} alt="" className={styles.photo} draggable={false} />
 
-          {showGuide && (
+          {wordOutside && (
             <svg className={styles.outlineSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
               <path d={panelPathD(base.id)} className={styles.outlinePath} />
             </svg>
