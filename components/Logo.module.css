@@ -19,6 +19,7 @@
 
 .word {
   position: relative;
+  z-index: 0;
   font-family: 'Gloze', var(--font-archivo), sans-serif;
   font-size: 42px;
   line-height: 1;
@@ -26,13 +27,22 @@
   -webkit-text-stroke: 3px var(--lime);
   paint-order: stroke fill;
   color: #fff;
-  filter: drop-shadow(0 2px 0 var(--ink));
 }
 .wordSm {
   font-size: 22px;
-  -webkit-text-stroke: 1.5px var(--lime);
-  filter: drop-shadow(0 1px 0 var(--ink));
+  -webkit-text-stroke: 2px var(--lime);
 }
+
+.wordOutline {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: var(--ink);
+  -webkit-text-stroke: 8px var(--ink);
+  paint-order: stroke fill;
+  pointer-events: none;
+}
+.wordSm .wordOutline { -webkit-text-stroke: 5px var(--ink); }
 
 .wordHighlight {
   position: absolute;
@@ -51,6 +61,7 @@
   .bubbles:not(.bubblesSm) .bubbleBig { width: 28px; height: 28px; left: 2px; top: 0; }
   .bubbles:not(.bubblesSm) .bubbleSmall { width: 15px; height: 15px; left: 17px; top: 9px; }
   .word:not(.wordSm) { font-size: 26px; -webkit-text-stroke: 2px var(--lime); }
+  .word:not(.wordSm) .wordOutline { -webkit-text-stroke: 6px var(--ink); }
 }
 
 @media (max-width: 420px) {
@@ -58,4 +69,5 @@
   .bubbles:not(.bubblesSm) .bubbleBig { width: 22px; height: 22px; left: 1px; top: 0; }
   .bubbles:not(.bubblesSm) .bubbleSmall { width: 12px; height: 12px; left: 13px; top: 7px; }
   .word:not(.wordSm) { font-size: 19px; -webkit-text-stroke: 1.5px var(--lime); }
+  .word:not(.wordSm) .wordOutline { -webkit-text-stroke: 5px var(--ink); }
 }
