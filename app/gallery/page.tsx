@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
 import { GALLERY_IMAGES, ROUTES } from '@/lib/data';
 import { breadcrumbJsonLd } from '@/lib/seo';
@@ -24,8 +23,7 @@ export default function GalleryPage() {
           gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))',
           gap: 3,
           background: 'var(--ink)',
-          border: '2px solid var(--ink)',
-          marginBottom: 48
+          border: '2px solid var(--ink)'
         }}
       >
         {GALLERY_IMAGES.map((src) => (
@@ -38,11 +36,6 @@ export default function GalleryPage() {
             />
           </div>
         ))}
-      </div>
-
-      <div style={{ textAlign: 'center' }}>
-        <h2 className="h-display h2" style={{ marginBottom: 20 }}>Seen one you like?</h2>
-        <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
       </div>
     </div>
   );
