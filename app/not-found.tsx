@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="container" style={{ textAlign: 'center', padding: '80px 0' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
           <BubbleMark size={56} />
-          <BubbleMark size={32} />
+          <BubbleMark size={32} mark={false} />
         </div>
         <h1 className="h-display h1" style={{ color: '#fff', marginBottom: 16 }}>This one&apos;s not painted yet.</h1>
         <p className="lede" style={{ color: 'rgba(255,255,255,0.75)', margin: '0 auto 32px' }}>
