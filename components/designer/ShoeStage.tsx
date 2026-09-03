@@ -12,13 +12,12 @@ function colourValue(id: string) {
   return WORD_COLOURS.find((c) => c.id === id)?.value || id;
 }
 
-// Scattered gloss blobs clipped to the letter glyphs, tiled across the word so every
-// letter picks up 1-2 highlights regardless of what was typed — approximates the
-// hand-painted bubble-letter shine without needing per-letter artwork.
+// One modest gloss blob clipped to the letter glyphs, tiled across the word so every
+// letter or two picks up a single highlight regardless of what was typed —
+// approximates the hand-painted bubble-letter shine without dominating the fill.
 const WORD_HIGHLIGHT_GRADIENT = [
-  'radial-gradient(ellipse 60% 38% at 28% 24%, #fff 0%, #fff 88%, rgba(255,255,255,0) 90%)',
-  'radial-gradient(ellipse 34% 22% at 76% 60%, #fff 0%, #fff 85%, rgba(255,255,255,0) 88%)',
-  'radial-gradient(ellipse 20% 16% at 48% 88%, #fff 0%, #fff 82%, rgba(255,255,255,0) 86%)'
+  'radial-gradient(ellipse 26% 16% at 27% 26%, #fff 0%, #fff 82%, rgba(255,255,255,0) 86%)',
+  'radial-gradient(ellipse 12% 9% at 72% 66%, #fff 0%, #fff 78%, rgba(255,255,255,0) 82%)'
 ].join(', ');
 
 /** Black glyph on light fills, white glyph on dark/non-hex (e.g. oklch) fills, so the sticker face stays visible against any selected colour. */
@@ -130,7 +129,7 @@ export default function ShoeStage({
   const wordFontSize = preview ? shoeWidth * 0.06 : Math.min(128, Math.max(28, shoeWidth * 0.06));
   const strokeThick = preview ? shoeWidth * 0.0154 : Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
   const strokeThin = preview ? shoeWidth * 0.0075 : Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
-  const stickerSize = Math.max(10, shoeWidth * 0.061);
+  const stickerSize = Math.max(20, shoeWidth * 0.122);
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
@@ -143,7 +142,7 @@ export default function ShoeStage({
             disabled={atMaxStickers}
             aria-label="Add a BUBBLEHOPS sticker"
           >
-            <BubbleMark size={44} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
+            <BubbleMark size={44} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
           </button>
           <div className={styles.badgeLabel}>
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
@@ -192,7 +191,7 @@ export default function ShoeStage({
                   style={{
                     fontSize: wordFontSize,
                     backgroundImage: WORD_HIGHLIGHT_GRADIENT,
-                    backgroundSize: `${wordFontSize * 0.62}px 100%`
+                    backgroundSize: `${wordFontSize * 0.95}px 100%`
                   } as React.CSSProperties}
                   aria-hidden="true"
                 >
@@ -242,7 +241,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
+                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
               </div>
             ))}
           </div>

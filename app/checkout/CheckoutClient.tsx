@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
-import { SIZES } from '@/lib/data';
-import { useStock } from '@/lib/inventory';
 import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
 
@@ -14,19 +12,18 @@ type DeliveryMethod = 'standard' | 'express';
 const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
 
 const STEP_HEADINGS: Record<CheckoutStep, string> = {
-  size: 'Pick the size',
+  bag: 'Your bag',
   delivery: 'Delivery details',
   payment: 'Pay and confirm'
 };
 
 export default function CheckoutClient() {
-  const { lines, setLineSize, setLineQty, total: cartTotal, ready } = useCart();
-  const { stock } = useStock();
+  const { lines, setLineQty, total: cartTotal, ready } = useCart();
   const { session } = useAuth();
   const searchParams = useSearchParams();
   const cancelled = searchParams.get('cancelled') === '1';
 
-  const [step, setStep] = useState<CheckoutStep>('size');
+  const [step, setStep] = useState<CheckoutStep>('bag');
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('standard');
   const [name, setName] = useState('');
   const [email, setEmail] = useState(session?.user?.email || '');
@@ -37,13 +34,8 @@ export default function CheckoutClient() {
   const [submitting, setSubmitting] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
-  const allSized = lines.length > 0 && lines.every((l) => !!l.size);
   const total = cartTotal + DELIVERY_COST[deliveryMethod];
   const deliveryLabel = deliveryMethod === 'standard' ? 'Free' : `£${DELIVERY_COST.express}`;
-
-  function stockFor(baseId: string, size: string) {
-    return stock[baseId]?.[size] ?? 0;
-  }
 
   function autofillAddress() {
     setName(name || 'Sam Parker');
@@ -110,127 +102,80 @@ export default function CheckoutClient() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 56 }}>
         <div>
-          {step === 'size' && (
+          {step === 'bag' && (
             <div>
-              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size and quantity</h2>
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Your bag</h2>
               <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
-                Kids&rsquo; UK sizes. If they&rsquo;re between sizes, we recommend going up.
+                Sizes were chosen for each pair in the designer. Adjust quantity or delivery speed below.
               </p>
 
-              {lines.map((l) => {
-                const inStockCount = SIZES.filter((s) => stockFor(l.baseId, s) > 0).length;
-                return (
-                  <div key={l.id} style={{ marginBottom: 32 }}>
-                    {lines.length > 1 && <p style={{ fontWeight: 800, marginBottom: 6 }}>{l.baseName}</p>}
-                    <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14, fontWeight: 600 }}>
-                      Live stock: {inStockCount} of {SIZES.length} sizes available.
-                    </p>
+              {lines.map((l) => (
+                <div key={l.id} style={{ marginBottom: 24, paddingBottom: 24, borderBottom: '2px solid rgba(32,30,29,0.15)' }}>
+                  <p style={{ fontWeight: 800, marginBottom: 6 }}>{l.baseName}</p>
+                  <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14, fontWeight: 600 }}>
+                    Size: {l.size ? `UK ${l.size.replace('UK ', '')}` : 'Not set'}
+                  </p>
 
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
-                        border: '2px solid var(--ink)',
-                        marginRight: -2,
-                        marginBottom: -2,
-                        overflow: 'hidden'
-                      }}
+                  <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+                    Quantity
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', border: '2px solid var(--ink)', width: 'fit-content' }}>
+                    <button
+                      type="button"
+                      onClick={() => setLineQty(l.id, l.qty - 1)}
+                      disabled={l.qty <= 1}
+                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderRight: '2px solid var(--ink)' }}
                     >
-                      {SIZES.map((size) => {
-                        const qty = stockFor(l.baseId, size);
-                        const soldOut = qty === 0;
-                        const low = qty > 0 && qty <= 2;
-                        const selected = l.size === size;
-                        const statusLabel = soldOut ? 'Sold out' : low ? 'Low stock' : 'In stock';
-                        return (
-                          <button
-                            key={size}
-                            disabled={soldOut}
-                            onClick={() => setLineSize(l.id, size)}
-                            style={{
-                              borderRight: '2px solid var(--ink)',
-                              borderBottom: '2px solid var(--ink)',
-                              padding: '12px 8px',
-                              background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
-                              opacity: soldOut ? 0.55 : 1,
-                              textAlign: 'left',
-                              cursor: soldOut ? 'not-allowed' : 'pointer'
-                            }}
-                          >
-                            <div style={{ fontWeight: 800, fontSize: 13 }}>UK {size.replace('UK ', '')}</div>
-                            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: soldOut ? 'inherit' : low ? '#b3261e' : 'var(--muted)' }}>
-                              {statusLabel}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <div style={{ marginTop: 20, display: 'flex', gap: 40, flexWrap: 'wrap' }}>
-                      <div>
-                        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
-                          Quantity
-                        </p>
-                        <div style={{ display: 'flex', alignItems: 'center', border: '2px solid var(--ink)', width: 'fit-content' }}>
-                          <button
-                            type="button"
-                            onClick={() => setLineQty(l.id, l.qty - 1)}
-                            disabled={l.qty <= 1}
-                            style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderRight: '2px solid var(--ink)' }}
-                          >
-                            −
-                          </button>
-                          <span style={{ width: 44, textAlign: 'center', fontWeight: 800 }}>{l.qty}</span>
-                          <button
-                            type="button"
-                            onClick={() => setLineQty(l.id, l.qty + 1)}
-                            disabled={l.qty >= 9}
-                            style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderLeft: '2px solid var(--ink)' }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      <div style={{ flex: 1, minWidth: 260 }}>
-                        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
-                          Delivery
-                        </p>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '2px solid var(--ink)' }}>
-                          {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
-                            const active = deliveryMethod === m;
-                            return (
-                              <button
-                                key={m}
-                                type="button"
-                                onClick={() => setDeliveryMethod(m)}
-                                style={{
-                                  textAlign: 'left',
-                                  padding: '12px 14px',
-                                  background: active ? 'var(--ink)' : '#fff',
-                                  color: active ? '#fff' : 'var(--ink)',
-                                  borderLeft: m === 'express' ? '2px solid var(--ink)' : 'none'
-                                }}
-                              >
-                                <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
-                                <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>
-                                  {m === 'standard' ? '3–5 days after painting · Free' : `Next day after painting · £${DELIVERY_COST.express}`}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
+                      −
+                    </button>
+                    <span style={{ width: 44, textAlign: 'center', fontWeight: 800 }}>{l.qty}</span>
+                    <button
+                      type="button"
+                      onClick={() => setLineQty(l.id, l.qty + 1)}
+                      disabled={l.qty >= 9}
+                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderLeft: '2px solid var(--ink)' }}
+                    >
+                      +
+                    </button>
                   </div>
-                );
-              })}
+                </div>
+              ))}
+
+              <div style={{ marginBottom: 24, maxWidth: 420 }}>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+                  Delivery
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '2px solid var(--ink)' }}>
+                  {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
+                    const active = deliveryMethod === m;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setDeliveryMethod(m)}
+                        style={{
+                          textAlign: 'left',
+                          padding: '12px 14px',
+                          background: active ? 'var(--ink)' : '#fff',
+                          color: active ? '#fff' : 'var(--ink)',
+                          borderLeft: m === 'express' ? '2px solid var(--ink)' : 'none'
+                        }}
+                      >
+                        <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
+                        <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>
+                          {m === 'standard' ? '3–5 days after painting · Free' : `Next day after painting · £${DELIVERY_COST.express}`}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               <p className="body-text" style={{ fontSize: 13, marginBottom: 24 }}>
                 We email you at every stage — painting, drying, sign-off and dispatch.
               </p>
 
-              <button className="btn btn-lime" disabled={!allSized} onClick={() => setStep('delivery')}>
+              <button className="btn btn-lime" onClick={() => setStep('delivery')}>
                 Continue →
               </button>
             </div>
@@ -266,7 +211,7 @@ export default function CheckoutClient() {
               </div>
 
               <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
-                <button className="btn btn-outline" onClick={() => setStep('size')}>← Back</button>
+                <button className="btn btn-outline" onClick={() => setStep('bag')}>← Back</button>
                 <button
                   className="btn btn-lime"
                   disabled={!name || !email || !address || !city || !postcode}

@@ -5,6 +5,7 @@ type Props = {
   glyph?: string;
   mark?: boolean;
   className?: string;
+  keylineWidth?: number;
 };
 
 /**
@@ -13,7 +14,7 @@ type Props = {
  * logo (lime ring/white fill), a placeable designer sticker (colour-matched
  * to the selected word/outline colours) and the account icon's motif.
  */
-export default function BubbleMark({ size = 40, ring = 'var(--lime)', fill = '#fff', glyph = 'var(--ink)', mark = true, className }: Props) {
+export default function BubbleMark({ size = 40, ring = 'var(--lime)', fill = '#fff', glyph = 'var(--ink)', mark = true, className, keylineWidth = 9 }: Props) {
   const s = size;
   return (
     <svg width={s} height={s} viewBox="-8 -8 174.62 174.29" className={className} aria-hidden="true">
@@ -24,7 +25,7 @@ export default function BubbleMark({ size = 40, ring = 'var(--lime)', fill = '#f
             d="M121.68,32.41c10.57,10,17.38,24.01,19.2,39.46,3.3,28.17-10.79,61.78-49.53,68.99-4.84.9-9.55,1.35-14.1,1.35-18.7,0-34.67-7.53-45.89-21.9-15.16-19.42-18.41-47.6-8.09-70.13,9.39-20.51,28.03-32.46,52.48-33.67,18.11-.89,34,4.6,45.94,15.9Z"
           />
           <path
-            style={{ fill: 'none', stroke: 'var(--ink)', strokeWidth: 9 }}
+            style={{ fill: 'none', stroke: 'var(--ink)', strokeWidth: keylineWidth }}
             d="M121.68,32.41c10.57,10,17.38,24.01,19.2,39.46,3.3,28.17-10.79,61.78-49.53,68.99-4.84.9-9.55,1.35-14.1,1.35-18.7,0-34.67-7.53-45.89-21.9-15.16-19.42-18.41-47.6-8.09-70.13,9.39-20.51,28.03-32.46,52.48-33.67,18.11-.89,34,4.6,45.94,15.9Z"
           />
           <path

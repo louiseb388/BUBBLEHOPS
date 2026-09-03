@@ -1,7 +1,7 @@
-export type CheckoutStep = 'size' | 'delivery' | 'payment';
+export type CheckoutStep = 'bag' | 'delivery' | 'payment';
 
 const STEPS: { key: CheckoutStep; label: string }[] = [
-  { key: 'size', label: 'Size' },
+  { key: 'bag', label: 'Your bag' },
   { key: 'delivery', label: 'Delivery' },
   { key: 'payment', label: 'Payment' }
 ];
