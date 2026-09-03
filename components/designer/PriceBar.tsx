@@ -7,11 +7,12 @@ import styles from './PriceBar.module.css';
 type Props = {
   price: number;
   bothPainted: boolean;
+  baseName: string;
   onAddToBasket: () => void;
   onSaveDesign: () => void;
 };
 
-export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesign }: Props) {
+export default function PriceBar({ price, bothPainted, baseName, onAddToBasket, onSaveDesign }: Props) {
   const [added, setAdded] = useState(false);
   const router = useRouter();
 
@@ -38,9 +39,13 @@ export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesi
       {added && (
         <div className={styles.popupBackdrop} role="dialog" aria-modal="true">
           <div className={styles.popup}>
-            <h3 className="h-display h3">Added to your basket</h3>
+            <p className="eyebrow" style={{ color: 'var(--olive)', marginBottom: 12 }}>Added to basket</p>
+            <h3 className="h-display h2" style={{ marginBottom: 16 }}>{baseName}</h3>
+            <p className="body-text" style={{ marginBottom: 24 }}>
+              Checkout now, or keep going and design another pair — your basket holds them both.
+            </p>
             <div className={styles.popupActions}>
-              <button className="btn btn-lime" onClick={() => router.push('/checkout')}>Checkout</button>
+              <button className="btn btn-lime" onClick={() => router.push('/checkout')}>Pick size and checkout →</button>
               <button className="btn btn-outline" onClick={() => setAdded(false)}>Create another pair</button>
             </div>
           </div>

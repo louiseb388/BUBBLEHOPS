@@ -31,10 +31,8 @@
   background: #fff;
   color: var(--ink);
   border: var(--border);
-  padding: 32px;
-  max-width: 360px;
+  padding: 36px;
+  max-width: 440px;
   width: 100%;
-  text-align: center;
 }
-.popup h3 { margin: 0 0 20px; }
 .popupActions { display: flex; flex-direction: column; gap: 10px; }

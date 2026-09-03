@@ -13,6 +13,7 @@ type CheckoutLine = {
   id: string;
   baseName: string;
   price: number; // GBP, whole pounds
+  qty: number;
   size: string | null;
   summary: string; // e.g. "Left: ARLO · Right: blank"
 };
@@ -30,7 +31,9 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json().catch(() => null);
   const lines: CheckoutLine[] = body?.lines;
-  const delivery = body?.delivery as { name: string; email: string; address: string; city: string; postcode: string; giftNote?: string } | undefined;
+  const delivery = body?.delivery as
+    | { name: string; email: string; address: string; city: string; postcode: string; method?: string; cost?: number }
+    | undefined;
 
   if (!lines || !Array.isArray(lines) || lines.length === 0) {
     return NextResponse.json({ error: 'Basket is empty.' }, { status: 400 });
@@ -43,7 +46,7 @@ export async function POST(req: NextRequest) {
   }
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = lines.map((l) => ({
-    quantity: 1,
+    quantity: Math.max(1, l.qty || 1),
     price_data: {
       currency: 'gbp',
       unit_amount: Math.round(l.price * 100),
@@ -54,6 +57,17 @@ export async function POST(req: NextRequest) {
     }
   }));
 
+  if (delivery?.method === 'express' && delivery.cost) {
+    line_items.push({
+      quantity: 1,
+      price_data: {
+        currency: 'gbp',
+        unit_amount: Math.round(delivery.cost * 100),
+        product_data: { name: 'Express delivery', description: 'Next day after painting' }
+      }
+    });
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -62,9 +76,9 @@ export async function POST(req: NextRequest) {
       customer_email: delivery.email,
       shipping_address_collection: { allowed_countries: ['GB'] },
       metadata: {
-        gift_note: delivery.giftNote?.slice(0, 480) || '',
         delivery_name: delivery.name,
         delivery_address: `${delivery.address}, ${delivery.city}, ${delivery.postcode}`.slice(0, 480),
+        delivery_method: delivery.method || 'standard',
         line_count: String(lines.length)
       },
       success_url: `${SITE.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

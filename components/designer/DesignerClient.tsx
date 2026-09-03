@@ -350,7 +350,7 @@ export default function DesignerClient() {
         </div>
       </div>
 
-      <PriceBar price={price} bothPainted={bothPainted} onAddToBasket={addToBasket} onSaveDesign={saveDesign} />
+      <PriceBar price={price} bothPainted={bothPainted} baseName={base.name} onAddToBasket={addToBasket} onSaveDesign={saveDesign} />
 
       {saveMsg && (
         <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', background: 'var(--ink)', color: '#fff', padding: '12px 20px', border: '2px solid var(--lime)', zIndex: 300 }}>

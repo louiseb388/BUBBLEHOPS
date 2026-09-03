@@ -150,7 +150,7 @@ export default function ShoeStage({
                     className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
                     style={{
                       color: outlineColour,
-                      WebkitTextStroke: `14px ${outlineColour}`,
+                      WebkitTextStroke: `clamp(4px, 2.2cqw, 14px) ${outlineColour}`,
                       paintOrder: 'stroke fill'
                     } as React.CSSProperties}
                     aria-hidden="true"
@@ -162,7 +162,7 @@ export default function ShoeStage({
                   className={`${styles.word} ${styles.wordGraffiti}`}
                   style={{
                     color: wordColour,
-                    WebkitTextStroke: '3px var(--ink)',
+                    WebkitTextStroke: 'clamp(1px, 0.5cqw, 3px) var(--ink)',
                     paintOrder: 'stroke fill'
                   } as React.CSSProperties}
                 >
@@ -195,7 +195,7 @@ export default function ShoeStage({
         </div>
 
         {base.placeholderPhoto && <span className={styles.placeholderPhoto}>Placeholder photo</span>}
-        {showGuide && <span className={styles.guideCaption}>Keep your text on the shoe</span>}
+        {wordOutside && <span className={styles.guideCaption}>Keep your text on the shoe</span>}
       </div>
     </div>
   );

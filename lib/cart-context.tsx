@@ -10,13 +10,15 @@ export type BagLine = {
   design: DesignState;
   price: number;
   size: string | null;
+  qty: number;
 };
 
 type CartState = {
   lines: BagLine[];
-  addLine: (line: Omit<BagLine, 'id'>) => string;
+  addLine: (line: Omit<BagLine, 'id' | 'qty'>) => string;
   removeLine: (id: string) => void;
   setLineSize: (id: string, size: string) => void;
+  setLineQty: (id: string, qty: number) => void;
   clear: () => void;
   total: number;
   ready: boolean;
@@ -32,7 +34,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setLines(JSON.parse(raw));
+      if (raw) {
+        const parsed: BagLine[] = JSON.parse(raw);
+        setLines(parsed.map((l) => ({ ...l, qty: l.qty && l.qty > 0 ? l.qty : 1 })));
+      }
     } catch {
       /* ignore corrupt storage */
     }
@@ -44,9 +49,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
   }, [lines, ready]);
 
-  const addLine = useCallback((line: Omit<BagLine, 'id'>) => {
+  const addLine = useCallback((line: Omit<BagLine, 'id' | 'qty'>) => {
     const id = `bag_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    setLines((prev) => [...prev, { ...line, id }]);
+    setLines((prev) => [...prev, { ...line, id, qty: 1 }]);
     return id;
   }, []);
 
@@ -58,12 +63,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLines((prev) => prev.map((l) => (l.id === id ? { ...l, size } : l)));
   }, []);
 
+  const setLineQty = useCallback((id: string, qty: number) => {
+    const clamped = Math.max(1, Math.min(9, Math.round(qty)));
+    setLines((prev) => prev.map((l) => (l.id === id ? { ...l, qty: clamped } : l)));
+  }, []);
+
   const clear = useCallback(() => setLines([]), []);
 
-  const total = lines.reduce((sum, l) => sum + l.price, 0);
+  const total = lines.reduce((sum, l) => sum + l.price * l.qty, 0);
 
   return (
-    <CartContext.Provider value={{ lines, addLine, removeLine, setLineSize, clear, total, ready }}>
+    <CartContext.Provider value={{ lines, addLine, removeLine, setLineSize, setLineQty, clear, total, ready }}>
       {children}
     </CartContext.Provider>
   );

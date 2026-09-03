@@ -1,35 +1,46 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
 import { SIZES } from '@/lib/data';
 import { useStock } from '@/lib/inventory';
-import DesignPreview from '@/components/DesignPreview';
+import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
+import OrderSummary from '@/components/checkout/OrderSummary';
 
-type Step = 'size' | 'delivery' | 'payment';
+type DeliveryMethod = 'standard' | 'express';
+const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
+
+const STEP_HEADINGS: Record<CheckoutStep, string> = {
+  size: 'Pick the size',
+  delivery: 'Delivery details',
+  payment: 'Pay and confirm'
+};
 
 export default function CheckoutClient() {
-  const { lines, setLineSize, total, ready } = useCart();
+  const { lines, setLineSize, setLineQty, total: cartTotal, ready } = useCart();
   const { stock } = useStock();
   const { session } = useAuth();
   const searchParams = useSearchParams();
   const cancelled = searchParams.get('cancelled') === '1';
 
-  const [step, setStep] = useState<Step>('size');
+  const [step, setStep] = useState<CheckoutStep>('size');
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('standard');
   const [name, setName] = useState('');
   const [email, setEmail] = useState(session?.user?.email || '');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [postcode, setPostcode] = useState('');
-  const [giftNote, setGiftNote] = useState('');
   const [terms, setTerms] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple' | 'google' | 'klarna'>('card');
   const [submitting, setSubmitting] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
   const allSized = lines.length > 0 && lines.every((l) => !!l.size);
+  const total = cartTotal + DELIVERY_COST[deliveryMethod];
+  const deliveryLabel = deliveryMethod === 'standard' ? 'Free' : `£${DELIVERY_COST.express}`;
 
   function stockFor(baseId: string, size: string) {
     return stock[baseId]?.[size] ?? 0;
@@ -58,10 +69,11 @@ export default function CheckoutClient() {
             id: l.id,
             baseName: l.baseName,
             price: l.price,
+            qty: l.qty,
             size: l.size,
             summary: `Left: ${l.design.left.blank ? 'blank' : l.design.left.word || '—'} · Right: ${l.design.right.blank ? 'blank' : l.design.right.word || '—'}`
           })),
-          delivery: { name, email, address, city, postcode, giftNote }
+          delivery: { name, email, address, city, postcode, method: deliveryMethod, cost: DELIVERY_COST[deliveryMethod] }
         })
       });
       const data = await res.json();
@@ -86,7 +98,8 @@ export default function CheckoutClient() {
 
   return (
     <div className="container" style={{ paddingTop: 56, paddingBottom: 96 }}>
-      <h1 className="h-display h1" style={{ marginBottom: 32 }}>Checkout.</h1>
+      <p className="eyebrow">Checkout</p>
+      <h1 className="h-display h1" style={{ marginBottom: 40 }}>{STEP_HEADINGS[step]}</h1>
 
       {cancelled && (
         <p style={{ background: 'var(--tint)', border: '2px solid var(--ink)', padding: '12px 16px', marginBottom: 24 }}>
@@ -94,157 +107,264 @@ export default function CheckoutClient() {
         </p>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 48 }}>
-        <aside>
-          <h2 style={{ fontSize: 14, fontWeight: 800, textTransform: 'uppercase', marginBottom: 16 }}>Order preview</h2>
-          {lines.map((l) => (
-            <div key={l.id} style={{ marginBottom: 24, borderBottom: '2px solid var(--ink)', paddingBottom: 16 }}>
-              <DesignPreview design={l.design} width={280} />
-              <p className="body-text" style={{ margin: '10px 0 0' }}>
-                {l.baseName}
-                <br />
-                Left: {l.design.left.blank ? 'Blank' : l.design.left.word || '—'}
-                <br />
-                Right: {l.design.right.blank ? 'Blank' : l.design.right.word || '—'}
-                <br />
-                {l.size ? `Size ${l.size}` : 'Size not chosen'} · £{l.price}
-              </p>
-            </div>
-          ))}
-          <p style={{ fontWeight: 800, fontSize: 18, marginBottom: 20 }}>Total: £{total}</p>
-          <Link href="/create-your-own" className="btn btn-outline btn-sm">Back to my design</Link>
-        </aside>
+      <CheckoutProgress step={step} />
 
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 56 }}>
         <div>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 32 }}>
-            {(['size', 'delivery', 'payment'] as Step[]).map((s, i) => (
-              <button
-                key={s}
-                onClick={() => setStep(s)}
-                className={`tag ${step === s ? 'tag-lime' : ''}`}
-                style={{ background: step === s ? undefined : '#fff', cursor: 'pointer' }}
-              >
-                {i + 1}. {s[0].toUpperCase() + s.slice(1)}
-              </button>
-            ))}
-          </div>
-
           {step === 'size' && (
             <div>
-              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size</h2>
-              <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 20 }}>UK kids&rsquo; sizes 10 through 6. Need an adult size? Get in touch.</p>
-              {lines.map((l) => (
-                <div key={l.id} style={{ marginBottom: 28 }}>
-                  <p style={{ fontWeight: 700, marginBottom: 10 }}>{l.baseName}</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(64px,1fr))', gap: 8 }}>
-                    {SIZES.map((size) => {
-                      const qty = stockFor(l.baseId, size);
-                      const soldOut = qty === 0;
-                      const low = qty > 0 && qty <= 2;
-                      const selected = l.size === size;
-                      return (
-                        <button
-                          key={size}
-                          disabled={soldOut}
-                          onClick={() => setLineSize(l.id, size)}
-                          style={{
-                            border: '2px solid var(--ink)',
-                            padding: '10px 4px',
-                            background: selected ? 'var(--lime)' : '#fff',
-                            opacity: soldOut ? 0.35 : 1,
-                            fontWeight: 700,
-                            fontSize: 13,
-                            position: 'relative'
-                          }}
-                        >
-                          {size}
-                          {soldOut && <div style={{ fontSize: 9, fontWeight: 600 }}>Sold out</div>}
-                          {low && <div style={{ fontSize: 9, fontWeight: 600, color: '#b3261e' }}>Low stock</div>}
-                        </button>
-                      );
-                    })}
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size and quantity</h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
+                Kids&rsquo; UK sizes. If they&rsquo;re between sizes, we recommend going up.
+              </p>
+
+              {lines.map((l) => {
+                const inStockCount = SIZES.filter((s) => stockFor(l.baseId, s) > 0).length;
+                return (
+                  <div key={l.id} style={{ marginBottom: 32 }}>
+                    {lines.length > 1 && <p style={{ fontWeight: 800, marginBottom: 6 }}>{l.baseName}</p>}
+                    <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14, fontWeight: 600 }}>
+                      Live stock: {inStockCount} of {SIZES.length} sizes available.
+                    </p>
+
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
+                        border: '2px solid var(--ink)',
+                        marginRight: -2,
+                        marginBottom: -2,
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {SIZES.map((size) => {
+                        const qty = stockFor(l.baseId, size);
+                        const soldOut = qty === 0;
+                        const low = qty > 0 && qty <= 2;
+                        const selected = l.size === size;
+                        const statusLabel = soldOut ? 'Sold out' : low ? 'Low stock' : 'In stock';
+                        return (
+                          <button
+                            key={size}
+                            disabled={soldOut}
+                            onClick={() => setLineSize(l.id, size)}
+                            style={{
+                              borderRight: '2px solid var(--ink)',
+                              borderBottom: '2px solid var(--ink)',
+                              padding: '12px 8px',
+                              background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
+                              opacity: soldOut ? 0.55 : 1,
+                              textAlign: 'left',
+                              cursor: soldOut ? 'not-allowed' : 'pointer'
+                            }}
+                          >
+                            <div style={{ fontWeight: 800, fontSize: 13 }}>UK {size.replace('UK ', '')}</div>
+                            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: soldOut ? 'inherit' : low ? '#b3261e' : 'var(--muted)' }}>
+                              {statusLabel}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div style={{ marginTop: 20, display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+                      <div>
+                        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+                          Quantity
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', border: '2px solid var(--ink)', width: 'fit-content' }}>
+                          <button
+                            type="button"
+                            onClick={() => setLineQty(l.id, l.qty - 1)}
+                            disabled={l.qty <= 1}
+                            style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderRight: '2px solid var(--ink)' }}
+                          >
+                            −
+                          </button>
+                          <span style={{ width: 44, textAlign: 'center', fontWeight: 800 }}>{l.qty}</span>
+                          <button
+                            type="button"
+                            onClick={() => setLineQty(l.id, l.qty + 1)}
+                            disabled={l.qty >= 9}
+                            style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderLeft: '2px solid var(--ink)' }}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div style={{ flex: 1, minWidth: 260 }}>
+                        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+                          Delivery
+                        </p>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '2px solid var(--ink)' }}>
+                          {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
+                            const active = deliveryMethod === m;
+                            return (
+                              <button
+                                key={m}
+                                type="button"
+                                onClick={() => setDeliveryMethod(m)}
+                                style={{
+                                  textAlign: 'left',
+                                  padding: '12px 14px',
+                                  background: active ? 'var(--ink)' : '#fff',
+                                  color: active ? '#fff' : 'var(--ink)',
+                                  borderLeft: m === 'express' ? '2px solid var(--ink)' : 'none'
+                                }}
+                              >
+                                <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
+                                <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>
+                                  {m === 'standard' ? '3–5 days after painting · Free' : `Next day after painting · £${DELIVERY_COST.express}`}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+
+              <p className="body-text" style={{ fontSize: 13, marginBottom: 24 }}>
+                We email you at every stage — painting, drying, sign-off and dispatch.
+              </p>
+
               <button className="btn btn-lime" disabled={!allSized} onClick={() => setStep('delivery')}>
-                Continue to delivery →
+                Continue →
               </button>
             </div>
           )}
 
           {step === 'delivery' && (
-            <div style={{ maxWidth: 460 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <h2 className="h-display h3" style={{ margin: 0 }}>Delivery</h2>
-                <button className="btn btn-outline btn-sm" onClick={autofillAddress} type="button">
-                  Autofill saved address
-                </button>
-              </div>
-
+            <div style={{ maxWidth: 520 }}>
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Where it&rsquo;s going</h2>
               <p className="body-text" style={{ marginBottom: 20 }}>
-                We&apos;ll send a photo of the finished pair before it ships, with 24 hours to confirm or comment.
+                We&apos;ll email you a photo of the finished pair before they ship. You&apos;ll have 24 hours to comment.
               </p>
+
+              <button
+                className="btn btn-sm"
+                onClick={autofillAddress}
+                type="button"
+                style={{ background: '#fff', border: '2px solid var(--lime)', color: 'var(--olive)', marginBottom: 24 }}
+              >
+                Autofill saved address
+              </button>
 
               <div style={{ display: 'grid', gap: 16 }}>
                 <Field label="Full name" value={name} onChange={setName} />
                 <Field label="Email" type="email" value={email} onChange={setEmail} />
-                <Field label="Address" value={address} onChange={setAddress} />
-                <Field label="City" value={city} onChange={setCity} />
-                <Field label="Postcode" value={postcode} onChange={setPostcode} />
-                <label style={{ display: 'grid', gap: 6 }}>
-                  <span style={{ fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    Gift note (optional)
-                  </span>
-                  <textarea
-                    rows={3}
-                    value={giftNote}
-                    onChange={(e) => setGiftNote(e.target.value)}
-                    style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, resize: 'vertical' }}
-                  />
-                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <Field label="Address" value={address} onChange={setAddress} />
+                  <Field label="Town or city" value={city} onChange={setCity} />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <Field label="Postcode" value={postcode} onChange={setPostcode} />
+                  <div />
+                </div>
               </div>
 
-              <button
-                className="btn btn-lime"
-                style={{ marginTop: 24 }}
-                disabled={!name || !email || !address || !city || !postcode}
-                onClick={() => setStep('payment')}
-              >
-                Continue to payment →
-              </button>
+              <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
+                <button className="btn btn-outline" onClick={() => setStep('size')}>← Back</button>
+                <button
+                  className="btn btn-lime"
+                  disabled={!name || !email || !address || !city || !postcode}
+                  onClick={() => setStep('payment')}
+                >
+                  Continue →
+                </button>
+              </div>
             </div>
           )}
 
           {step === 'payment' && (
-            <div style={{ maxWidth: 460 }}>
-              <h2 className="h-display h3" style={{ marginBottom: 20 }}>Payment</h2>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-                {['Card', 'Apple Pay', 'Google Pay', 'Klarna'].map((m) => (
-                  <span key={m} className="tag" style={{ background: '#fff' }}>{m}</span>
-                ))}
-              </div>
+            <div style={{ maxWidth: 520 }}>
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Payment</h2>
               <p className="body-text" style={{ marginBottom: 20 }}>
-                You&apos;ll choose exactly how to pay — card (Visa/Mastercard), Apple Pay, Google Pay, or Klarna&apos;s
-                3 interest-free instalments — on Stripe&apos;s secure payment page in the next step.
+                Pay how you like. Klarna splits it into three, interest free.
               </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', border: '2px solid var(--ink)', marginBottom: 16 }}>
+                {(
+                  [
+                    { key: 'card', label: 'Card', sub: 'Visa, Mastercard, Amex' },
+                    { key: 'apple', label: 'Apple Pay', sub: 'Apple Pay, one touch' },
+                    { key: 'google', label: 'G Pay', sub: 'Google Pay, one tap' },
+                    { key: 'klarna', label: 'Klarna', sub: '3 payments, 0% interest' }
+                  ] as const
+                ).map((m, i) => {
+                  const active = paymentMethod === m.key;
+                  return (
+                    <button
+                      key={m.key}
+                      type="button"
+                      onClick={() => setPaymentMethod(m.key)}
+                      style={{
+                        textAlign: 'left',
+                        padding: '12px 14px',
+                        background: active ? 'var(--ink)' : '#fff',
+                        color: active ? '#fff' : 'var(--ink)',
+                        borderLeft: i === 0 ? 'none' : '2px solid var(--ink)'
+                      }}
+                    >
+                      <div style={{ fontWeight: 800, fontSize: 13 }}>{m.label}</div>
+                      <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>{m.sub}</div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <span className="tag" style={{ background: '#fff', fontStyle: 'italic', fontWeight: 800 }}>VISA</span>
+                <span className="tag" style={{ background: '#fff', fontWeight: 800 }}>MASTERCARD</span>
+                <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>Secured, 3-D Secure</span>
+              </div>
+
+              <button
+                className="btn btn-sm"
+                type="button"
+                style={{ background: '#fff', border: '2px solid var(--lime)', color: 'var(--olive)', marginBottom: 24 }}
+              >
+                Autofill saved card
+              </button>
+
+              {paymentMethod === 'card' && (
+                <div style={{ display: 'grid', gap: 16, marginBottom: 20 }}>
+                  <Field label="Card number" value="4242 4242 4242 4242" onChange={() => {}} />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                    <Field label="Expiry" value="" placeholder="MM / YY" onChange={() => {}} />
+                    <Field label="Security code" value="" placeholder="123" onChange={() => {}} />
+                  </div>
+                </div>
+              )}
 
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 20 }}>
                 <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} style={{ marginTop: 4 }} />
                 <span className="body-text">
-                  I agree to the{' '}
-                  <Link href="/terms-and-conditions" style={{ fontWeight: 700, textDecoration: 'underline' }}>
-                    Terms & Conditions
+                  I accept the{' '}
+                  <Link href="/terms-and-conditions" style={{ fontWeight: 700, color: 'var(--olive)' }}>
+                    terms and conditions
                   </Link>
+                  .
                 </span>
               </label>
 
               {payError && <p style={{ color: '#b3261e', marginBottom: 16 }}>{payError}</p>}
 
-              <button className="btn btn-lime" onClick={submitPayment} disabled={submitting}>
-                {submitting ? 'Redirecting to secure payment…' : `Pay £${total} →`}
-              </button>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button className="btn btn-outline" onClick={() => setStep('delivery')}>← Back</button>
+                <button className="btn btn-lime" onClick={submitPayment} disabled={submitting}>
+                  {submitting ? 'Redirecting to secure payment…' : 'Place the order →'}
+                </button>
+              </div>
             </div>
           )}
+        </div>
+
+        <div style={{ borderLeft: '2px solid rgba(32,30,29,0.2)', paddingLeft: 40 }}>
+          <OrderSummary lines={lines} total={total} deliveryLabel={deliveryLabel} />
         </div>
       </div>
     </div>
@@ -255,12 +375,14 @@ function Field({
   label,
   value,
   onChange,
-  type = 'text'
+  type = 'text',
+  placeholder
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  placeholder?: string;
 }) {
   return (
     <label style={{ display: 'grid', gap: 6 }}>
@@ -268,6 +390,7 @@ function Field({
       <input
         type={type}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
       />

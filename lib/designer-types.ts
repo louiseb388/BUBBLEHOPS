@@ -1,3 +1,5 @@
+import { WORD_COLOURS } from './data';
+
 export type Sticker = { id: string; x: number; y: number; scale: number };
 
 export type Side = {
@@ -48,6 +50,37 @@ export function priceForDesign(basePrice: number, design: DesignState): number {
   if (paintedCount === 0) return basePrice; // at least the base pair
   if (paintedCount === 1) return Math.round(basePrice * 1.0);
   return Math.round(basePrice * 2 * 0.98); // small pair discount vs 2x single-shoe price
+}
+
+function colourLabel(id: string): string {
+  return WORD_COLOURS.find((c) => c.id === id)?.label || id;
+}
+
+/** Which side(s) are painted, e.g. "Both shoes" / "Left shoe only" / "Base only". */
+export function paintingLabel(design: DesignState): string {
+  const l = !design.left.blank;
+  const r = !design.right.blank;
+  if (l && r) return 'Both shoes';
+  if (l) return 'Left shoe only';
+  if (r) return 'Right shoe only';
+  return 'Base only';
+}
+
+function sideSummary(side: Side): string | null {
+  if (side.blank || !side.word) return null;
+  const outline = side.outline === 'none' ? 'no outline' : `outlined in ${colourLabel(side.outline).toLowerCase()}`;
+  return `${side.word.toUpperCase()} in graffiti letters, ${colourLabel(side.colour).toLowerCase()} ${outline}`;
+}
+
+/** One-line design description for order summaries, e.g. "Both shoes: ARLO in graffiti letters, teal outlined in lime." */
+export function summarizeDesign(design: DesignState): string {
+  const l = sideSummary(design.left);
+  const r = sideSummary(design.right);
+  if (!l && !r) return 'Left and right left blank.';
+  if (l && l === r) return `Both shoes: ${l}.`;
+  if (l && r) return `Left: ${l}. Right: ${r}.`;
+  if (l) return `Left: ${l}. Right: blank.`;
+  return `Right: ${r}. Left: blank.`;
 }
 
 export function encodeDesign(design: DesignState): string {
