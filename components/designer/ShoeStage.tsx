@@ -12,6 +12,15 @@ function colourValue(id: string) {
   return WORD_COLOURS.find((c) => c.id === id)?.value || id;
 }
 
+// Scattered gloss blobs clipped to the letter glyphs, tiled across the word so every
+// letter picks up 1-2 highlights regardless of what was typed — approximates the
+// hand-painted bubble-letter shine without needing per-letter artwork.
+const WORD_HIGHLIGHT_GRADIENT = [
+  'radial-gradient(ellipse 60% 38% at 28% 24%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.72) 45%, rgba(255,255,255,0) 75%)',
+  'radial-gradient(ellipse 34% 22% at 76% 60%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 78%)',
+  'radial-gradient(ellipse 20% 16% at 48% 88%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 80%)'
+].join(', ');
+
 /** Black glyph on light fills, white glyph on dark/non-hex (e.g. oklch) fills, so the sticker face stays visible against any selected colour. */
 function glyphFor(hex: string) {
   const m = /^#([0-9a-f]{6})$/i.exec(hex);
@@ -169,6 +178,17 @@ export default function ShoeStage({
                     fontSize: wordFontSize,
                     color: wordColour
                   } as React.CSSProperties}
+                >
+                  {side.word}
+                </span>
+                <span
+                  className={`${styles.word} ${styles.wordGraffiti} ${styles.wordHighlightLayer}`}
+                  style={{
+                    fontSize: wordFontSize,
+                    backgroundImage: WORD_HIGHLIGHT_GRADIENT,
+                    backgroundSize: `${wordFontSize * 0.62}px 100%`
+                  } as React.CSSProperties}
+                  aria-hidden="true"
                 >
                   {side.word}
                 </span>

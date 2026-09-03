@@ -122,6 +122,17 @@
   inset: 0;
   z-index: -1;
 }
+.wordHighlightLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: repeat-x;
+  background-position: 0 center;
+}
 .wordGraffiti { font-family: 'Gloze', var(--font-archivo), sans-serif; letter-spacing: 0.01em; }
 .wordRegular { font-family: var(--font-poppins), sans-serif; font-weight: 700; }
 

@@ -34,7 +34,6 @@ export default function CheckoutClient() {
   const [city, setCity] = useState('');
   const [postcode, setPostcode] = useState('');
   const [terms, setTerms] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple' | 'google' | 'klarna'>('card');
   const [submitting, setSubmitting] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
@@ -283,62 +282,15 @@ export default function CheckoutClient() {
             <div style={{ maxWidth: 520 }}>
               <h2 className="h-display h3" style={{ marginBottom: 4 }}>Payment</h2>
               <p className="body-text" style={{ marginBottom: 20 }}>
-                Pay how you like. Klarna splits it into three, interest free.
+                Card, Apple Pay, Google Pay or Klarna — choose on the next screen. Klarna splits it into three,
+                interest free.
               </p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', border: '2px solid var(--ink)', marginBottom: 16 }}>
-                {(
-                  [
-                    { key: 'card', label: 'Card', sub: 'Visa, Mastercard, Amex' },
-                    { key: 'apple', label: 'Apple Pay', sub: 'Apple Pay, one touch' },
-                    { key: 'google', label: 'G Pay', sub: 'Google Pay, one tap' },
-                    { key: 'klarna', label: 'Klarna', sub: '3 payments, 0% interest' }
-                  ] as const
-                ).map((m, i) => {
-                  const active = paymentMethod === m.key;
-                  return (
-                    <button
-                      key={m.key}
-                      type="button"
-                      onClick={() => setPaymentMethod(m.key)}
-                      style={{
-                        textAlign: 'left',
-                        padding: '12px 14px',
-                        background: active ? 'var(--ink)' : '#fff',
-                        color: active ? '#fff' : 'var(--ink)',
-                        borderLeft: i === 0 ? 'none' : '2px solid var(--ink)'
-                      }}
-                    >
-                      <div style={{ fontWeight: 800, fontSize: 13 }}>{m.label}</div>
-                      <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>{m.sub}</div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
                 <span className="tag" style={{ background: '#fff', fontStyle: 'italic', fontWeight: 800 }}>VISA</span>
                 <span className="tag" style={{ background: '#fff', fontWeight: 800 }}>MASTERCARD</span>
                 <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>Secured, 3-D Secure</span>
               </div>
-
-              <button
-                className="btn btn-sm"
-                type="button"
-                style={{ background: '#fff', border: '2px solid var(--lime)', color: 'var(--olive)', marginBottom: 24 }}
-              >
-                Autofill saved card
-              </button>
-
-              {paymentMethod === 'card' && (
-                <div style={{ display: 'grid', gap: 16, marginBottom: 20 }}>
-                  <Field label="Card number" value="4242 4242 4242 4242" onChange={() => {}} />
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                    <Field label="Expiry" value="" placeholder="MM / YY" onChange={() => {}} />
-                    <Field label="Security code" value="" placeholder="123" onChange={() => {}} />
-                  </div>
-                </div>
-              )}
 
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 20 }}>
                 <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} style={{ marginTop: 4 }} />
@@ -356,7 +308,7 @@ export default function CheckoutClient() {
               <div style={{ display: 'flex', gap: 10 }}>
                 <button className="btn btn-outline" onClick={() => setStep('delivery')}>← Back</button>
                 <button className="btn btn-lime" onClick={submitPayment} disabled={submitting}>
-                  {submitting ? 'Redirecting to secure payment…' : 'Place the order →'}
+                  {submitting ? 'Redirecting to secure payment…' : 'Continue to secure payment →'}
                 </button>
               </div>
             </div>
