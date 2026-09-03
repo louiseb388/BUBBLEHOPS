@@ -206,7 +206,7 @@ export default function ShoeStage({
                 style={{
                   left: `${s.x}%`,
                   top: `${s.y}%`,
-                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}scale(${s.scale})`
+                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${s.rot || 0}deg) scale(${s.scale})`
                 }}
                 onPointerDown={(e) => onStickerPointerDown(s.id, e)}
                 onDoubleClick={(e) => {

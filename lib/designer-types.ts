@@ -1,6 +1,6 @@
 import { WORD_COLOURS } from './data';
 
-export type Sticker = { id: string; x: number; y: number; scale: number };
+export type Sticker = { id: string; x: number; y: number; scale: number; rot?: number };
 
 export type Side = {
   blank: boolean;

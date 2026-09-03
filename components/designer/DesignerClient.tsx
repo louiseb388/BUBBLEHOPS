@@ -30,7 +30,8 @@ function randomSticker() {
     id: `st_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     x: 30 + Math.random() * 40,
     y: 35 + Math.random() * 30,
-    scale: 1.8 + Math.random() * 0.4 // ~100% bigger than baseline (1.0), with slight variance
+    scale: 0.9 + Math.random() * 0.2, // half of the previous ~100%-bigger baseline
+    rot: Math.round(Math.random() * 360)
   };
 }
 
@@ -131,7 +132,7 @@ export default function DesignerClient() {
       rot: Math.round((Math.random() - 0.5) * 40),
       x: 40 + Math.random() * 20,
       y: 40 + Math.random() * 20,
-      stickers: Math.random() > 0.5 ? [{ id: `st_${Date.now()}`, x: 30 + Math.random() * 40, y: 60 + Math.random() * 20, scale: 1 }] : []
+      stickers: Math.random() > 0.5 ? [randomSticker()] : []
     });
     setDesign({ baseId: randomBase.id, left: randomSide(), right: randomSide() });
   }
