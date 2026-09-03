@@ -80,7 +80,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
               className={styles.slider}
               type="range"
               min={1.2}
-              max={3.2}
+              max={2.56}
               step={0.02}
               value={side.size}
               onPointerDown={onBeginChange}
