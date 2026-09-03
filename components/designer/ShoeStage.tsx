@@ -163,22 +163,15 @@ export default function ShoeStage({
                   transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
                 }}
               >
-                {/* Only the inner fill blends against the shoe photo (isolated to just this
-                    span so the outline rings drawn after it stay fully opaque, unaffected
-                    by the blend). */}
-                <div style={{ isolation: 'isolate' } as React.CSSProperties}>
-                  <span
-                    className={`${styles.word} ${styles.wordGraffiti}`}
-                    style={{
-                      fontSize: wordFontSize,
-                      color: wordColour,
-                      mixBlendMode: 'multiply',
-                      opacity: 0.8
-                    } as React.CSSProperties}
-                  >
-                    {side.word}
-                  </span>
-                </div>
+                <span
+                  className={`${styles.word} ${styles.wordGraffiti}`}
+                  style={{
+                    fontSize: wordFontSize,
+                    color: wordColour
+                  } as React.CSSProperties}
+                >
+                  {side.word}
+                </span>
                 {side.outline !== 'none' && (
                   <span
                     className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
@@ -223,7 +216,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={30} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
+                <BubbleMark size={45} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
               </div>
             ))}
           </div>

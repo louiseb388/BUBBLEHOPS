@@ -2,7 +2,7 @@
   background: var(--ink);
   color: #fff;
   border-top: var(--border);
-  border-bottom: var(--border);
+  border-bottom: 6px solid #fff;
   padding: 14px var(--pad-narrow);
 }
 .inner {
