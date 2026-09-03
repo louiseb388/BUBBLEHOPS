@@ -54,7 +54,7 @@ function SignInInner() {
               style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
             />
           </label>
-          {message && status !== 'sent' && <p style={{ color: '#b3261e', margin: 0 }}>{message}</p>}
+          {message && <p style={{ color: '#b3261e', margin: 0 }}>{message}</p>}
           <button className="btn btn-lime" type="submit" disabled={status === 'sending' || !configured}>
             {status === 'sending' ? 'Sending link…' : 'Email me a sign-in link'}
           </button>
