@@ -1,26 +1,16 @@
-.footer { background: var(--ink); color: #fff; border-top: var(--border); }
-
-.appBand {
+.oneOfOne { background: var(--lime); border-top: var(--border); border-bottom: var(--border); }
+.oneOfOneInner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 48px 0;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
-.appBadges { display: flex; gap: 12px; }
-.storeBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 2px solid #fff;
-  padding: 10px 16px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 13px;
-}
+.oneOfOneInner h2 { color: var(--ink); }
+
+.footer { background: var(--ink); color: #fff; }
 
 .grid {
   display: grid;
@@ -28,6 +18,7 @@
   gap: 32px;
   padding: 56px 0 40px;
 }
+.tagline { margin: 16px 0 0; font-size: 14px; line-height: 1.5; opacity: 0.85; max-width: 26ch; }
 .col h3 {
   margin: 0 0 16px;
   font-size: 12px;
@@ -45,11 +36,34 @@
 }
 .col a:hover { opacity: 1; text-decoration: underline; }
 
+.mailingCopy { margin: 0 0 14px; font-size: 14px; color: #fff; opacity: 0.9; }
+.mailingForm { display: flex; }
+.mailingInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: none;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+.mailingInput::placeholder { color: rgba(255, 255, 255, 0.5); }
+.mailingInput:focus { outline: none; border-color: var(--lime); }
+.mailingBtn {
+  flex: none;
+  background: var(--lime);
+  color: var(--ink);
+  border: 2px solid var(--lime);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+}
+.mailingBtn:hover { background: var(--lime-hover); border-color: var(--lime-hover); }
+
 .bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
   padding: 24px 0 40px;
   border-top: 2px solid rgba(255, 255, 255, 0.15);
   font-size: 13px;
