@@ -93,7 +93,6 @@ export function getBase(id: string): BaseTrainer | undefined {
 export type WordColour = { id: string; value: string; label: string };
 
 export const WORD_COLOURS: WordColour[] = [
-  { id: 'white', value: '#ffffff', label: 'White' },
   { id: 'ink', value: '#201e1d', label: 'Black' },
   { id: 'grey', value: '#9b9797', label: 'Grey' },
   { id: 'lime', value: '#b6ea16', label: 'Lime' },

@@ -25,7 +25,7 @@ export const DEFAULT_SIDE: Side = {
   blank: false,
   word: '',
   colour: 'ink',
-  outline: 'white',
+  outline: 'lime',
   font: 'graffiti',
   size: 1.2,
   rot: 0,

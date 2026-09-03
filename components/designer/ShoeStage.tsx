@@ -114,7 +114,7 @@ export default function ShoeStage({
   const atMaxStickers = side.stickers.length >= MAX_STICKERS;
 
   const wordFontSize = Math.min(128, Math.max(28, shoeWidth * 0.06));
-  const strokeThick = Math.min(14, Math.max(4, shoeWidth * 0.022));
+  const strokeThick = Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
   const strokeThin = Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
 
   return (
@@ -160,23 +160,31 @@ export default function ShoeStage({
                 style={{
                   left: `${side.x}%`,
                   top: `${side.y}%`,
-                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`,
-                  isolation: 'isolate',
-                  mixBlendMode: 'multiply',
-                  opacity: 0.8
-                } as React.CSSProperties}
+                  transform: `translate(-50%, -50%) ${flip ? 'scaleX(-1) ' : ''}rotate(${side.rot}deg) scale(${side.size})`
+                }}
               >
-                {/* The colour ring, fill and black outline render normally relative to each
-                    other (no per-layer blending — the ring layers self-fill into solid
-                    silhouettes at this font weight, which would otherwise contaminate or
-                    hide a blended layer next to them). The whole word is blended as one
-                    isolated group against the shoe photo via .wordWrap instead. */}
+                {/* Only the inner fill blends against the shoe photo (isolated to just this
+                    span so the outline rings drawn after it stay fully opaque, unaffected
+                    by the blend). */}
+                <div style={{ isolation: 'isolate' } as React.CSSProperties}>
+                  <span
+                    className={`${styles.word} ${styles.wordGraffiti}`}
+                    style={{
+                      fontSize: wordFontSize,
+                      color: wordColour,
+                      mixBlendMode: 'multiply',
+                      opacity: 0.8
+                    } as React.CSSProperties}
+                  >
+                    {side.word}
+                  </span>
+                </div>
                 {side.outline !== 'none' && (
                   <span
                     className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
                     style={{
                       fontSize: wordFontSize,
-                      color: outlineColour,
+                      color: 'transparent',
                       WebkitTextStroke: `${strokeThick}px ${outlineColour}`,
                       paintOrder: 'stroke fill'
                     } as React.CSSProperties}
@@ -186,13 +194,14 @@ export default function ShoeStage({
                   </span>
                 )}
                 <span
-                  className={`${styles.word} ${styles.wordGraffiti}`}
+                  className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
                   style={{
                     fontSize: wordFontSize,
-                    color: wordColour,
+                    color: 'transparent',
                     WebkitTextStroke: `${strokeThin}px var(--ink)`,
                     paintOrder: 'stroke fill'
                   } as React.CSSProperties}
+                  aria-hidden="true"
                 >
                   {side.word}
                 </span>

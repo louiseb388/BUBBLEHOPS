@@ -19,9 +19,15 @@
   padding: 0;
   cursor: grab;
   transition: transform 0.15s ease;
+  animation: stickerSwell 3.6s ease-in-out infinite;
 }
-.stickerBadge:hover:not(:disabled) { transform: scale(1.06); }
+.stickerBadge:hover:not(:disabled) { animation: none; transform: scale(1.06); }
 .stickerBadge:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@keyframes stickerSwell {
+  0%, 85%, 100% { transform: scale(1); }
+  92% { transform: scale(1.18); }
+}
 
 .badgeLabel {
   display: flex;

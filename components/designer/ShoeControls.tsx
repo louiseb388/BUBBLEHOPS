@@ -19,8 +19,6 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
 
   return (
     <div className={styles.panel}>
-      <h3 style={{ margin: '0 0 10px', fontWeight: 800, fontSize: 12, textTransform: 'uppercase' }}>{label} shoe</h3>
-
       {!side.blank && (
         <>
           <div className={styles.row}>

@@ -5,7 +5,7 @@
   position: relative;
 }
 .stageGrid {
-  max-width: 1150px;
+  max-width: 1495px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
