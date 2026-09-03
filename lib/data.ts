@@ -76,7 +76,7 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     id: 'airforce',
     img: '/photos/bubblehops-nike-court-borough-kids-trainer-base.jpg',
     name: 'Nike Air Force 1',
-    meta: 'Low top · UK 10 – 6',
+    meta: 'High top · UK 10 – 6',
     price: 135,
     panel: 'base03',
     ar: 328 / 162,

@@ -9,18 +9,5 @@
   padding-bottom: 32px;
   border-bottom: var(--border);
 }
+.sectionTitle { font-size: clamp(45px, 5.1vw, 72px); }
 
-.galleryTeaser { border-top: var(--border); padding: 72px 0; background: var(--tint); }
-.galleryGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 3px;
-  background: var(--ink);
-  border: var(--border);
-  margin-bottom: 32px;
-}
-.galleryItem { aspect-ratio: 1; overflow: hidden; }
-.galleryItem img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-.galleryItem:hover img { transform: scale(1.06); }
-.closer { text-align: center; }
-.closer h2 { margin-bottom: 20px; }

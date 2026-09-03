@@ -65,46 +65,51 @@
 .snakeBtn {
   position: relative;
   display: inline-flex;
-  padding: 2px;
   text-decoration: none;
-  isolation: isolate;
 }
-.snakeBtn::before,
-.snakeBtn::after {
-  content: '';
+.snakeSvg {
   position: absolute;
-  z-index: 0;
-}
-.snakeBtn::before {
   inset: 0;
-  background: rgba(255, 255, 255, 0.4);
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
 }
-.snakeBtn::after {
-  inset: -60%;
-  background: conic-gradient(from 0deg, transparent 0deg, transparent 320deg, #fff 345deg, #fff 360deg);
-  animation: snakeSpin 2.2s linear infinite;
+.snakeTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.snakeDash {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 16 84;
+  vector-effect: non-scaling-stroke;
+  animation: snakeDashMove 2.4s linear infinite;
+}
+@keyframes snakeDashMove {
+  to { stroke-dashoffset: -100; }
 }
 .snakeBtnInner {
   position: relative;
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   background: var(--lime);
   color: var(--ink);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 21px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 14px 24px;
+  padding: 21px 36px;
   white-space: nowrap;
   transition: background 0.15s ease;
 }
 .snakeBtn:hover .snakeBtnInner { background: var(--lime-hover); }
-
-@keyframes snakeSpin {
-  to { transform: rotate(360deg); }
-}
 
 .bottomBar {
   position: absolute;

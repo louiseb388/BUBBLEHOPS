@@ -1,4 +1,4 @@
-.oneOfOne { background: var(--lime); border-top: var(--border); border-bottom: var(--border); }
+.oneOfOne { background: var(--lime); border-bottom: var(--border); }
 .oneOfOneInner {
   display: flex;
   flex-wrap: wrap;
@@ -8,7 +8,7 @@
   padding-top: 64px;
   padding-bottom: 64px;
 }
-.oneOfOneInner h2 { color: var(--ink); }
+.oneOfOneInner h2 { color: var(--ink); font-size: clamp(45px, 5.1vw, 72px); }
 
 .footer { background: var(--ink); color: #fff; }
 
