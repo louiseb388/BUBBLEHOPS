@@ -19,7 +19,7 @@ export default function DesignPreview({
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, width, pointerEvents: 'none' }}>
       <div>
-        <ShoeStage base={base} side={design.left} which="left" active={false} onFocus={noop} onMoveWord={noop} onMoveSticker={noop} showStickerBadge={false} />
+        <ShoeStage base={base} side={design.left} which="left" active={false} onFocus={noop} onMoveWord={noop} onMoveSticker={noop} showStickerBadge={false} preview />
         {showLabels && (
           <p style={{ margin: '6px 0 0', textAlign: 'center', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>
             Left
@@ -27,7 +27,7 @@ export default function DesignPreview({
         )}
       </div>
       <div>
-        <ShoeStage base={base} side={design.right} which="right" active={false} onFocus={noop} onMoveWord={noop} onMoveSticker={noop} showStickerBadge={false} />
+        <ShoeStage base={base} side={design.right} which="right" active={false} onFocus={noop} onMoveWord={noop} onMoveSticker={noop} showStickerBadge={false} preview />
         {showLabels && (
           <p style={{ margin: '6px 0 0', textAlign: 'center', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>
             Right

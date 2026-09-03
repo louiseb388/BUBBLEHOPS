@@ -42,6 +42,8 @@ export default function BasketPage() {
                 Left: {line.design.left.blank ? 'Blank' : line.design.left.word || '—'}
                 <br />
                 Right: {line.design.right.blank ? 'Blank' : line.design.right.word || '—'}
+                <br />
+                Size: {line.size || 'Choose at checkout'}
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>

@@ -16,9 +16,9 @@ function colourValue(id: string) {
 // letter picks up 1-2 highlights regardless of what was typed — approximates the
 // hand-painted bubble-letter shine without needing per-letter artwork.
 const WORD_HIGHLIGHT_GRADIENT = [
-  'radial-gradient(ellipse 60% 38% at 28% 24%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.72) 45%, rgba(255,255,255,0) 75%)',
-  'radial-gradient(ellipse 34% 22% at 76% 60%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 78%)',
-  'radial-gradient(ellipse 20% 16% at 48% 88%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 80%)'
+  'radial-gradient(ellipse 60% 38% at 28% 24%, #fff 0%, #fff 88%, rgba(255,255,255,0) 90%)',
+  'radial-gradient(ellipse 34% 22% at 76% 60%, #fff 0%, #fff 85%, rgba(255,255,255,0) 88%)',
+  'radial-gradient(ellipse 20% 16% at 48% 88%, #fff 0%, #fff 82%, rgba(255,255,255,0) 86%)'
 ].join(', ');
 
 /** Black glyph on light fills, white glyph on dark/non-hex (e.g. oklch) fills, so the sticker face stays visible against any selected colour. */
@@ -46,6 +46,10 @@ type Props = {
   onRemoveSticker?: (id: string) => void;
   onFocus: () => void;
   showStickerBadge?: boolean;
+  /** Read-only thumbnail (basket/checkout order summary): skips the interactive
+   * designer's legibility floor on word/outline size, so word and stickers stay
+   * proportional to the shoe at any thumbnail size instead of looking oversized. */
+  preview?: boolean;
 };
 
 export default function ShoeStage({
@@ -58,7 +62,8 @@ export default function ShoeStage({
   onAddSticker,
   onRemoveSticker,
   onFocus,
-  showStickerBadge = true
+  showStickerBadge = true,
+  preview = false
 }: Props) {
   const flip = which === 'left';
   const ref = useRef<HTMLDivElement>(null);
@@ -122,9 +127,10 @@ export default function ShoeStage({
 
   const atMaxStickers = side.stickers.length >= MAX_STICKERS;
 
-  const wordFontSize = Math.min(128, Math.max(28, shoeWidth * 0.06));
-  const strokeThick = Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
-  const strokeThin = Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
+  const wordFontSize = preview ? shoeWidth * 0.06 : Math.min(128, Math.max(28, shoeWidth * 0.06));
+  const strokeThick = preview ? shoeWidth * 0.0154 : Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
+  const strokeThin = preview ? shoeWidth * 0.0075 : Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
+  const stickerSize = Math.max(10, shoeWidth * 0.061);
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
@@ -236,7 +242,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={45} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
+                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} />
               </div>
             ))}
           </div>
