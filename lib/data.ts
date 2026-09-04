@@ -245,11 +245,6 @@ export const GALLERY_IMAGES = [
   '/photos/05.jpg', '/photos/06.jpg', '/photos/07.jpg', '/photos/08.jpg', '/photos/09.jpg'
 ];
 
-export const INSTAGRAM_STRIP = [
-  '/photos/02.jpg', '/photos/03.jpg', '/photos/04.jpg',
-  '/photos/05.jpg', '/photos/06.jpg', '/photos/07.jpg', '/photos/08.jpg', '/photos/09.jpg'
-];
-
 export const ABOUT_USES = [
   { label: 'Paint', body: 'Angelus acrylic leather paint, thinned and built in layers. Non-toxic once cured, and it flexes with the leather instead of sitting on top of it.' },
   { label: 'Prep', body: 'Every panel that takes colour is stripped with acetone deglazer first — the step most custom pairs skip, and the reason they crack.' },

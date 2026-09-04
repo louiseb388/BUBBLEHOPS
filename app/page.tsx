@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import HeroCarousel from '@/components/HeroCarousel';
 import ProductGrid from '@/components/ProductGrid';
-import InstagramStrip from '@/components/InstagramStrip';
 import { ROUTES } from '@/lib/data';
 import styles from './page.module.css';
 
@@ -29,8 +28,6 @@ export default function HomePage() {
         </div>
         <ProductGrid />
       </section>
-
-      <InstagramStrip />
     </>
   );
 }
