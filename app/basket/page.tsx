@@ -31,7 +31,7 @@ export default function BasketPage() {
       <div style={{ borderTop: '2px solid var(--ink)' }}>
         {lines.map((line) => (
           <div key={line.id} className={styles.line}>
-            <DesignPreview design={line.design} width={220} />
+            <DesignPreview design={line.design} width="100%" gap={0} />
             <div>
               <p style={{ margin: '0 0 4px', fontWeight: 800, textTransform: 'uppercase' }}>{line.baseName}</p>
               <p className="body-text" style={{ margin: 0 }}>

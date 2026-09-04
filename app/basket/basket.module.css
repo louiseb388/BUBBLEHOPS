@@ -1,6 +1,6 @@
 .line {
   display: grid;
-  grid-template-columns: 220px 1fr auto;
+  grid-template-columns: 440px 1fr auto;
   gap: 24px;
   align-items: center;
   padding: 24px 0;

@@ -7,17 +7,19 @@ import ShoeStage from './designer/ShoeStage';
 export default function DesignPreview({
   design,
   width = 220,
-  showLabels = false
+  showLabels = false,
+  gap = 4
 }: {
   design: DesignState;
   width?: number | string;
   showLabels?: boolean;
+  gap?: number;
 }) {
   const base = getBase(design.baseId);
   if (!base) return null;
   const noop = () => {};
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, width, pointerEvents: 'none' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap, width, pointerEvents: 'none' }}>
       <div>
         <ShoeStage base={base} side={design.left} which="left" active={false} onFocus={noop} onMoveWord={noop} onMoveSticker={noop} showStickerBadge={false} preview />
         {showLabels && (
