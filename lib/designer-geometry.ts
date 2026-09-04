@@ -83,3 +83,45 @@ export function panelPathD(baseId: string): string {
   const base = getBase(baseId);
   return PANELS[base?.panel || 'base01'] || PANELS.base01;
 }
+
+/** 4 corners + 4 edge midpoints of a (possibly rotated) wPx x hPx rectangle centered at
+ * (cxPct,cyPct), converted back to the panel's 0-100 percentage space. Sampling the whole
+ * perimeter rather than just the center point catches a rotated or oversized word/sticker
+ * poking out even while its own anchor point stays inside — important against a concave
+ * outline like the scalloped strap panel, where a corner can cross a notch the center misses. */
+function rectPerimeterSamples(cxPct: number, cyPct: number, wPx: number, hPx: number, rotDeg: number, stageW: number, stageH: number): Pt[] {
+  const cxPx = (cxPct / 100) * stageW;
+  const cyPx = (cyPct / 100) * stageH;
+  const rad = (rotDeg * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const hw = wPx / 2;
+  const hh = hPx / 2;
+  const local: [number, number][] = [
+    [-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh],
+    [0, -hh], [hw, 0], [0, hh], [-hw, 0]
+  ];
+  return local.map(([lx, ly]) => {
+    const rx = lx * cos - ly * sin;
+    const ry = lx * sin + ly * cos;
+    return { x: ((cxPx + rx) / stageW) * 100, y: ((cyPx + ry) / stageH) * 100 };
+  });
+}
+
+/** True if any part of a (possibly rotated) wPx x hPx rectangle centered at (cxPct,cyPct) —
+ * a word or sticker's own bounding box — extends outside the panel polygon, not just its
+ * center anchor point. */
+export function isRectOutsidePanel(
+  poly: Pt[],
+  cxPct: number,
+  cyPct: number,
+  wPx: number,
+  hPx: number,
+  rotDeg: number,
+  stageW: number,
+  stageH: number
+): boolean {
+  if (poly.length < 3 || stageW <= 0 || stageH <= 0) return false;
+  const pts = rectPerimeterSamples(cxPct, cyPct, wPx, hPx, rotDeg, stageW, stageH);
+  return pts.some((p) => !isInsidePolygon(p, poly));
+}

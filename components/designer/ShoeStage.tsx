@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import type { BaseTrainer } from '@/lib/data';
 import { METALLIC_STROKE_TONES, METALLIC_SWATCH_GRADIENT, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
-import { isInsidePolygon, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
+import { isRectOutsidePanel, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
 import BubbleMark from '../BubbleMark';
 import styles from './ShoeStage.module.css';
 
@@ -68,8 +68,12 @@ export default function ShoeStage({
   // together in the middle (toes pointing outward) rather than toe-to-toe.
   const flip = which === 'right';
   const ref = useRef<HTMLDivElement>(null);
+  const wordRef = useRef<HTMLSpanElement>(null);
   const [dragStickerId, setDragStickerId] = useState<string | null>(null);
   const [shoeWidth, setShoeWidth] = useState(420);
+  // Natural (pre-rotate, pre-scale) size of the rendered word, so the "outside" check below
+  // can test its actual rotated bounding box instead of just its center anchor point.
+  const [wordNaturalSize, setWordNaturalSize] = useState({ w: 0, h: 0 });
 
   // Tracked in JS rather than via CSS container queries: `container-type` establishes
   // a blend-isolation boundary in Chromium, which cuts the word's mix-blend-mode off
@@ -120,8 +124,6 @@ export default function ShoeStage({
     setDragStickerId(null);
   }
 
-  const wordOutside = side.word && !isInsidePolygon({ x: side.x, y: side.y }, panelForBase(base.id));
-
   const wordColour = colourValue(side.colour);
   const outlineColour = side.outline === 'none' ? 'transparent' : colourValue(side.outline);
   const stickerGlyph = glyphFor(wordColour);
@@ -139,6 +141,22 @@ export default function ShoeStage({
   // scaled purely off shoeWidth, so at small (mobile) widths they fell out of proportion with the
   // word, which clamps to a 28px floor there.
   const stickerSize = wordFontSize;
+
+  useLayoutEffect(() => {
+    const el = wordRef.current;
+    if (!el) return;
+    setWordNaturalSize({ w: el.offsetWidth, h: el.offsetHeight });
+  }, [side.word, wordFontSize]);
+
+  const stageHeight = shoeWidth / base.ar;
+  const panel = panelForBase(base.id);
+  const wordOutside =
+    !!side.word &&
+    isRectOutsidePanel(panel, side.x, side.y, wordNaturalSize.w * side.size, wordNaturalSize.h * side.size, side.rot, shoeWidth, stageHeight);
+  const stickerOutside = side.stickers.some((s) =>
+    isRectOutsidePanel(panel, s.x, s.y, stickerSize * s.scale, stickerSize * s.scale, s.rot || 0, shoeWidth, stageHeight)
+  );
+  const showGuide = !side.blank && (wordOutside || stickerOutside);
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
@@ -180,7 +198,7 @@ export default function ShoeStage({
         >
           <img src={base.img} alt="" className={styles.photo} draggable={false} />
 
-          {wordOutside && (
+          {showGuide && (
             <svg className={styles.outlineSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
               <path d={panelPathD(base.id)} className={styles.outlinePath} />
             </svg>
@@ -197,6 +215,7 @@ export default function ShoeStage({
                 }}
               >
                 <span
+                  ref={wordRef}
                   className={`${styles.word} ${styles.wordGraffiti}`}
                   style={
                     (metallicFill
@@ -298,7 +317,7 @@ export default function ShoeStage({
         </div>
 
         {base.placeholderPhoto && <span className={styles.placeholderPhoto}>Placeholder photo</span>}
-        {wordOutside && <span className={styles.guideCaption}>Keep your text on the shoe</span>}
+        {showGuide && <span className={styles.guideCaption}>Keep your design on the shoe</span>}
       </div>
     </div>
   );
