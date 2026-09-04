@@ -317,7 +317,7 @@ export default function ShoeStage({
         </div>
 
         {base.placeholderPhoto && <span className={styles.placeholderPhoto}>Placeholder photo</span>}
-        {showGuide && <span className={styles.guideCaption}>Keep your design on the shoe</span>}
+        {showGuide && <span className={styles.guideCaption}>Please keep inside here</span>}
       </div>
     </div>
   );

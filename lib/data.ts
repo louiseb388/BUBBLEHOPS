@@ -256,8 +256,8 @@ export const ABOUT_USES = [
 // word/sticker placement (and drag "bounce back") within the shoe's own canvas area, not for
 // visual clipping. base06 is the Adidas Advantage (triple-velcro) shape shared by all four
 // colourways above, since they're the same shoe. Traced from the customer-supplied reference
-// outline (toe to heel along the upper, scalloped around each strap) rather than the smaller
-// approximation used before, so the active area now matches that reference exactly.
+// outline (toe to heel along the upper, scalloped around each strap), with the bottom edge
+// nudged down 5 points past that reference to use a bit more of the panel above the sole.
 export const PANELS: Record<string, string> = {
-  "base06": "M 98,42 L 96,33 L 90,36 L 87,34 L 85,30 L 80,34 L 74,33 L 68,27 L 62,14 L 59,13 L 56,15 L 57,25 L 55,30 L 51,30 L 48,25 L 45,28 L 45,34 L 43,38 L 40,40 L 36,36 L 34,39 L 33,44 L 30,51 L 27,50 L 25,44 L 21,48 L 17,57 L 11,76 L 14,78 L 20,81 L 32,82 L 68,73 L 92,69 L 98,65 Z"
+  "base06": "M 98,42 L 96,33 L 90,36 L 87,34 L 85,30 L 80,34 L 74,33 L 68,27 L 62,14 L 59,13 L 56,15 L 57,25 L 55,30 L 51,30 L 48,25 L 45,28 L 45,34 L 43,38 L 40,40 L 36,36 L 34,39 L 33,44 L 30,51 L 27,50 L 25,44 L 21,48 L 17,57 L 11,81 L 14,83 L 20,86 L 32,87 L 68,78 L 92,74 L 98,70 Z"
 };
