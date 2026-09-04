@@ -49,7 +49,9 @@ export default function DesignerClient() {
   const [, forceRender] = useState(0);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
 
-  // Load: URL share param > localStorage > query base param > first base.
+  // Load: URL share param > explicit query base param (e.g. clicked from a base-shoe
+  // card) > localStorage > first base. An explicit ?base= means the visitor just chose
+  // that shoe, so it must win over whatever design happens to be stored from before.
   useEffect(() => {
     const shared = searchParams.get('d');
     if (shared) {
@@ -58,6 +60,11 @@ export default function DesignerClient() {
         setDesign(decoded);
         return;
       }
+    }
+    const baseParam = searchParams.get('base');
+    if (baseParam && getBase(baseParam)) {
+      setDesign(defaultDesign(baseParam));
+      return;
     }
     const stored = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null;
     if (stored) {
@@ -68,9 +75,7 @@ export default function DesignerClient() {
         /* fall through */
       }
     }
-    const baseParam = searchParams.get('base');
-    const initialBase = baseParam && getBase(baseParam) ? baseParam : BASES_IN_STOCK[0].id;
-    setDesign(defaultDesign(initialBase));
+    setDesign(defaultDesign(BASES_IN_STOCK[0].id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
