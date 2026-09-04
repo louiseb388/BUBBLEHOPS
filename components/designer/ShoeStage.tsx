@@ -4,7 +4,7 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 import type { BaseTrainer } from '@/lib/data';
 import { METALLIC_STROKE_TONES, METALLIC_SWATCH_GRADIENT, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
-import { isInsidePolygon, panelClipPath, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
+import { isInsidePolygon, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
 import BubbleMark from '../BubbleMark';
 import styles from './ShoeStage.module.css';
 
@@ -184,7 +184,7 @@ export default function ShoeStage({
             </svg>
           )}
 
-          <div className={styles.paintLayer} style={{ clipPath: panelClipPath(base.id) }}>
+          <div className={styles.paintLayer}>
             {!side.blank && side.word && (
               <div
                 className={styles.wordWrap}
