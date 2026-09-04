@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
@@ -29,6 +29,7 @@ export default function CheckoutClient() {
   const cancelled = searchParams.get('cancelled') === '1';
 
   const [step, setStep] = useState<CheckoutStep>('bag');
+  const [initialStepResolved, setInitialStepResolved] = useState(false);
   const [added, setAdded] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('standard');
   const [name, setName] = useState('');
@@ -43,6 +44,14 @@ export default function CheckoutClient() {
   const allSized = lines.length > 0 && lines.every((l) => !!l.size);
   const total = cartTotal + DELIVERY_COST[deliveryMethod];
   const deliveryLabel = deliveryMethod === 'standard' ? 'Free' : `£${DELIVERY_COST.express}`;
+
+  // Arriving from the basket with every line already sized means the size step is
+  // done — skip straight to delivery instead of sending them back through it.
+  useEffect(() => {
+    if (!ready || initialStepResolved) return;
+    if (allSized) setStep('delivery');
+    setInitialStepResolved(true);
+  }, [ready, initialStepResolved, allSized]);
 
   function stockFor(baseId: string, size: string) {
     return stock[baseId]?.[size] ?? 0;
@@ -133,10 +142,8 @@ export default function CheckoutClient() {
                     style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
-                      border: '2px solid var(--ink)',
-                      marginRight: -2,
-                      marginBottom: 20,
-                      overflow: 'hidden'
+                      gap: 8,
+                      marginBottom: 20
                     }}
                   >
                     {SIZES.map((size) => {
@@ -151,8 +158,6 @@ export default function CheckoutClient() {
                           disabled={soldOut}
                           onClick={() => setLineSize(l.id, size)}
                           style={{
-                            borderRight: '2px solid var(--ink)',
-                            borderBottom: '2px solid var(--ink)',
                             padding: '12px 8px',
                             background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
                             opacity: soldOut ? 0.55 : 1,
@@ -172,12 +177,12 @@ export default function CheckoutClient() {
                   <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
                     Quantity
                   </p>
-                  <div style={{ display: 'flex', alignItems: 'center', border: '2px solid var(--ink)', width: 'fit-content' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: '#fff', width: 'fit-content' }}>
                     <button
                       type="button"
                       onClick={() => setLineQty(l.id, l.qty - 1)}
                       disabled={l.qty <= 1}
-                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderRight: '2px solid var(--ink)' }}
+                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16 }}
                     >
                       −
                     </button>
@@ -186,7 +191,7 @@ export default function CheckoutClient() {
                       type="button"
                       onClick={() => setLineQty(l.id, l.qty + 1)}
                       disabled={l.qty >= 9}
-                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16, borderLeft: '2px solid var(--ink)' }}
+                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16 }}
                     >
                       +
                     </button>
@@ -199,7 +204,7 @@ export default function CheckoutClient() {
                 <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
                   Delivery
                 </p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '2px solid var(--ink)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
                     const active = deliveryMethod === m;
                     return (
@@ -211,8 +216,7 @@ export default function CheckoutClient() {
                           textAlign: 'left',
                           padding: '12px 14px',
                           background: active ? 'var(--ink)' : '#fff',
-                          color: active ? '#fff' : 'var(--ink)',
-                          borderLeft: m === 'express' ? '2px solid var(--ink)' : 'none'
+                          color: active ? '#fff' : 'var(--ink)'
                         }}
                       >
                         <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
