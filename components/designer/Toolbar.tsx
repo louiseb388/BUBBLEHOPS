@@ -1,25 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { BASES_IN_STOCK, type BaseTrainer } from '@/lib/data';
+import { BASES_IN_STOCK } from '@/lib/data';
 import { isSoldOut, sizesInStock, type Stock } from '@/lib/inventory';
 import styles from './Toolbar.module.css';
 
 type Props = {
-  base: BaseTrainer;
   bothPainted: boolean;
   stock: Stock;
   onPickBase: (id: string) => void;
 };
 
-export default function Toolbar({ base, bothPainted, stock, onPickBase }: Props) {
+export default function Toolbar({ bothPainted, stock, onPickBase }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className={styles.toolbar}>
       <div className={styles.inner}>
         <div className={styles.left}>
-          <span className={styles.baseName}>{base.name}</span>
           <span className={styles.status}>{bothPainted ? 'Both shoes painted' : 'One painted'}</span>
           <div className={styles.dropdownWrap}>
             <button className={styles.moreBasesBtn} onClick={() => setOpen((v) => !v)} aria-expanded={open}>

@@ -110,12 +110,18 @@ export const WORD_COLOURS: WordColour[] = [
   { id: 'brown', value: '#7a4a1e', label: 'Brown' }
 ];
 
-/** Swatch-only gloss treatment for the two metallic colours — the underlying
- * `value` above stays a flat hex so word-fill/outline rendering elsewhere is
- * unaffected; only the picker swatch gets the shiny gradient look. */
+/** Gloss gradient for the two metallic colours — used both for the picker swatch
+ * and, via background-clip:text, for the painted word's fill on the shoe itself. */
 export const METALLIC_SWATCH_GRADIENT: Record<string, string> = {
   grey: 'linear-gradient(135deg, #d8d8d8 0%, #f8f8f8 30%, #8a8a8a 55%, #e8e8e8 80%, #b0b0b0 100%)',
   gold: 'linear-gradient(135deg, #d4af37 0%, #fbf3b9 30%, #a4780a 55%, #f3d675 80%, #b8860b 100%)'
+};
+
+/** A stroke can't take a CSS gradient, so the metallic outline is faked with a darker
+ * base tone plus a thinner lighter tone layered on top, reading as a subtle bevel. */
+export const METALLIC_STROKE_TONES: Record<string, { base: string; highlight: string }> = {
+  grey: { base: '#9a9a9a', highlight: '#f2f2f2' },
+  gold: { base: '#a4780a', highlight: '#f6e27a' }
 };
 
 export const SIZES = ['UK 10', 'UK 11', 'UK 12', 'UK 13', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'];

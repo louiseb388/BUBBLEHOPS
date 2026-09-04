@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 import type { BaseTrainer } from '@/lib/data';
-import { SOLE_ABOVE_CLIP, WORD_COLOURS } from '@/lib/data';
+import { METALLIC_STROKE_TONES, METALLIC_SWATCH_GRADIENT, SOLE_ABOVE_CLIP, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
 import { isInsidePolygon, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
 import BubbleMark from '../BubbleMark';
@@ -43,6 +43,7 @@ type Props = {
   onMoveSticker: (id: string, x: number, y: number) => void;
   onAddSticker?: () => void;
   onRemoveSticker?: (id: string) => void;
+  onSurpriseMe?: () => void;
   onFocus: () => void;
   showStickerBadge?: boolean;
   /** Read-only thumbnail (basket/checkout order summary): skips the interactive
@@ -60,6 +61,7 @@ export default function ShoeStage({
   onMoveSticker,
   onAddSticker,
   onRemoveSticker,
+  onSurpriseMe,
   onFocus,
   showStickerBadge = true,
   preview = false
@@ -126,6 +128,9 @@ export default function ShoeStage({
 
   const atMaxStickers = side.stickers.length >= MAX_STICKERS;
 
+  const metallicFill = METALLIC_SWATCH_GRADIENT[side.colour];
+  const metallicOutline = side.outline !== 'none' ? METALLIC_STROKE_TONES[side.outline] : undefined;
+
   const wordFontSize = preview ? shoeWidth * 0.06 : Math.min(128, Math.max(28, shoeWidth * 0.06));
   const strokeThick = preview ? shoeWidth * 0.0154 : Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
   const strokeThin = preview ? shoeWidth * 0.0075 : Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
@@ -143,6 +148,12 @@ export default function ShoeStage({
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
             <span>Drag to move · Double-click to remove</span>
           </div>
+          <span className={styles.baseNameInline}>{base.name}</span>
+          {onSurpriseMe && (
+            <button type="button" className="btn btn-lime btn-sm" onClick={onSurpriseMe}>
+              Surprise me
+            </button>
+          )}
         </div>
       )}
 
@@ -185,10 +196,17 @@ export default function ShoeStage({
               >
                 <span
                   className={`${styles.word} ${styles.wordGraffiti}`}
-                  style={{
-                    fontSize: wordFontSize,
-                    color: wordColour
-                  } as React.CSSProperties}
+                  style={
+                    (metallicFill
+                      ? {
+                          fontSize: wordFontSize,
+                          backgroundImage: metallicFill,
+                          WebkitBackgroundClip: 'text',
+                          backgroundClip: 'text',
+                          color: 'transparent'
+                        }
+                      : { fontSize: wordFontSize, color: wordColour }) as React.CSSProperties
+                  }
                 >
                   {side.word}
                 </span>
@@ -209,7 +227,21 @@ export default function ShoeStage({
                     style={{
                       fontSize: wordFontSize,
                       color: 'transparent',
-                      WebkitTextStroke: `${strokeThick}px ${outlineColour}`,
+                      WebkitTextStroke: `${strokeThick}px ${metallicOutline?.base ?? outlineColour}`,
+                      paintOrder: 'stroke fill'
+                    } as React.CSSProperties}
+                    aria-hidden="true"
+                  >
+                    {side.word}
+                  </span>
+                )}
+                {metallicOutline && (
+                  <span
+                    className={`${styles.word} ${styles.wordGraffiti} ${styles.wordOutlineLayer}`}
+                    style={{
+                      fontSize: wordFontSize,
+                      color: 'transparent',
+                      WebkitTextStroke: `${strokeThick * 0.45}px ${metallicOutline.highlight}`,
                       paintOrder: 'stroke fill'
                     } as React.CSSProperties}
                     aria-hidden="true"

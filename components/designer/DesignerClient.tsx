@@ -215,6 +215,7 @@ export default function DesignerClient() {
           beginChange();
           setDesign((d) => (d ? { ...d, [which]: { ...d[which], stickers: d[which].stickers.filter((s) => s.id !== id) } } : d));
         }}
+        onSurpriseMe={surpriseMe}
       />
     );
   }
@@ -261,9 +262,6 @@ export default function DesignerClient() {
           <button className="btn btn-outline-white btn-sm" onClick={redo} disabled={redoStack.current.length === 0} aria-label="Redo">
             ↻
           </button>
-          <button className="btn btn-lime btn-sm" onClick={surpriseMe}>
-            Surprise me
-          </button>
         </div>
       </div>
     );
@@ -281,7 +279,6 @@ export default function DesignerClient() {
   return (
     <div>
       <Toolbar
-        base={base}
         bothPainted={bothPainted}
         stock={stock}
         onPickBase={pickBase}
