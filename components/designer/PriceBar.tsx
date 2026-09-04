@@ -6,7 +6,8 @@ import styles from './PriceBar.module.css';
 type Props = {
   price: number;
   bothPainted: boolean;
-  onAddToBasket: () => void;
+  /** Returns false to block checkout — e.g. artwork still outside the paintable boundary. */
+  onAddToBasket: () => boolean;
   onSaveDesign: () => void;
   onShareDesign: () => void;
 };
@@ -15,8 +16,7 @@ export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesi
   const router = useRouter();
 
   function handleAdd() {
-    onAddToBasket();
-    router.push('/checkout');
+    if (onAddToBasket()) router.push('/checkout');
   }
 
   return (

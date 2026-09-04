@@ -48,6 +48,16 @@ export default function DesignerClient() {
   const undoStack = useRef<DesignState[]>([]);
   const redoStack = useRef<DesignState[]>([]);
   const [, forceRender] = useState(0);
+
+  // Tracks whether either shoe's word/stickers currently cross the paintable boundary, so
+  // checkout can be blocked with a prompt to reposition instead of silently letting artwork
+  // that would print off the panel through. Stable callbacks so ShoeStage's own effect (which
+  // reports on change) doesn't re-fire on every unrelated re-render.
+  const [leftOutside, setLeftOutside] = useState(false);
+  const [rightOutside, setRightOutside] = useState(false);
+  const [showRepositionWarning, setShowRepositionWarning] = useState(false);
+  const onLeftOutsideChange = useCallback((outside: boolean) => setLeftOutside(outside), []);
+  const onRightOutsideChange = useCallback((outside: boolean) => setRightOutside(outside), []);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
 
   // Load: URL share param > explicit query base param (e.g. clicked from a base-shoe
@@ -191,10 +201,17 @@ export default function DesignerClient() {
     setTimeout(() => setSaveMsg(null), 3000);
   }
 
-  function addToBasket() {
-    if (!design || !base) return;
+  /** Returns whether checkout should proceed — false blocks it, prompting the shopper to
+   * reposition anything currently outside the paintable boundary on either shoe first. */
+  function addToBasket(): boolean {
+    if (!design || !base) return false;
+    if (leftOutside || rightOutside) {
+      setShowRepositionWarning(true);
+      return false;
+    }
     const price = priceForDesign(base.price, design);
     addLine({ baseId: base.id, baseName: base.name, design, price, size: null });
+    return true;
   }
 
   async function saveDesign() {
@@ -252,6 +269,7 @@ export default function DesignerClient() {
           beginChange();
           setDesign((d) => (d ? { ...d, [which]: { ...d[which], stickers: d[which].stickers.filter((s) => s.id !== id) } } : d));
         }}
+        onOutsideChange={which === 'left' ? onLeftOutsideChange : onRightOutsideChange}
       />
     );
   }
@@ -385,6 +403,28 @@ export default function DesignerClient() {
       {saveMsg && (
         <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', background: 'var(--ink)', color: '#fff', padding: '12px 20px', border: '2px solid var(--lime)', zIndex: 300 }}>
           {saveMsg}
+        </div>
+      )}
+
+      {showRepositionWarning && (
+        <div className={styles.popupBackdrop} role="dialog" aria-modal="true">
+          <div className={styles.popup}>
+            <p className="eyebrow" style={{ color: 'var(--olive)', marginBottom: 12 }}>Reposition needed</p>
+            <h3 className="h-display h2" style={{ marginBottom: 16 }}>
+              Some of your design is outside the {leftOutside && rightOutside ? 'boundary on both shoes' : leftOutside ? 'left shoe’s boundary' : 'right shoe’s boundary'}.
+            </h3>
+            <div className={styles.popupActions}>
+              <button
+                className="btn btn-lime"
+                onClick={() => {
+                  setActiveSide(leftOutside ? 'left' : 'right');
+                  setShowRepositionWarning(false);
+                }}
+              >
+                Reposition it →
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

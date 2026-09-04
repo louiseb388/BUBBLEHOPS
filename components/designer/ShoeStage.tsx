@@ -49,6 +49,9 @@ type Props = {
    * designer's legibility floor on word/outline size, so word and stickers stay
    * proportional to the shoe at any thumbnail size instead of looking oversized. */
   preview?: boolean;
+  /** Fires whenever the word/sticker "outside the boundary" state changes, so a parent
+   * (checkout gating) can track it without re-deriving the same geometry itself. */
+  onOutsideChange?: (outside: boolean) => void;
 };
 
 export default function ShoeStage({
@@ -62,7 +65,8 @@ export default function ShoeStage({
   onRemoveSticker,
   onFocus,
   showStickerBadge = true,
-  preview = false
+  preview = false,
+  onOutsideChange
 }: Props) {
   // Mirror the right stage instead of the left, so each pair's heels sit
   // together in the middle (toes pointing outward) rather than toe-to-toe.
@@ -157,6 +161,10 @@ export default function ShoeStage({
     isRectOutsidePanel(panel, s.x, s.y, stickerSize * s.scale, stickerSize * s.scale, s.rot || 0, shoeWidth, stageHeight)
   );
   const showGuide = !side.blank && (wordOutside || stickerOutside);
+
+  useEffect(() => {
+    onOutsideChange?.(showGuide);
+  }, [showGuide, onOutsideChange]);
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
