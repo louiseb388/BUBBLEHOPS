@@ -27,7 +27,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
               id={`${label}-word`}
               className={styles.input}
               placeholder="Type a name or word"
-              maxLength={12}
+              maxLength={9}
               value={side.word}
               onChange={(e) => discrete({ word: e.target.value })}
             />
