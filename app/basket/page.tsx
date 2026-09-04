@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
 import DesignPreview from '@/components/DesignPreview';
+import styles from './basket.module.css';
 
 export default function BasketPage() {
   const { lines, removeLine, total, ready } = useCart();
@@ -24,17 +25,7 @@ export default function BasketPage() {
 
       <div style={{ borderTop: '2px solid var(--ink)' }}>
         {lines.map((line) => (
-          <div
-            key={line.id}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '220px 1fr auto',
-              gap: 24,
-              alignItems: 'center',
-              padding: '24px 0',
-              borderBottom: '2px solid var(--ink)'
-            }}
-          >
+          <div key={line.id} className={styles.line}>
             <DesignPreview design={line.design} width={220} />
             <div>
               <p style={{ margin: '0 0 4px', fontWeight: 800, textTransform: 'uppercase' }}>{line.baseName}</p>
@@ -46,7 +37,7 @@ export default function BasketPage() {
                 Size: {line.size || 'Not set'}
               </p>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div className={styles.priceCol}>
               <p style={{ margin: '0 0 12px', fontWeight: 800, fontSize: 18 }}>£{line.price}</p>
               <button className="btn btn-outline btn-sm" onClick={() => removeLine(line.id)}>Remove</button>
             </div>

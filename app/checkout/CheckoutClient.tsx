@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
 import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
+import styles from './checkout.module.css';
 
 type DeliveryMethod = 'standard' | 'express';
 const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
@@ -100,7 +101,7 @@ export default function CheckoutClient() {
 
       <CheckoutProgress step={step} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 56 }}>
+      <div className={styles.grid}>
         <div>
           {step === 'bag' && (
             <div>
@@ -197,7 +198,7 @@ export default function CheckoutClient() {
                 Autofill saved address
               </button>
 
-              <div style={{ display: 'grid', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
                 <Field label="Full name" value={name} onChange={setName} />
                 <Field label="Email" type="email" value={email} onChange={setEmail} />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -260,7 +261,7 @@ export default function CheckoutClient() {
           )}
         </div>
 
-        <div style={{ borderLeft: '2px solid rgba(32,30,29,0.2)', paddingLeft: 40 }}>
+        <div className={styles.sidebar}>
           <OrderSummary lines={lines} total={total} deliveryLabel={deliveryLabel} />
         </div>
       </div>
@@ -289,7 +290,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
+        style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, width: '100%', boxSizing: 'border-box' }}
       />
     </label>
   );

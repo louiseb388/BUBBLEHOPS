@@ -66,7 +66,7 @@ export default function ContactForm() {
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
+          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, width: '100%', boxSizing: 'border-box' }}
         />
       </label>
 
@@ -77,7 +77,7 @@ export default function ContactForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
+          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, width: '100%', boxSizing: 'border-box' }}
         />
       </label>
 
@@ -88,7 +88,7 @@ export default function ContactForm() {
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, resize: 'vertical' }}
+          style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
         />
       </label>
 

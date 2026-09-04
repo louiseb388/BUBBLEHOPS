@@ -51,7 +51,7 @@ function SignInInner() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15 }}
+              style={{ border: '2px solid var(--ink)', padding: '12px 14px', fontSize: 15, width: '100%', boxSizing: 'border-box' }}
             />
           </label>
           {message && <p style={{ color: '#b3261e', margin: 0 }}>{message}</p>}

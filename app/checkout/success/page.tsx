@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCart, type BagLine } from '@/lib/cart-context';
 import CheckoutProgress from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
+import styles from '../checkout.module.css';
 
 function orderRef(sessionId: string) {
   const tail = sessionId.replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase();
@@ -35,7 +36,7 @@ function SuccessInner() {
 
       <CheckoutProgress step="payment" complete />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 56 }}>
+      <div className={styles.grid}>
         <div>
           <h2 className="h-display h3" style={{ marginBottom: 4 }}>
             {sessionId ? `Order ${orderRef(sessionId)} is in` : 'Order confirmed'}
@@ -52,7 +53,7 @@ function SuccessInner() {
         </div>
 
         {orderLines.length > 0 && (
-          <div style={{ borderLeft: '2px solid rgba(32,30,29,0.2)', paddingLeft: 40 }}>
+          <div className={styles.sidebar}>
             <OrderSummary lines={orderLines} total={orderTotal} deliveryLabel="Included" />
           </div>
         )}
