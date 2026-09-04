@@ -45,9 +45,6 @@ type Props = {
   onRemoveSticker?: (id: string) => void;
   onFocus: () => void;
   showStickerBadge?: boolean;
-  /** Show the base trainer's name inline with the sticker badge — pass this for only
-   * one of the two stages (left) so the name appears once, not once per shoe. */
-  showBaseName?: boolean;
   /** Read-only thumbnail (basket/checkout order summary): skips the interactive
    * designer's legibility floor on word/outline size, so word and stickers stay
    * proportional to the shoe at any thumbnail size instead of looking oversized. */
@@ -65,7 +62,6 @@ export default function ShoeStage({
   onRemoveSticker,
   onFocus,
   showStickerBadge = true,
-  showBaseName = false,
   preview = false
 }: Props) {
   const flip = which === 'left';
@@ -150,7 +146,6 @@ export default function ShoeStage({
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
             <span>Drag to move · Double-click to remove</span>
           </div>
-          {showBaseName && <span className={styles.baseNameInline}>{base.name}</span>}
         </div>
       )}
 
@@ -160,7 +155,7 @@ export default function ShoeStage({
             type="button"
             className={`${styles.stickerBadge} ${which === 'right' ? styles.stickerBadgeRight : ''}`}
             onClick={onAddSticker}
-            disabled={atMaxStickers}
+            disabled={atMaxStickers || side.blank}
             aria-label="Add a BUBBLEHOPS sticker"
           >
             <BubbleMark

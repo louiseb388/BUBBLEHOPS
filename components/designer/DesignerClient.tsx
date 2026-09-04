@@ -195,7 +195,6 @@ export default function DesignerClient() {
         side={side}
         which={which}
         active={activeSide === which}
-        showBaseName={which === 'left'}
         onFocus={() => setActiveSide(which)}
         onMoveWord={(x, y) => {
           patchSide(which, { x, y });
@@ -232,8 +231,7 @@ export default function DesignerClient() {
             className={`btn btn-outline-white btn-sm ${side.blank ? styles.actionBarActive : ''}`}
             onClick={() => {
               beginChange();
-              const nextBlank = !side.blank;
-              patchSide(which, nextBlank ? { blank: true, stickers: [] } : { blank: false });
+              patchSide(which, { blank: !side.blank });
             }}
           >
             Leave blank
@@ -282,7 +280,7 @@ export default function DesignerClient() {
   return (
     <div>
       <Toolbar
-        bothPainted={bothPainted}
+        base={base}
         stock={stock}
         onPickBase={pickBase}
       />

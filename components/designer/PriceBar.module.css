@@ -18,3 +18,9 @@
 .price { font-weight: 900; font-size: 20px; }
 .priceNote { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.iconRow { display: flex; gap: 10px; }
+
+@media (max-width: 720px) {
+  .actions { flex-direction: column; align-items: stretch; width: 100%; }
+  .iconRow { justify-content: center; }
+}

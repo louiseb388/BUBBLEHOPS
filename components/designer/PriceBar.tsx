@@ -28,12 +28,14 @@ export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesi
         </div>
         <div className={styles.actions}>
           <button className="btn btn-lime" onClick={handleAdd}>Choose size and checkout →</button>
-          <button className="btn btn-outline-white" onClick={onSaveDesign} aria-label="Save design">
-            <SaveIcon />
-          </button>
-          <button className="btn btn-outline-white" onClick={onShareDesign} aria-label="Share design">
-            <ShareIcon />
-          </button>
+          <div className={styles.iconRow}>
+            <button className="btn btn-outline-white" onClick={onSaveDesign} aria-label="Save design">
+              <SaveIcon />
+            </button>
+            <button className="btn btn-outline-white" onClick={onShareDesign} aria-label="Share design">
+              <ShareIcon />
+            </button>
+          </div>
         </div>
       </div>
     </div>

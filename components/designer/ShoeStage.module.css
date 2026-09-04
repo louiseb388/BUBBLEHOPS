@@ -11,13 +11,6 @@
 .stageOuterRight .badgeRow { flex-direction: row-reverse; }
 .stageOuterRight .badgeRow .badgeLabel { margin-right: 0; margin-left: auto; text-align: right; }
 
-.baseNameInline {
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 11px;
-  color: var(--ink);
-}
-
 .stickerBadge {
   position: absolute;
   top: 12px;
