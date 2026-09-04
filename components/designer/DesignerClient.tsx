@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BASES_IN_STOCK, getBase, WORD_COLOURS } from '@/lib/data';
+import { BASES_IN_STOCK, SIZES, getBase, WORD_COLOURS } from '@/lib/data';
 import { useStock, isSoldOut } from '@/lib/inventory';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
@@ -43,6 +43,7 @@ export default function DesignerClient() {
   const { session } = useAuth();
 
   const [design, setDesign] = useState<DesignState | null>(null);
+  const [size, setSize] = useState<string | null>(null);
   const [activeSide, setActiveSide] = useState<'left' | 'right'>('left');
   const undoStack = useRef<DesignState[]>([]);
   const redoStack = useRef<DesignState[]>([]);
@@ -114,6 +115,7 @@ export default function DesignerClient() {
   function pickBase(id: string) {
     beginChange();
     setDesign((d) => (d ? { ...d, baseId: id } : d));
+    setSize(null);
   }
 
   function surpriseMe() {
@@ -135,6 +137,7 @@ export default function DesignerClient() {
       stickers: Math.random() > 0.5 ? [randomSticker()] : []
     });
     setDesign({ baseId: randomBase.id, left: randomSide(), right: randomSide() });
+    setSize(null);
   }
 
   async function shareDesign() {
@@ -155,9 +158,10 @@ export default function DesignerClient() {
   }
 
   function addToBasket() {
-    if (!design || !base) return;
+    if (!design || !base || !size) return;
     const price = priceForDesign(base.price, design);
-    addLine({ baseId: base.id, baseName: base.name, design, price, size: null });
+    addLine({ baseId: base.id, baseName: base.name, design, price, size });
+    setSize(null);
   }
 
   async function saveDesign() {
@@ -183,6 +187,10 @@ export default function DesignerClient() {
 
   const bothPainted = !!design && !design.left.blank && !design.right.blank;
   const price = useMemo(() => (design && base ? priceForDesign(base.price, design) : 0), [design, base]);
+  const sizeOptions = useMemo(
+    () => SIZES.map((s) => ({ size: s, qty: stock[base.id]?.[s] ?? 0 })),
+    [stock, base.id]
+  );
 
   if (!design || !base) {
     return <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>Loading designer…</div>;
@@ -344,6 +352,9 @@ export default function DesignerClient() {
         price={price}
         bothPainted={bothPainted}
         baseName={base.name}
+        size={size}
+        onSizeChange={setSize}
+        sizeOptions={sizeOptions}
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
         onShareDesign={shareDesign}
