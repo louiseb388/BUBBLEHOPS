@@ -121,7 +121,7 @@ export default function CheckoutClient() {
       <CheckoutProgress step={step} />
 
       <div className={styles.grid}>
-        <div>
+        <div style={{ minWidth: 0 }}>
           {step === 'bag' && (
             <div>
               <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size and quantity</h2>
@@ -217,7 +217,8 @@ export default function CheckoutClient() {
                           textAlign: 'left',
                           padding: '12px 14px',
                           background: active ? 'var(--ink)' : '#fff',
-                          color: active ? '#fff' : 'var(--ink)'
+                          color: active ? '#fff' : 'var(--ink)',
+                          border: 'none'
                         }}
                       >
                         <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
@@ -234,7 +235,7 @@ export default function CheckoutClient() {
                 We email you at every stage — painting, drying, sign-off and dispatch.
               </p>
 
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <Link href="/create-your-own" className="btn btn-outline">
                   ← Back to my design
                 </Link>
@@ -274,7 +275,7 @@ export default function CheckoutClient() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
+              <div style={{ display: 'flex', gap: 10, marginTop: 28, flexWrap: 'wrap' }}>
                 <button className="btn btn-outline" onClick={() => setStep('bag')}>← Back</button>
                 <button
                   className="btn btn-lime"
@@ -314,7 +315,7 @@ export default function CheckoutClient() {
 
               {payError && <p style={{ color: '#b3261e', marginBottom: 16 }}>{payError}</p>}
 
-              <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <button className="btn btn-outline" onClick={() => setStep('delivery')}>← Back</button>
                 <button className="btn btn-lime" onClick={submitPayment} disabled={submitting}>
                   {submitting ? 'Redirecting to secure payment…' : 'Continue to secure payment →'}
