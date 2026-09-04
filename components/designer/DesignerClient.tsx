@@ -15,6 +15,7 @@ import {
   type DesignState,
   type Side
 } from '@/lib/designer-types';
+import { renderDesignJpeg } from '@/lib/export-design';
 import ShoeStage, { MAX_STICKERS } from './ShoeStage';
 import ShoeControls from './ShoeControls';
 import Toolbar from './Toolbar';
@@ -143,19 +144,50 @@ export default function DesignerClient() {
   }
 
   async function shareDesign() {
-    if (!design) return;
+    if (!design || !base) return;
     const encoded = encodeDesign(design);
     const url = `${window.location.origin}/create-your-own?d=${encoded}`;
+
+    let file: File | null = null;
+    try {
+      const blob = await renderDesignJpeg(design, base);
+      file = new File([blob], 'bubblehops-design.jpg', { type: 'image/jpeg' });
+    } catch {
+      /* image render failed — fall through to a link-only share below */
+    }
+
+    if (file && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'My BUBBLEHOPS design', text: `My BUBBLEHOPS design — ${url}` });
+        return;
+      } catch {
+        /* user cancelled — fall through */
+      }
+    }
     if (navigator.share) {
       try {
         await navigator.share({ title: 'My BUBBLEHOPS design', url });
         return;
       } catch {
-        /* user cancelled — fall through to clipboard */
+        /* user cancelled — fall through to download/clipboard */
       }
     }
-    await navigator.clipboard.writeText(url);
-    setSaveMsg('Link copied to clipboard.');
+
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = 'bubblehops-design.jpg';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+      await navigator.clipboard.writeText(url);
+      setSaveMsg('Image downloaded — link also copied to clipboard.');
+    } else {
+      await navigator.clipboard.writeText(url);
+      setSaveMsg('Link copied to clipboard.');
+    }
     setTimeout(() => setSaveMsg(null), 3000);
   }
 
