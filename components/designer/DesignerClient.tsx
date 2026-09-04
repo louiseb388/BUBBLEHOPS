@@ -195,6 +195,7 @@ export default function DesignerClient() {
         side={side}
         which={which}
         active={activeSide === which}
+        showBaseName={which === 'left'}
         onFocus={() => setActiveSide(which)}
         onMoveWord={(x, y) => {
           patchSide(which, { x, y });
@@ -215,7 +216,6 @@ export default function DesignerClient() {
           beginChange();
           setDesign((d) => (d ? { ...d, [which]: { ...d[which], stickers: d[which].stickers.filter((s) => s.id !== id) } } : d));
         }}
-        onSurpriseMe={surpriseMe}
       />
     );
   }
@@ -261,6 +261,9 @@ export default function DesignerClient() {
           </button>
           <button className="btn btn-outline-white btn-sm" onClick={redo} disabled={redoStack.current.length === 0} aria-label="Redo">
             ↻
+          </button>
+          <button className="btn btn-lime btn-sm" onClick={surpriseMe}>
+            Surprise me
           </button>
         </div>
       </div>

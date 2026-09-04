@@ -2,9 +2,9 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 import type { BaseTrainer } from '@/lib/data';
-import { METALLIC_STROKE_TONES, METALLIC_SWATCH_GRADIENT, SOLE_ABOVE_CLIP, WORD_COLOURS } from '@/lib/data';
+import { METALLIC_STROKE_TONES, METALLIC_SWATCH_GRADIENT, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
-import { isInsidePolygon, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
+import { isInsidePolygon, panelClipPath, panelForBase, panelPathD, snapToPanel } from '@/lib/designer-geometry';
 import BubbleMark from '../BubbleMark';
 import styles from './ShoeStage.module.css';
 
@@ -43,9 +43,11 @@ type Props = {
   onMoveSticker: (id: string, x: number, y: number) => void;
   onAddSticker?: () => void;
   onRemoveSticker?: (id: string) => void;
-  onSurpriseMe?: () => void;
   onFocus: () => void;
   showStickerBadge?: boolean;
+  /** Show the base trainer's name inline with the sticker badge — pass this for only
+   * one of the two stages (left) so the name appears once, not once per shoe. */
+  showBaseName?: boolean;
   /** Read-only thumbnail (basket/checkout order summary): skips the interactive
    * designer's legibility floor on word/outline size, so word and stickers stay
    * proportional to the shoe at any thumbnail size instead of looking oversized. */
@@ -61,9 +63,9 @@ export default function ShoeStage({
   onMoveSticker,
   onAddSticker,
   onRemoveSticker,
-  onSurpriseMe,
   onFocus,
   showStickerBadge = true,
+  showBaseName = false,
   preview = false
 }: Props) {
   const flip = which === 'left';
@@ -148,12 +150,7 @@ export default function ShoeStage({
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
             <span>Drag to move · Double-click to remove</span>
           </div>
-          <span className={styles.baseNameInline}>{base.name}</span>
-          {onSurpriseMe && (
-            <button type="button" className="btn btn-lime btn-sm" onClick={onSurpriseMe}>
-              Surprise me
-            </button>
-          )}
+          {showBaseName && <span className={styles.baseNameInline}>{base.name}</span>}
         </div>
       )}
 
@@ -184,7 +181,7 @@ export default function ShoeStage({
             </svg>
           )}
 
-          <div className={styles.paintLayer} style={{ clipPath: SOLE_ABOVE_CLIP[base.panel] }}>
+          <div className={styles.paintLayer} style={{ clipPath: panelClipPath(base.id) }}>
             {!side.blank && side.word && (
               <div
                 className={styles.wordWrap}

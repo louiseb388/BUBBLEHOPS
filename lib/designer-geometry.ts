@@ -83,3 +83,12 @@ export function panelPathD(baseId: string): string {
   const base = getBase(baseId);
   return PANELS[base?.panel || 'base01'] || PANELS.base01;
 }
+
+/** CSS clip-path matching the same traced panel silhouette used for placement, so the
+ * word/sticker artwork itself is hard-clipped to the canvas side panel — it can't render
+ * over the sole, laces/velcro, or the toe/heel beyond the panel, however it's sized or rotated. */
+export function panelClipPath(baseId: string): string {
+  const poly = panelForBase(baseId);
+  if (poly.length < 3) return 'none';
+  return `polygon(${poly.map((p) => `${p.x}% ${p.y}%`).join(',')})`;
+}
