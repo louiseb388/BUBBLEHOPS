@@ -15,7 +15,11 @@ const NAV = [
 
 export default function Header() {
   const pathname = usePathname();
-  const { lines } = useCart();
+  const { lines: allLines } = useCart();
+  // Matches the basket page's own definition: a line with no size picked yet isn't
+  // really "in the basket", so it shouldn't count here either — otherwise the badge
+  // can show 1 while the basket page (correctly) says it's empty.
+  const lines = allLines.filter((l) => !!l.size);
   const { session, initials } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
