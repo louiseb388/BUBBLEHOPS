@@ -64,7 +64,9 @@ export default function ShoeStage({
   showStickerBadge = true,
   preview = false
 }: Props) {
-  const flip = which === 'left';
+  // Mirror the right stage instead of the left, so each pair's heels sit
+  // together in the middle (toes pointing outward) rather than toe-to-toe.
+  const flip = which === 'right';
   const ref = useRef<HTMLDivElement>(null);
   const [dragStickerId, setDragStickerId] = useState<string | null>(null);
   const [shoeWidth, setShoeWidth] = useState(420);
