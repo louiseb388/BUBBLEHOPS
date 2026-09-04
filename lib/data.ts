@@ -199,6 +199,8 @@ export const SITE = {
   email: 'studio@bubblehops.com',
   instagramHandle: '@bubblehop_uk',
   instagramUrl: 'https://instagram.com/bubblehop_uk',
+  tiktokHandle: '@bubblehop_uk',
+  tiktokUrl: 'https://www.tiktok.com/@bubblehop_uk',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://bubblehops.co.uk'
 };
 

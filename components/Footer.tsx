@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import MailingListForm from './MailingListForm';
+import { SITE } from '@/lib/data';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -37,6 +38,26 @@ export default function Footer() {
               <br />
               What do yours say?
             </p>
+            <div className={styles.socialRow}>
+              <a
+                href={SITE.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="BUBBLEHOPS on Instagram"
+                className={styles.socialIcon}
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href={SITE.tiktokUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="BUBBLEHOPS on TikTok"
+                className={styles.socialIcon}
+              >
+                <TikTokIcon />
+              </a>
+            </div>
           </div>
           <div className={styles.col}>
             <h3>Shop</h3>
@@ -77,6 +98,24 @@ function FooterMark() {
       <circle fill="#fff" cx="62.46" cy="62.46" r="49.68" />
       <path fill="#231f20" d="M87.43,75.3l-21.26-6.35c7.03-27.75,34.76-22.58,21.26,6.35Z" />
       <path fill="#231f20" d="M51.53,62.73l-18.47-10.71c11.5-21.23,25.9-9.8,18.47,10.71Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" stroke="#000" strokeWidth="2" />
+      <circle cx="12" cy="12" r="4.2" stroke="#000" strokeWidth="2" />
+      <circle cx="17.4" cy="6.6" r="1.2" fill="#000" />
+    </svg>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg width="15" height="17" viewBox="0 0 448 512" fill="#000" aria-hidden="true">
+      <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z" />
     </svg>
   );
 }
