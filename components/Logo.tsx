@@ -2,15 +2,9 @@ import Link from 'next/link';
 import BubbleMark from './BubbleMark';
 import styles from './Logo.module.css';
 
-type Props = {
-  /** Fixed small size regardless of viewport — for contexts like the footer where the
-   * logo shares a narrow column with other content, rather than owning a full header row. */
-  compact?: boolean;
-};
-
-export default function Logo({ compact = false }: Props) {
+export default function Logo() {
   return (
-    <Link href="/" className={`${styles.mark} ${compact ? styles.compact : ''}`} aria-label="BUBBLEHOPS home">
+    <Link href="/" className={styles.mark} aria-label="BUBBLEHOPS home">
       <span className={styles.bubbles}>
         <BubbleMark size={40} fill="#fff" className={styles.bubbleBig} keylineWidth={13.5} />
       </span>
