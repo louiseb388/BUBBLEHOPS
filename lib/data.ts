@@ -26,7 +26,7 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     img: '/photos/bubblehops-adidas-advantage-green-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Green',
     meta: 'Triple velcro · UK kids’ 10 – 2',
-    price: 80,
+    price: 79,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
@@ -37,7 +37,7 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     img: '/photos/bubblehops-adidas-advantage-black-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Core Black',
     meta: 'Triple velcro · UK kids’ 10 – 2',
-    price: 80,
+    price: 79,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
@@ -48,7 +48,7 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     img: '/photos/bubblehops-adidas-advantage-pink-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Bliss Pink',
     meta: 'Triple velcro · UK kids’ 10 – 2',
-    price: 80,
+    price: 79,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
@@ -59,7 +59,7 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     img: '/photos/bubblehops-adidas-advantage-grey-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Grey One',
     meta: 'Triple velcro · UK kids’ 10 – 2',
-    price: 80,
+    price: 79,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
@@ -144,7 +144,7 @@ export type Faq = { q: string; a: string };
 export const FAQS: Faq[] = [
   {
     q: 'How much do custom trainers cost?',
-    a: "£80 for a single hand-painted shoe, or £157 for a full pair. The base trainer is bought new in your child's size and included in that price, as is the painting, sealing and free standard UK delivery. Leaving one shoe blank reduces the total."
+    a: "£79 for a single hand-painted shoe, or £99 for a full pair. The base trainer is bought new in your child's size and included in that price, as is the painting, sealing and free standard UK delivery. Leaving one shoe blank reduces the total."
   },
   {
     q: 'How are custom trainers made?',
@@ -207,7 +207,7 @@ export const SITE = {
 export type RouteMeta = { path: string; title: string; desc: string; crumb: string };
 
 export const ROUTES: Record<string, RouteMeta> = {
-  home: { path: '/', title: "BUBBLEHOPS | Hand-Painted Custom Kids' Trainers, Made in the UK", desc: "Design hand-painted custom kids' trainers online. Pick a base, add their name in graffiti lettering, and we paint it by hand in the UK. From £80, free UK delivery.", crumb: 'Home' },
+  home: { path: '/', title: "BUBBLEHOPS | Hand-Painted Custom Kids' Trainers, Made in the UK", desc: "Design hand-painted custom kids' trainers online. Pick a base, add their name in graffiti lettering, and we paint it by hand in the UK. From £79, free UK delivery.", crumb: 'Home' },
   design: { path: '/create-your-own', title: "Create Your Own Custom Kids' Trainers | BUBBLEHOPS", desc: "Design custom kids' trainers in your browser: pick a base, type their name, choose colours and bubble stickers, then we hand-paint the pair in the UK.", crumb: 'Create your own' },
   shop: { path: '/base-trainers', title: 'Base Trainers for Customising | BUBBLEHOPS', desc: "The Adidas Advantage, hand-painted to order in four colourways: Green, Core Black, Bliss Pink and Grey One. UK kids' sizes 10 to 6.", crumb: 'Base trainers' },
   gallery: { path: '/gallery', title: 'Custom Trainer Gallery | Hand-Painted Pairs | BUBBLEHOPS', desc: "Hand-painted kids' trainers we have made: names, characters and graffiti lettering. Every pair is one of a kind.", crumb: 'Gallery' },

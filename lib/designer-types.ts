@@ -42,14 +42,17 @@ export function defaultDesign(baseId: string): DesignState {
   };
 }
 
-/** Price for a design given per-shoe blank state and the base's price-per-shoe. */
+/** Flat price for a full pair (both shoes painted) — not derived from basePrice*2, since it's
+ * priced as its own bundle rather than two single shoes. */
+const PAIR_PRICE = 99;
+
+/** Price for a design given per-shoe blank state and the base's starting (single-shoe) price. */
 export function priceForDesign(basePrice: number, design: DesignState): number {
   const leftPainted = !design.left.blank;
   const rightPainted = !design.right.blank;
   const paintedCount = (leftPainted ? 1 : 0) + (rightPainted ? 1 : 0);
-  if (paintedCount === 0) return basePrice; // at least the base pair
-  if (paintedCount === 1) return Math.round(basePrice * 1.0);
-  return Math.round(basePrice * 2 * 0.98); // small pair discount vs 2x single-shoe price
+  if (paintedCount === 2) return PAIR_PRICE;
+  return basePrice; // 0 or 1 painted — base pair, or a single painted shoe
 }
 
 function colourLabel(id: string): string {
