@@ -24,7 +24,7 @@ export type DesignState = {
 export const DEFAULT_SIDE: Side = {
   blank: false,
   word: '',
-  colour: 'ink',
+  colour: 'teal',
   outline: 'lime',
   font: 'graffiti',
   size: 1.2,

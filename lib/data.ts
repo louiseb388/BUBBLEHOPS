@@ -93,8 +93,7 @@ export function getBase(id: string): BaseTrainer | undefined {
 export type WordColour = { id: string; value: string; label: string };
 
 export const WORD_COLOURS: WordColour[] = [
-  { id: 'ink', value: '#201e1d', label: 'Black' },
-  { id: 'grey', value: '#9b9797', label: 'Grey' },
+  { id: 'grey', value: '#c0c0c0', label: 'Silver' },
   { id: 'lime', value: '#b6ea16', label: 'Lime' },
   { id: 'green', value: '#1f9d55', label: 'Green' },
   { id: 'teal', value: '#12b5b0', label: 'Teal' },
@@ -108,9 +107,16 @@ export const WORD_COLOURS: WordColour[] = [
   { id: 'orange', value: '#ff7a1a', label: 'Orange' },
   { id: 'gold', value: '#e8b400', label: 'Gold' },
   { id: 'yellow', value: '#f7e733', label: 'Yellow' },
-  { id: 'brown', value: '#7a4a1e', label: 'Brown' },
-  { id: 'cream', value: '#f0e3c8', label: 'Cream' }
+  { id: 'brown', value: '#7a4a1e', label: 'Brown' }
 ];
+
+/** Swatch-only gloss treatment for the two metallic colours — the underlying
+ * `value` above stays a flat hex so word-fill/outline rendering elsewhere is
+ * unaffected; only the picker swatch gets the shiny gradient look. */
+export const METALLIC_SWATCH_GRADIENT: Record<string, string> = {
+  grey: 'linear-gradient(135deg, #d8d8d8 0%, #f8f8f8 30%, #8a8a8a 55%, #e8e8e8 80%, #b0b0b0 100%)',
+  gold: 'linear-gradient(135deg, #d4af37 0%, #fbf3b9 30%, #a4780a 55%, #f3d675 80%, #b8860b 100%)'
+};
 
 export const SIZES = ['UK 10', 'UK 11', 'UK 12', 'UK 13', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'];
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { WORD_COLOURS } from '@/lib/data';
+import { METALLIC_SWATCH_GRADIENT, WORD_COLOURS } from '@/lib/data';
 import type { Side } from '@/lib/designer-types';
 import styles from './ShoeControls.module.css';
 
@@ -40,7 +40,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
                 <button
                   key={c.id}
                   className={`${styles.swatch} ${side.colour === c.id ? styles.active : ''}`}
-                  style={{ background: c.value }}
+                  style={{ background: METALLIC_SWATCH_GRADIENT[c.id] || c.value }}
                   aria-label={c.label}
                   title={c.label}
                   onClick={() => discrete({ colour: c.id })}
@@ -52,22 +52,22 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
           <div className={styles.row}>
             <span className={styles.label}>Outline colour</span>
             <div className={styles.swatches}>
+              {WORD_COLOURS.map((c) => (
+                <button
+                  key={c.id}
+                  className={`${styles.swatch} ${side.outline === c.id ? styles.active : ''}`}
+                  style={{ background: METALLIC_SWATCH_GRADIENT[c.id] || c.value }}
+                  aria-label={c.label}
+                  title={c.label}
+                  onClick={() => discrete({ outline: c.id })}
+                />
+              ))}
               <button
                 className={styles.swatchNone}
                 aria-label="No outline"
                 title="No outline"
                 onClick={() => discrete({ outline: 'none' })}
               />
-              {WORD_COLOURS.map((c) => (
-                <button
-                  key={c.id}
-                  className={`${styles.swatch} ${side.outline === c.id ? styles.active : ''}`}
-                  style={{ background: c.value }}
-                  aria-label={c.label}
-                  title={c.label}
-                  onClick={() => discrete({ outline: c.id })}
-                />
-              ))}
             </div>
           </div>
 
