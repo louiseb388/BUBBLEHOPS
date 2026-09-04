@@ -194,6 +194,11 @@ export const CARE_STEPS = [
   }
 ];
 
+// Shared with app/api/checkout/route.ts, which recomputes delivery cost server-side from
+// this same table rather than trusting whatever the client sends — see that file.
+export type DeliveryMethod = 'standard' | 'express';
+export const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
+
 export const SITE = {
   name: 'BUBBLEHOPS',
   email: 'studio@bubblehops.com',

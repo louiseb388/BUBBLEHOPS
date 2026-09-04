@@ -5,14 +5,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
-import { SIZES } from '@/lib/data';
+import { SIZES, DELIVERY_COST, type DeliveryMethod } from '@/lib/data';
 import { useStock } from '@/lib/inventory';
 import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import styles from './checkout.module.css';
-
-type DeliveryMethod = 'standard' | 'express';
-const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
 
 const STEP_HEADINGS: Record<CheckoutStep, string> = {
   bag: 'Pick the size',
@@ -76,15 +73,20 @@ export default function CheckoutClient() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          // Price is intentionally not sent — the server looks it up itself from baseId and
+          // which sides are painted, rather than trusting a number the client could tamper
+          // with. baseName/summary are just display text for the Stripe line item.
           lines: lines.map((l) => ({
             id: l.id,
+            baseId: l.baseId,
             baseName: l.baseName,
-            price: l.price,
+            leftBlank: l.design.left.blank,
+            rightBlank: l.design.right.blank,
             qty: l.qty,
             size: l.size,
             summary: `Left: ${l.design.left.blank ? 'blank' : l.design.left.word || '—'} · Right: ${l.design.right.blank ? 'blank' : l.design.right.word || '—'}`
           })),
-          delivery: { name, email, address, city, postcode, method: deliveryMethod, cost: DELIVERY_COST[deliveryMethod] }
+          delivery: { name, email, address, city, postcode, method: deliveryMethod }
         })
       });
       const data = await res.json();

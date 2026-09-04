@@ -46,8 +46,11 @@ export function defaultDesign(baseId: string): DesignState {
  * priced as its own bundle rather than two single shoes. */
 const PAIR_PRICE = 99;
 
-/** Price for a design given per-shoe blank state and the base's starting (single-shoe) price. */
-export function priceForDesign(basePrice: number, design: DesignState): number {
+/** Price for a design given per-shoe blank state and the base's starting (single-shoe) price.
+ * Takes just the blank flags (a DesignState satisfies this too) so server-side pricing —
+ * e.g. app/api/checkout/route.ts, recomputing price rather than trusting the client's — can
+ * call it without needing a full fake DesignState for fields it never reads. */
+export function priceForDesign(basePrice: number, design: { left: { blank: boolean }; right: { blank: boolean } }): number {
   const leftPainted = !design.left.blank;
   const rightPainted = !design.right.blank;
   const paintedCount = (leftPainted ? 1 : 0) + (rightPainted ? 1 : 0);
