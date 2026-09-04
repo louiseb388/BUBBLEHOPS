@@ -16,8 +16,8 @@ function colourValue(id: string) {
 // letter or two picks up a single highlight regardless of what was typed —
 // approximates the hand-painted bubble-letter shine without dominating the fill.
 const WORD_HIGHLIGHT_GRADIENT = [
-  'radial-gradient(ellipse 26% 16% at 27% 26%, #f0f0f0 0%, #f0f0f0 82%, rgba(240,240,240,0) 86%)',
-  'radial-gradient(ellipse 12% 9% at 72% 66%, #f0f0f0 0%, #f0f0f0 78%, rgba(240,240,240,0) 82%)'
+  'radial-gradient(ellipse 20% 20% at 27% 26%, #f0f0f0 0%, #f0f0f0 82%, rgba(240,240,240,0) 86%)',
+  'radial-gradient(ellipse 10% 10% at 72% 66%, #f0f0f0 0%, #f0f0f0 78%, rgba(240,240,240,0) 82%)'
 ].join(', ');
 
 /** Black glyph on light fills, white glyph on dark/non-hex (e.g. oklch) fills, so the sticker face stays visible against any selected colour. */
