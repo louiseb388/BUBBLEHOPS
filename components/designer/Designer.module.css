@@ -1,3 +1,9 @@
+.mobileOnly { display: none; }
+@media (max-width: 720px) {
+  .desktopOnly { display: none; }
+  .mobileOnly { display: block; }
+}
+
 .stageWrap {
   background: #fff;
   border-bottom: var(--border);
@@ -17,6 +23,13 @@
 .disclaimer {
   max-width: var(--max-w);
   margin: 6px auto 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.disclaimerMobile {
+  max-width: var(--max-w);
+  margin: 0 auto 10px;
+  padding: 0 var(--pad-narrow);
   font-size: 11px;
   color: var(--muted);
 }

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BASES_IN_STOCK, SIZES, getBase, WORD_COLOURS } from '@/lib/data';
+import { BASES_IN_STOCK, getBase, WORD_COLOURS } from '@/lib/data';
 import { useStock, isSoldOut } from '@/lib/inventory';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
@@ -43,7 +43,6 @@ export default function DesignerClient() {
   const { session } = useAuth();
 
   const [design, setDesign] = useState<DesignState | null>(null);
-  const [size, setSize] = useState<string | null>(null);
   const [activeSide, setActiveSide] = useState<'left' | 'right'>('left');
   const undoStack = useRef<DesignState[]>([]);
   const redoStack = useRef<DesignState[]>([]);
@@ -115,7 +114,6 @@ export default function DesignerClient() {
   function pickBase(id: string) {
     beginChange();
     setDesign((d) => (d ? { ...d, baseId: id } : d));
-    setSize(null);
   }
 
   function surpriseMe() {
@@ -137,7 +135,6 @@ export default function DesignerClient() {
       stickers: Math.random() > 0.5 ? [randomSticker()] : []
     });
     setDesign({ baseId: randomBase.id, left: randomSide(), right: randomSide() });
-    setSize(null);
   }
 
   async function shareDesign() {
@@ -158,10 +155,9 @@ export default function DesignerClient() {
   }
 
   function addToBasket() {
-    if (!design || !base || !size) return;
+    if (!design || !base) return;
     const price = priceForDesign(base.price, design);
-    addLine({ baseId: base.id, baseName: base.name, design, price, size });
-    setSize(null);
+    addLine({ baseId: base.id, baseName: base.name, design, price, size: null });
   }
 
   async function saveDesign() {
@@ -187,13 +183,91 @@ export default function DesignerClient() {
 
   const bothPainted = !!design && !design.left.blank && !design.right.blank;
   const price = useMemo(() => (design && base ? priceForDesign(base.price, design) : 0), [design, base]);
-  const sizeOptions = useMemo(
-    () => SIZES.map((s) => ({ size: s, qty: stock[base.id]?.[s] ?? 0 })),
-    [stock, base.id]
-  );
 
   if (!design || !base) {
     return <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>Loading designer…</div>;
+  }
+
+  function renderStage(which: 'left' | 'right') {
+    const side = design![which];
+    return (
+      <ShoeStage
+        base={base!}
+        side={side}
+        which={which}
+        active={activeSide === which}
+        onFocus={() => setActiveSide(which)}
+        onMoveWord={(x, y) => {
+          patchSide(which, { x, y });
+        }}
+        onMoveSticker={(id, x, y) => {
+          setDesign((d) =>
+            d ? { ...d, [which]: { ...d[which], stickers: d[which].stickers.map((s) => (s.id === id ? { ...s, x, y } : s)) } } : d
+          );
+        }}
+        onAddSticker={() => {
+          beginChange();
+          setDesign((d) => {
+            if (!d || d[which].stickers.length >= MAX_STICKERS) return d;
+            return { ...d, [which]: { ...d[which], stickers: [...d[which].stickers, randomSticker()] } };
+          });
+        }}
+        onRemoveSticker={(id) => {
+          beginChange();
+          setDesign((d) => (d ? { ...d, [which]: { ...d[which], stickers: d[which].stickers.filter((s) => s.id !== id) } } : d));
+        }}
+      />
+    );
+  }
+
+  function renderActions(which: 'left' | 'right') {
+    const side = design![which];
+    const other = which === 'left' ? 'right' : 'left';
+    const label = which === 'left' ? 'Left' : 'Right';
+    return (
+      <div className={styles.actionBarCol}>
+        <span className={styles.actionBarLabel}>{label} shoe · Outer side</span>
+        <div className={styles.actionBarBtns}>
+          <button
+            className={`btn btn-outline-white btn-sm ${side.blank ? styles.actionBarActive : ''}`}
+            onClick={() => {
+              beginChange();
+              const nextBlank = !side.blank;
+              patchSide(which, nextBlank ? { blank: true, stickers: [] } : { blank: false });
+            }}
+          >
+            Leave blank
+          </button>
+          <button
+            className="btn btn-outline-white btn-sm"
+            onClick={() => {
+              beginChange();
+              patchSide(which, { x: 50, y: 50, stickers: [] });
+            }}
+          >
+            Reset
+          </button>
+          <button
+            className="btn btn-outline-white btn-sm"
+            onClick={() => {
+              beginChange();
+              setDesign((d) => (d ? { ...d, [other]: { ...side, stickers: [...side.stickers] } } : d));
+            }}
+          >
+            Copy to {other}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function renderControls(which: 'left' | 'right') {
+    const label = which === 'left' ? 'Left' : 'Right';
+    return (
+      <div>
+        <ShoeControls label={label} side={design![which]} onBeginChange={beginChange} onChange={(patch) => patchSide(which, patch)} />
+      </div>
+    );
   }
 
   return (
@@ -211,153 +285,55 @@ export default function DesignerClient() {
         canRedo={redoStack.current.length > 0}
       />
 
-      <div className={styles.stageWrap}>
-        <div className={styles.stageGrid}>
-          <ShoeStage
-            base={base}
-            side={design.left}
-            which="left"
-            active={activeSide === 'left'}
-            onFocus={() => setActiveSide('left')}
-            onMoveWord={(x, y) => {
-              patchSide('left', { x, y });
-            }}
-            onMoveSticker={(id, x, y) => {
-              setDesign((d) =>
-                d ? { ...d, left: { ...d.left, stickers: d.left.stickers.map((s) => (s.id === id ? { ...s, x, y } : s)) } } : d
-              );
-            }}
-            onAddSticker={() => {
-              beginChange();
-              setDesign((d) => {
-                if (!d || d.left.stickers.length >= MAX_STICKERS) return d;
-                return { ...d, left: { ...d.left, stickers: [...d.left.stickers, randomSticker()] } };
-              });
-            }}
-            onRemoveSticker={(id) => {
-              beginChange();
-              setDesign((d) => (d ? { ...d, left: { ...d.left, stickers: d.left.stickers.filter((s) => s.id !== id) } } : d));
-            }}
-          />
-          <ShoeStage
-            base={base}
-            side={design.right}
-            which="right"
-            active={activeSide === 'right'}
-            onFocus={() => setActiveSide('right')}
-            onMoveWord={(x, y) => {
-              patchSide('right', { x, y });
-            }}
-            onMoveSticker={(id, x, y) => {
-              setDesign((d) =>
-                d ? { ...d, right: { ...d.right, stickers: d.right.stickers.map((s) => (s.id === id ? { ...s, x, y } : s)) } } : d
-              );
-            }}
-            onAddSticker={() => {
-              beginChange();
-              setDesign((d) => {
-                if (!d || d.right.stickers.length >= MAX_STICKERS) return d;
-                return { ...d, right: { ...d.right, stickers: [...d.right.stickers, randomSticker()] } };
-              });
-            }}
-            onRemoveSticker={(id) => {
-              beginChange();
-              setDesign((d) => (d ? { ...d, right: { ...d.right, stickers: d.right.stickers.filter((s) => s.id !== id) } } : d));
-            }}
-          />
-        </div>
-        <p className={styles.disclaimer}>* A preview, not the finished pair — we hand-letter every word.</p>
-      </div>
-
-      <div className={styles.actionBar}>
-        <div className={styles.actionBarGrid}>
-          <div className={styles.actionBarCol}>
-            <span className={styles.actionBarLabel}>Left shoe · Outer side</span>
-            <div className={styles.actionBarBtns}>
-              <button
-                className={`btn btn-outline-white btn-sm ${design.left.blank ? styles.actionBarActive : ''}`}
-                onClick={() => {
-                  beginChange();
-                  const nextBlank = !design.left.blank;
-                  patchSide('left', nextBlank ? { blank: true, stickers: [] } : { blank: false });
-                }}
-              >
-                Leave blank
-              </button>
-              <button
-                className="btn btn-outline-white btn-sm"
-                onClick={() => {
-                  beginChange();
-                  patchSide('left', { x: 50, y: 50, stickers: [] });
-                }}
-              >
-                Reset
-              </button>
-              <button
-                className="btn btn-outline-white btn-sm"
-                onClick={() => {
-                  beginChange();
-                  setDesign((d) => (d ? { ...d, right: { ...d.left, stickers: [...d.left.stickers] } } : d));
-                }}
-              >
-                Copy to right
-              </button>
-            </div>
+      {/* Desktop: grouped by section (both shoes, then both action bars, then both control panels) so the
+          three bands each stay one continuous full-width strip. Hidden below 720px in favour of the
+          per-shoe layout, where the same components render again grouped by shoe instead. */}
+      <div className={styles.desktopOnly}>
+        <div className={styles.stageWrap}>
+          <div className={styles.stageGrid}>
+            {renderStage('left')}
+            {renderStage('right')}
           </div>
-          <div className={styles.actionBarCol}>
-            <span className={styles.actionBarLabel}>Right shoe · Outer side</span>
-            <div className={styles.actionBarBtns}>
-              <button
-                className={`btn btn-outline-white btn-sm ${design.right.blank ? styles.actionBarActive : ''}`}
-                onClick={() => {
-                  beginChange();
-                  const nextBlank = !design.right.blank;
-                  patchSide('right', nextBlank ? { blank: true, stickers: [] } : { blank: false });
-                }}
-              >
-                Leave blank
-              </button>
-              <button
-                className="btn btn-outline-white btn-sm"
-                onClick={() => {
-                  beginChange();
-                  patchSide('right', { x: 50, y: 50, stickers: [] });
-                }}
-              >
-                Reset
-              </button>
-              <button
-                className="btn btn-outline-white btn-sm"
-                onClick={() => {
-                  beginChange();
-                  setDesign((d) => (d ? { ...d, left: { ...d.right, stickers: [...d.right.stickers] } } : d));
-                }}
-              >
-                Copy to left
-              </button>
-            </div>
+          <p className={styles.disclaimer}>* A preview, not the finished pair — we hand-letter every word.</p>
+        </div>
+
+        <div className={styles.actionBar}>
+          <div className={styles.actionBarGrid}>
+            {renderActions('left')}
+            {renderActions('right')}
+          </div>
+        </div>
+
+        <div className={styles.controlsWrap}>
+          <div className={styles.controlsGrid}>
+            {renderControls('left')}
+            {renderControls('right')}
           </div>
         </div>
       </div>
 
-      <div className={styles.controlsWrap}>
-        <div className={styles.controlsGrid}>
-          <div>
-            <ShoeControls
-              label="Left"
-              side={design.left}
-              onBeginChange={beginChange}
-              onChange={(patch) => patchSide('left', patch)}
-            />
-          </div>
-          <div>
-            <ShoeControls
-              label="Right"
-              side={design.right}
-              onBeginChange={beginChange}
-              onChange={(patch) => patchSide('right', patch)}
-            />
-          </div>
+      {/* Mobile: grouped by shoe, so a shoe's own customisation controls sit right below it. */}
+      <div className={styles.mobileOnly}>
+        <p className={styles.disclaimerMobile}>* A preview, not the finished pair — we hand-letter every word.</p>
+
+        <div className={styles.stageWrap}>
+          <div className={styles.stageGrid}>{renderStage('left')}</div>
+        </div>
+        <div className={styles.actionBar}>
+          <div className={styles.actionBarGrid}>{renderActions('left')}</div>
+        </div>
+        <div className={styles.controlsWrap}>
+          <div className={styles.controlsGrid}>{renderControls('left')}</div>
+        </div>
+
+        <div className={styles.stageWrap}>
+          <div className={styles.stageGrid}>{renderStage('right')}</div>
+        </div>
+        <div className={styles.actionBar}>
+          <div className={styles.actionBarGrid}>{renderActions('right')}</div>
+        </div>
+        <div className={styles.controlsWrap}>
+          <div className={styles.controlsGrid}>{renderControls('right')}</div>
         </div>
       </div>
 
@@ -365,9 +341,6 @@ export default function DesignerClient() {
         price={price}
         bothPainted={bothPainted}
         baseName={base.name}
-        size={size}
-        onSizeChange={setSize}
-        sizeOptions={sizeOptions}
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
       />
