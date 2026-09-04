@@ -42,6 +42,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
                   className={`${styles.swatch} ${side.colour === c.id ? styles.active : ''}`}
                   style={{ background: c.value }}
                   aria-label={c.label}
+                  title={c.label}
                   onClick={() => discrete({ colour: c.id })}
                 />
               ))}
@@ -54,6 +55,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
               <button
                 className={styles.swatchNone}
                 aria-label="No outline"
+                title="No outline"
                 onClick={() => discrete({ outline: 'none' })}
               />
               {WORD_COLOURS.map((c) => (
@@ -62,6 +64,7 @@ export default function ShoeControls({ label, side, onChange, onBeginChange }: P
                   className={`${styles.swatch} ${side.outline === c.id ? styles.active : ''}`}
                   style={{ background: c.value }}
                   aria-label={c.label}
+                  title={c.label}
                   onClick={() => discrete({ outline: c.id })}
                 />
               ))}

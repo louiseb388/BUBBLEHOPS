@@ -257,10 +257,13 @@ export default function DesignerClient() {
             Copy to {other}
           </button>
           <button className="btn btn-outline-white btn-sm" onClick={undo} disabled={undoStack.current.length === 0} aria-label="Undo">
-            ↺ Undo
+            ↺
           </button>
           <button className="btn btn-outline-white btn-sm" onClick={redo} disabled={redoStack.current.length === 0} aria-label="Redo">
-            ↻ Redo
+            ↻
+          </button>
+          <button className="btn btn-outline-white btn-sm" onClick={surpriseMe}>
+            Surprise me
           </button>
         </div>
       </div>
@@ -283,7 +286,6 @@ export default function DesignerClient() {
         bothPainted={bothPainted}
         stock={stock}
         onPickBase={pickBase}
-        onSurprise={surpriseMe}
       />
 
       {/* Desktop: grouped by section (both shoes, then both action bars, then both control panels) so the

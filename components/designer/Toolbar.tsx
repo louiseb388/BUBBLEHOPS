@@ -10,10 +10,9 @@ type Props = {
   bothPainted: boolean;
   stock: Stock;
   onPickBase: (id: string) => void;
-  onSurprise: () => void;
 };
 
-export default function Toolbar({ base, bothPainted, stock, onPickBase, onSurprise }: Props) {
+export default function Toolbar({ base, bothPainted, stock, onPickBase }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,10 +57,6 @@ export default function Toolbar({ base, bothPainted, stock, onPickBase, onSurpri
               </div>
             )}
           </div>
-        </div>
-
-        <div className={styles.actions}>
-          <button className={styles.textBtn} onClick={onSurprise}>Surprise me</button>
         </div>
       </div>
     </div>

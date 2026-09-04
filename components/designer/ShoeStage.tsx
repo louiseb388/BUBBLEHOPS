@@ -129,21 +129,12 @@ export default function ShoeStage({
   const wordFontSize = preview ? shoeWidth * 0.06 : Math.min(128, Math.max(28, shoeWidth * 0.06));
   const strokeThick = preview ? shoeWidth * 0.0154 : Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
   const strokeThin = preview ? shoeWidth * 0.0075 : Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
-  const stickerSize = Math.max(20, shoeWidth * 0.122);
+  const stickerSize = Math.max(10, shoeWidth * 0.061);
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
       {showStickerBadge && (
         <div className={styles.badgeRow}>
-          <button
-            type="button"
-            className={styles.stickerBadge}
-            onClick={onAddSticker}
-            disabled={atMaxStickers}
-            aria-label="Add a BUBBLEHOPS sticker"
-          >
-            <BubbleMark size={44} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
-          </button>
           <div className={styles.badgeLabel}>
             <strong>BUBBLEHOPS STICKER · {side.stickers.length}/{MAX_STICKERS}</strong>
             <span>Drag to move · Double-click to remove</span>
@@ -152,6 +143,17 @@ export default function ShoeStage({
       )}
 
       <div className={styles.shoeWrap}>
+        {showStickerBadge && (
+          <button
+            type="button"
+            className={`${styles.stickerBadge} ${which === 'right' ? styles.stickerBadgeRight : ''}`}
+            onClick={onAddSticker}
+            disabled={atMaxStickers}
+            aria-label="Add a BUBBLEHOPS sticker"
+          >
+            <BubbleMark size={66} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
+          </button>
+        )}
         <div
           ref={ref}
           className={`${styles.shoe} ${flip ? styles.flip : ''}`}

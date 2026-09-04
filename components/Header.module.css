@@ -56,7 +56,7 @@
 .avatar {
   background: var(--lime);
   color: var(--ink);
-  border-color: var(--ink);
+  border-color: var(--lime);
   font-weight: 800;
   font-size: 13px;
 }
