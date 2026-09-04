@@ -1,0 +1,17 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0;
+}
+@media (max-width: 640px) {
+  /* Standard full-bleed break-out: width:100vw + this margin trick positions the
+     grid at the viewport edges regardless of .container's own padding/max-width,
+     and padding:0 removes .container's side padding so the tiles reach it too. */
+  .grid {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

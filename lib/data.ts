@@ -230,21 +230,20 @@ export const HERO_SLIDES = [
   { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 45%' }
 ];
 
+// The old generic /photos/0N.jpg files this array used to also list are the exact same
+// photos as the renamed bubblehops-hand-painted-...-0N.jpg ones below (just a rougher crop),
+// so they've been dropped rather than showing every pair twice. 02 (Scooby-Doo) and 04 (the
+// same pair's close-up) and 08 (Taz) are dropped too — licensed characters, not ours to show.
 export const GALLERY_IMAGES = [
   '/photos/bubblehops-hand-painted-custom-kids-trainers-01.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-02.jpg',
   '/photos/bubblehops-hand-painted-custom-kids-trainers-03.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-04.jpg',
   '/photos/bubblehops-hand-painted-custom-kids-trainers-05.jpg',
   '/photos/bubblehops-hand-painted-custom-kids-trainers-06.jpg',
   '/photos/bubblehops-hand-painted-custom-kids-trainers-07.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-08.jpg',
   '/photos/bubblehops-hand-painted-custom-kids-trainers-09.jpg',
   '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg',
   '/photos/bubblehops-hand-painted-stan-smith-kids-trainers-tomski.jpg',
-  '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg',
-  '/photos/01.jpg', '/photos/02.jpg', '/photos/03.jpg', '/photos/04.jpg',
-  '/photos/05.jpg', '/photos/06.jpg', '/photos/07.jpg', '/photos/08.jpg', '/photos/09.jpg'
+  '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg'
 ];
 
 export const ABOUT_USES = [
