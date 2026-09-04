@@ -163,7 +163,15 @@ export default function ShoeStage({
             disabled={atMaxStickers}
             aria-label="Add a BUBBLEHOPS sticker"
           >
-            <BubbleMark size={66} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={20.25} />
+            <BubbleMark
+              size={66}
+              ring={outlineColour}
+              fill={wordColour}
+              glyph={stickerGlyph}
+              keylineWidth={20.25}
+              fillMetallic={metallicFill ? side.colour : undefined}
+              ringMetallic={metallicOutline ? side.outline : undefined}
+            />
           </button>
         )}
         <div
@@ -276,7 +284,15 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={20.25} />
+                <BubbleMark
+                  size={stickerSize}
+                  ring={outlineColour}
+                  fill={wordColour}
+                  glyph={stickerGlyph}
+                  keylineWidth={20.25}
+                  fillMetallic={metallicFill ? side.colour : undefined}
+                  ringMetallic={metallicOutline ? side.outline : undefined}
+                />
               </div>
             ))}
           </div>

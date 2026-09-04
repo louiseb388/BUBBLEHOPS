@@ -99,14 +99,35 @@ export const WORD_COLOURS: WordColour[] = [
   { id: 'brown', value: '#7a4a1e', label: 'Brown' }
 ];
 
-/** Gloss gradient for the two metallic colours — used both for the picker swatch
- * and, via background-clip:text, for the painted word's fill on the shoe itself.
- * Kept low-contrast (tight band around the base tone) so it still reads as
- * metallic without looking chrome-like or washing out the word. */
-export const METALLIC_SWATCH_GRADIENT: Record<string, string> = {
-  grey: 'linear-gradient(135deg, #b8b8b8 0%, #e0e0e0 30%, #9c9c9c 55%, #d2d2d2 80%, #b0b0b0 100%)',
-  gold: 'linear-gradient(135deg, #cf9f2a 0%, #ecd583 30%, #a97c0e 55%, #ddbd5f 80%, #c0930f 100%)'
+/** Gloss gradient stops for the two metallic colours — single source of truth for
+ * the picker swatch, the painted word's fill (via background-clip:text, using the
+ * derived CSS string below) and the sticker's SVG fill (via linearGradient stops
+ * built from this same data), so all three stay visually identical. Kept
+ * low-contrast (tight band around the base tone) so it still reads as metallic
+ * without looking chrome-like or washing out the word. */
+export const METALLIC_GRADIENT_STOPS: Record<string, { offset: string; color: string }[]> = {
+  grey: [
+    { offset: '0%', color: '#b8b8b8' },
+    { offset: '30%', color: '#e0e0e0' },
+    { offset: '55%', color: '#9c9c9c' },
+    { offset: '80%', color: '#d2d2d2' },
+    { offset: '100%', color: '#b0b0b0' }
+  ],
+  gold: [
+    { offset: '0%', color: '#cf9f2a' },
+    { offset: '30%', color: '#ecd583' },
+    { offset: '55%', color: '#a97c0e' },
+    { offset: '80%', color: '#ddbd5f' },
+    { offset: '100%', color: '#c0930f' }
+  ]
 };
+
+export const METALLIC_SWATCH_GRADIENT: Record<string, string> = Object.fromEntries(
+  Object.entries(METALLIC_GRADIENT_STOPS).map(([id, stops]) => [
+    id,
+    `linear-gradient(135deg, ${stops.map((s) => `${s.color} ${s.offset}`).join(', ')})`
+  ])
+);
 
 /** A stroke can't take a CSS gradient, so the metallic outline is faked with a darker
  * base tone plus a thinner lighter tone layered on top, reading as a subtle bevel. */
@@ -242,16 +263,17 @@ export const ABOUT_USES = [
   { label: 'Prep', body: 'Every panel that takes colour is stripped with acetone deglazer first — the step most custom pairs skip, and the reason they crack.' },
   { label: 'Finish', body: 'Two coats of acrylic finisher seal the pair, so the artwork survives play, weather and the school run.' }
 ];
-// Auto-derived from the BUBBLEHOPS design prototype (source/bubblehops-site.dc.html).
-// PANELS: per-base hand-sampled paintable side-panel silhouette (SVG path, 0-100 viewBox).
+// PANELS: per-base paintable side-panel silhouette (SVG path, 0-100 viewBox), hand-traced
+// against each base's own product photo — the top edge hugs the collar/lace row and excludes
+// straps, tongues and pull-loops; the bottom edge hugs the leather-to-midsole seam. These are
+// photo-derived geometry, not generic shapes — re-derive them if base photography changes.
 // SOLE_CLIP: per-base clip-path polygon so lettering tucks behind the midsole curve.
-// These are photo-derived geometry, not generic shapes — re-derive them if base photography changes.
 export const PANELS: Record<string, string> = {
-  "base01": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,75.5 L 93.6,75.5 L 91.5,75.5 L 89.3,75.6 L 87.1,75.7 L 84.9,75.8 L 82.7,76 L 80.5,76.2 L 78.4,76.5 L 76.2,76.8 L 74,77.1 L 71.8,77.4 L 69.6,77.7 L 67.5,77.9 L 65.3,78.1 L 63.1,78.2 L 60.9,78.2 L 58.7,78 L 56.5,77.8 L 54.4,77.6 L 52.2,77.2 L 50,76.8 L 47.8,76.3 L 45.6,75.7 L 43.5,75.2 L 41.3,74.6 L 39.1,73.9 L 36.9,73.3 L 34.7,72.7 L 32.5,72.1 L 30.4,71.6 L 28.2,71 L 26,70.5 L 23.8,70.1 L 21.6,69.6 L 19.5,69.3 L 17.3,69 L 15.1,68.8 L 12.9,68.6 L 10.7,68.4 L 8.5,68.4 L 6.4,68.3 L 4.2,68.3 Z",
-  "base02": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,74 L 93.6,74.1 L 91.5,74.2 L 89.3,74.4 L 87.1,74.7 L 84.9,75 L 82.7,75.3 L 80.5,75.7 L 78.4,76 L 76.2,76.3 L 74,76.6 L 71.8,76.8 L 69.6,77.4 L 67.5,78.2 L 65.3,79.5 L 63.1,81.1 L 60.9,82.8 L 58.7,84.6 L 56.5,86.3 L 54.4,88 L 52.2,89.6 L 50,90.9 L 47.8,91.7 L 45.6,92.2 L 43.5,92.3 L 41.3,92.3 L 39.1,92.2 L 36.9,92.2 L 34.7,92.1 L 32.5,92.1 L 30.4,92.1 L 28.2,92 L 26,92 L 23.8,91.9 L 21.6,91.8 L 19.5,91.7 L 17.3,91.6 L 15.1,91.5 L 12.9,91.4 L 10.7,91.4 L 8.5,91.3 L 6.4,91.3 L 4.2,91.3 Z",
-  "base03": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,93.2 L 93.6,93.2 L 91.5,93.3 L 89.3,93.3 L 87.1,93.3 L 84.9,93.4 L 82.7,93.5 L 80.5,93.5 L 78.4,93.6 L 76.2,93.7 L 74,93.7 L 71.8,93.8 L 69.6,93.8 L 67.5,93.8 L 65.3,93.8 L 63.1,93.8 L 60.9,93.8 L 58.7,93.8 L 56.5,93.8 L 54.4,93.8 L 52.2,93.6 L 50,93.1 L 47.8,92.5 L 45.6,91.5 L 43.5,90.5 L 41.3,89.4 L 39.1,88.3 L 36.9,87.1 L 34.7,85.9 L 32.5,84.9 L 30.4,84.2 L 28.2,83.5 L 26,83.2 L 23.8,82.8 L 21.6,82.5 L 19.5,82.3 L 17.3,82 L 15.1,81.9 L 12.9,81.7 L 10.7,81.6 L 8.5,81.6 L 6.4,81.5 L 4.2,81.5 Z",
-  "base04": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,80.2 L 93.6,80 L 91.5,79.6 L 89.3,79.2 L 87.1,78.4 L 84.9,77.6 L 82.7,76.8 L 80.5,75.9 L 78.4,75 L 76.2,74.2 L 74,73.6 L 71.8,73.2 L 69.6,72.9 L 67.5,72.8 L 65.3,72.9 L 63.1,73 L 60.9,73.2 L 58.7,73.6 L 56.5,74.3 L 54.4,75.1 L 52.2,76.2 L 50,77.5 L 47.8,78.7 L 45.6,79.9 L 43.5,81 L 41.3,82 L 39.1,82.9 L 36.9,83.5 L 34.7,83.8 L 32.5,83.9 L 30.4,83.9 L 28.2,83.8 L 26,83.7 L 23.8,83.6 L 21.6,83.6 L 19.5,83.5 L 17.3,83.5 L 15.1,83.4 L 12.9,83.4 L 10.7,83.4 L 8.5,83.4 L 6.4,83.4 L 4.2,83.4 Z",
-  "base05": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,66.5 L 93.6,66.5 L 91.5,66.7 L 89.3,66.9 L 87.1,67.3 L 84.9,67.6 L 82.7,68 L 80.5,68.5 L 78.4,69 L 76.2,69.4 L 74,69.9 L 71.8,70.4 L 69.6,70.9 L 67.5,71.6 L 65.3,72.2 L 63.1,72.9 L 60.9,73.5 L 58.7,74.1 L 56.5,74.6 L 54.4,74.9 L 52.2,75.2 L 50,75.5 L 47.8,76.1 L 45.6,77.1 L 43.5,78.3 L 41.3,79.9 L 39.1,81.4 L 36.9,83 L 34.7,84.5 L 32.5,86.1 L 30.4,87.3 L 28.2,88.1 L 26,88.6 L 23.8,88.8 L 21.6,88.6 L 19.5,88.4 L 17.3,88.3 L 15.1,88.1 L 12.9,88 L 10.7,87.8 L 8.5,87.8 L 6.4,87.7 L 4.2,87.7 Z"
+  "base01": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,45.6 L 84.9,46.5 L 87.1,47.2 L 89.3,48.5 L 91.5,50.9 L 93.6,51.8 L 95.8,53.1 L 95.8,68.5 L 93.6,68.5 L 91.5,68.5 L 89.3,68.6 L 87.1,68.7 L 84.9,68.8 L 82.7,69 L 80.5,69.2 L 78.4,69.5 L 76.2,69.8 L 74,70.1 L 71.8,70.4 L 69.6,70.7 L 67.5,70.9 L 65.3,71.1 L 63.1,71.2 L 60.9,71.2 L 58.7,71 L 56.5,70.8 L 54.4,70.6 L 52.2,70.2 L 50,69.8 L 47.8,69.3 L 45.6,68.7 L 43.5,68.2 L 41.3,67.6 L 39.1,66.9 L 36.9,66.3 L 34.7,65.7 L 32.5,65.1 L 30.4,64.6 L 28.2,64 L 26,63.5 L 23.8,63.1 L 21.6,62.6 L 19.5,62.3 L 17.3,62 L 15.1,61.8 L 12.9,61.6 L 10.7,61.4 L 8.5,61.4 L 6.4,61.3 L 4.2,61.3 Z",
+  "base02": "M 8,32 L 15,32 L 20,30 L 25,28 L 30,32 L 35,35 L 40,35 L 45,32 L 50,26 L 55,22 L 60,25 L 65,29 L 70,34 L 75,39 L 80,43 L 85,47 L 90,51 L 95,58 L 95,62 L 90,64 L 85,66 L 80,66 L 70,68 L 60,69 L 50,70 L 40,70 L 30,69 L 20,68 L 15,70 L 8,68 Z",
+  "base03": "M 4.2,17.8 L 6.4,16.1 L 8.5,15.5 L 10.7,13.5 L 12.9,16.2 L 15.1,19.3 L 17.3,22.7 L 19.5,26.4 L 21.6,28.6 L 23.8,28.3 L 26,26.8 L 28.2,24.5 L 30.4,20.7 L 32.5,16.7 L 34.7,14 L 36.9,12.3 L 39.1,11.8 L 41.3,12.4 L 43.5,13.8 L 45.6,15.8 L 47.8,18 L 50,20.4 L 52.2,22.2 L 54.4,24.3 L 56.5,26.2 L 58.7,28.2 L 60.9,30.2 L 63.1,32 L 65.3,34.1 L 67.5,36.3 L 69.6,38.1 L 71.8,39.6 L 74,41.4 L 76.2,42.8 L 78.4,43.7 L 80.5,44.8 L 82.7,47 L 84.9,49.4 L 87.1,51.5 L 89.3,54.3 L 91.5,58.1 L 93.6,60.4 L 95.8,63.1 L 95.8,64 L 93.6,64.8 L 91.5,65.5 L 89.3,66.6 L 87.1,66.8 L 84.9,66.9 L 82.7,67 L 80.5,67.2 L 78.4,67.3 L 76.2,67.4 L 74,67.6 L 71.8,67.7 L 69.6,67.8 L 67.5,68 L 65.3,68.1 L 63.1,68.2 L 60.9,68.3 L 58.7,68.5 L 56.5,68.6 L 54.4,68.7 L 52.2,68.9 L 50,69 L 47.8,68.9 L 45.6,68.7 L 43.5,68.6 L 41.3,68.5 L 39.1,68.3 L 36.9,68.2 L 34.7,68.1 L 32.5,68 L 30.4,67.8 L 28.2,67.7 L 26,67.6 L 23.8,67.4 L 21.6,67.3 L 19.5,67.2 L 17.3,67 L 15.1,66.9 L 12.9,66.8 L 10.7,66.6 L 8.5,66.5 L 6.4,66.4 L 4.2,66.3 Z",
+  "base04": "M 8,50 L 15,46 L 22,44 L 30,42 L 38,42 L 45,40 L 50,38 L 55,33 L 60,33 L 65,38 L 70,44 L 75,50 L 80,55 L 85,60 L 90,64 L 95,68 L 95,79 L 90,79 L 85,78 L 80,77 L 70,78 L 60,79 L 50,80 L 40,80 L 30,80 L 20,79 L 15,79 L 8,78 Z",
+  "base05": "M 13,43 L 15,40 L 22,39 L 30,29 L 38,31 L 46,29 L 52,32 L 58,30 L 65,36 L 70,42 L 76,48 L 80,50 L 85,54 L 90,58 L 96,64 L 96,77 L 90,78 L 85,77 L 80,76 L 70,75 L 60,76 L 50,76 L 40,77 L 30,78 L 20,77 L 15,78 L 13,77 Z"
 };
 
 export const SOLE_CLIP: Record<string, string> = {
