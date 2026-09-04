@@ -237,15 +237,8 @@ export default function CheckoutClient() {
                 <Link href="/create-your-own" className="btn btn-outline">
                   ← Back to my design
                 </Link>
-                <button
-                  className="btn btn-lime"
-                  disabled={!allSized}
-                  onClick={() => {
-                    setStep('delivery');
-                    setAdded(true);
-                  }}
-                >
-                  Continue →
+                <button className="btn btn-lime" disabled={!allSized} onClick={() => setAdded(true)}>
+                  Add to basket →
                 </button>
               </div>
             </div>
@@ -342,7 +335,15 @@ export default function CheckoutClient() {
             <h3 className="h-display h2" style={{ marginBottom: 16 }}>That&rsquo;s added to your basket.</h3>
             <div className={styles.popupActions}>
               <button className="btn btn-lime" onClick={() => router.push('/basket')}>View basket →</button>
-              <button className="btn btn-outline" onClick={() => setAdded(false)}>Continue shopping</button>
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  setAdded(false);
+                  setStep('delivery');
+                }}
+              >
+                Continue shopping
+              </button>
             </div>
           </div>
         </div>
