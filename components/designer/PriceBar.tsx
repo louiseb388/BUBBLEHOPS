@@ -10,9 +10,10 @@ type Props = {
   baseName: string;
   onAddToBasket: () => void;
   onSaveDesign: () => void;
+  onShareDesign: () => void;
 };
 
-export default function PriceBar({ price, bothPainted, baseName, onAddToBasket, onSaveDesign }: Props) {
+export default function PriceBar({ price, bothPainted, baseName, onAddToBasket, onSaveDesign, onShareDesign }: Props) {
   const [added, setAdded] = useState(false);
   const router = useRouter();
 
@@ -32,6 +33,7 @@ export default function PriceBar({ price, bothPainted, baseName, onAddToBasket, 
           <div className={styles.actions}>
             <button className="btn btn-lime" onClick={handleAdd}>Add to basket →</button>
             <button className="btn btn-outline-white" onClick={onSaveDesign}>Save design</button>
+            <button className="btn btn-outline-white" onClick={onShareDesign}>Share design</button>
           </div>
         </div>
       </div>

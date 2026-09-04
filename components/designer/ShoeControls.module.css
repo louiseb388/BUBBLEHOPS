@@ -16,6 +16,7 @@
   padding: 7px 12px;
   font-size: 14px;
   font-family: var(--font-poppins), sans-serif;
+  text-transform: uppercase;
 }
 
 .swatches { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -256,6 +256,12 @@ export default function DesignerClient() {
           >
             Copy to {other}
           </button>
+          <button className="btn btn-outline-white btn-sm" onClick={undo} disabled={undoStack.current.length === 0} aria-label="Undo">
+            ↺ Undo
+          </button>
+          <button className="btn btn-outline-white btn-sm" onClick={redo} disabled={redoStack.current.length === 0} aria-label="Redo">
+            ↻ Redo
+          </button>
         </div>
       </div>
     );
@@ -277,12 +283,7 @@ export default function DesignerClient() {
         bothPainted={bothPainted}
         stock={stock}
         onPickBase={pickBase}
-        onShare={shareDesign}
         onSurprise={surpriseMe}
-        onUndo={undo}
-        onRedo={redo}
-        canUndo={undoStack.current.length > 0}
-        canRedo={redoStack.current.length > 0}
       />
 
       {/* Desktop: grouped by section (both shoes, then both action bars, then both control panels) so the
@@ -343,6 +344,7 @@ export default function DesignerClient() {
         baseName={base.name}
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
+        onShareDesign={shareDesign}
       />
 
       {saveMsg && (
