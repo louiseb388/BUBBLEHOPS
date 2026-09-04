@@ -17,21 +17,20 @@ export type BaseTrainer = {
 };
 
 // All four are the same Adidas Advantage (triple-velcro) model — see
-// https://www.amazon.co.uk/dp/B0CKXVBC59 — in different colourways, so they
-// share one photo (swap in each colourway's own product shot as they're
-// supplied) and one panel geometry (base06), traced once against that photo.
+// https://www.amazon.co.uk/dp/B0CKXVBC59 — in different colourways, each with
+// its own product photo but sharing one panel geometry (base06), traced once
+// against that photo (all four are the same mould, so it lines up on each).
 export const BASES_IN_STOCK: BaseTrainer[] = [
   {
     id: 'advgreen',
-    img: '/photos/bubblehops-adidas-advantage-black-kids-trainer-base.jpg',
+    img: '/photos/bubblehops-adidas-advantage-green-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Green',
     meta: 'Triple velcro · UK kids’ 10 – 2',
     price: 80,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
-    box: { left: '32%', top: '42%', width: '36%' },
-    placeholderPhoto: true // TODO: swap in the Cloud White / Cloud White / Green product photo
+    box: { left: '32%', top: '42%', width: '36%' }
   },
   {
     id: 'advblack',
@@ -46,27 +45,25 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
   },
   {
     id: 'advpink',
-    img: '/photos/bubblehops-adidas-advantage-black-kids-trainer-base.jpg',
+    img: '/photos/bubblehops-adidas-advantage-pink-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Bliss Pink',
     meta: 'Triple velcro · UK kids’ 10 – 2',
     price: 80,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
-    box: { left: '32%', top: '42%', width: '36%' },
-    placeholderPhoto: true // TODO: swap in the Cloud White / Bliss Pink / Core Black product photo
+    box: { left: '32%', top: '42%', width: '36%' }
   },
   {
     id: 'advgrey',
-    img: '/photos/bubblehops-adidas-advantage-black-kids-trainer-base.jpg',
+    img: '/photos/bubblehops-adidas-advantage-grey-kids-trainer-base.jpg',
     name: 'Adidas Advantage — Grey One',
     meta: 'Triple velcro · UK kids’ 10 – 2',
     price: 80,
     panel: 'base06',
     ar: 1500 / 720,
     heel: { x: '13%', y: '74%' },
-    box: { left: '32%', top: '42%', width: '36%' },
-    placeholderPhoto: true // TODO: swap in the Cloud White / Cloud White / Grey One product photo
+    box: { left: '32%', top: '42%', width: '36%' }
   }
 ];
 
@@ -226,7 +223,7 @@ export const ROUTES: Record<string, RouteMeta> = {
 export const HERO_SLIDES = [
   { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 40%' },
   { img: '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg', pos: '50% 30%' },
-  { img: '/photos/bubblehops-hand-painted-stan-smith-kids-trainers-tomski.jpg', pos: '50% 35%' },
+  { img: '/photos/bubblehops-hand-painted-adidas-advantage-kids-trainers-milo.jpg', pos: '62% 58%' },
   { img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg', pos: '50% 40%' }
 ];
 
