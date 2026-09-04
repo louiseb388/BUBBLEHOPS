@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { BagLine } from '@/lib/cart-context';
 import { sideDescriptions, paintingLabel } from '@/lib/designer-types';
 import DesignPreview from '../DesignPreview';
@@ -7,10 +6,9 @@ type Props = {
   lines: BagLine[];
   total: number;
   deliveryLabel: string;
-  backHref?: string;
 };
 
-export default function OrderSummary({ lines, total, deliveryLabel, backHref = '/create-your-own' }: Props) {
+export default function OrderSummary({ lines, total, deliveryLabel }: Props) {
   return (
     <aside>
       <p
@@ -36,10 +34,7 @@ export default function OrderSummary({ lines, total, deliveryLabel, backHref = '
             <div style={{ borderTop: 'var(--border)', padding: 16 }}>
               <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 15, textTransform: 'uppercase' }}>{l.baseName}</p>
               <p className="body-text" style={{ margin: '0 0 6px', fontSize: 13 }}>{desc.left}</p>
-              <p className="body-text" style={{ margin: '0 0 14px', fontSize: 13 }}>{desc.right}</p>
-              <Link href={backHref} className="btn btn-outline btn-sm">
-                ← Back to my design
-              </Link>
+              <p className="body-text" style={{ margin: 0, fontSize: 13 }}>{desc.right}</p>
             </div>
           </div>
         );

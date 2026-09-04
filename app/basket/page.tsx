@@ -6,9 +6,14 @@ import DesignPreview from '@/components/DesignPreview';
 import styles from './basket.module.css';
 
 export default function BasketPage() {
-  const { lines, removeLine, total, ready } = useCart();
+  const { lines: allLines, removeLine, ready } = useCart();
 
   if (!ready) return null;
+
+  // Only show pairs that already have a size picked at checkout — an
+  // in-progress design with no size yet isn't really "in the basket".
+  const lines = allLines.filter((l) => !!l.size);
+  const total = lines.reduce((sum, l) => sum + l.price * l.qty, 0);
 
   if (lines.length === 0) {
     return (
@@ -34,7 +39,7 @@ export default function BasketPage() {
                 <br />
                 Right: {line.design.right.blank ? 'Blank' : line.design.right.word || '—'}
                 <br />
-                Size: {line.size || 'Choose at checkout'}
+                Size: {line.size}
               </p>
             </div>
             <div className={styles.priceCol}>

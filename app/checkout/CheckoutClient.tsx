@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
 import { SIZES } from '@/lib/data';
@@ -25,9 +25,11 @@ export default function CheckoutClient() {
   const { stock } = useStock();
   const { session } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const cancelled = searchParams.get('cancelled') === '1';
 
   const [step, setStep] = useState<CheckoutStep>('bag');
+  const [added, setAdded] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('standard');
   const [name, setName] = useState('');
   const [email, setEmail] = useState(session?.user?.email || '');
@@ -227,9 +229,21 @@ export default function CheckoutClient() {
                 We email you at every stage — painting, drying, sign-off and dispatch.
               </p>
 
-              <button className="btn btn-lime" disabled={!allSized} onClick={() => setStep('delivery')}>
-                Continue →
-              </button>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Link href="/create-your-own" className="btn btn-outline">
+                  ← Back to my design
+                </Link>
+                <button
+                  className="btn btn-lime"
+                  disabled={!allSized}
+                  onClick={() => {
+                    setStep('delivery');
+                    setAdded(true);
+                  }}
+                >
+                  Continue →
+                </button>
+              </div>
             </div>
           )}
 
@@ -316,6 +330,19 @@ export default function CheckoutClient() {
           <OrderSummary lines={lines} total={total} deliveryLabel={deliveryLabel} />
         </div>
       </div>
+
+      {added && (
+        <div className={styles.popupBackdrop} role="dialog" aria-modal="true">
+          <div className={styles.popup}>
+            <p className="eyebrow" style={{ color: 'var(--olive)', marginBottom: 12 }}>Added to your basket</p>
+            <h3 className="h-display h2" style={{ marginBottom: 16 }}>That&rsquo;s added to your basket.</h3>
+            <div className={styles.popupActions}>
+              <button className="btn btn-lime" onClick={() => router.push('/basket')}>View basket →</button>
+              <button className="btn btn-outline" onClick={() => setAdded(false)}>Continue shopping</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
