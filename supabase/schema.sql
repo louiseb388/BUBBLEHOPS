@@ -6,11 +6,12 @@
 --   - orders:        Stripe webhook order log (app/api/webhook/route.ts) + account order history
 --   - inventory:     live stock, optional (lib/inventory.ts) — falls back to SEED_STOCK if unused
 --
--- Auth itself needs no schema: email OTP (magic link) sign-in uses Supabase's built-in
--- auth.users table. Just make sure Email auth is enabled (it is by default) under
--- Authentication → Providers, and add your site's URL (and http://localhost:3000 for local
--- dev) under Authentication → URL Configuration → Redirect URLs, since signInWithEmail
--- redirects to `${origin}/account`.
+-- Auth itself needs no schema: passwordless email-code sign-in (like Vercel's — no link to
+-- click, the shopper types the code) uses Supabase's built-in auth.users table. Email auth
+-- is enabled by default under Authentication → Providers. One extra step: Supabase's default
+-- "Magic Link" email template only shows a clickable link, not a visible code — edit that
+-- template (Authentication → Emails → Magic Link) to display {{ .Token }} as the code the
+-- shopper types on /sign-in, e.g. add a line like "Your code: {{ .Token }}".
 
 create table if not exists saved_designs (
   id         uuid primary key default gen_random_uuid(),

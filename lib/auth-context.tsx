@@ -9,7 +9,10 @@ type AuthState = {
   session: Session | null;
   loading: boolean;
   initials: string;
+  /** Requests a one-time code by email (no password, no link to click — see verifyCode). */
   signInWithEmail: (email: string) => Promise<{ ok: boolean; message: string }>;
+  /** Completes sign-in with the code from that email, Vercel-style. */
+  verifyCode: (email: string, code: string) => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
 };
 
@@ -43,12 +46,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabase) {
       return { ok: false, message: 'Sign-in needs NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY set in your environment.' };
     }
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/account` : undefined }
-    });
+    // No emailRedirectTo: this app has the shopper type the code from the email rather than
+    // click a link, so there's no redirect destination to configure.
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
     if (error) return { ok: false, message: error.message };
-    return { ok: true, message: 'Check your email for a sign-in link.' };
+    return { ok: true, message: 'Check your email for a 6-digit code.' };
+  }
+
+  async function verifyCode(email: string, code: string) {
+    if (!supabase) {
+      return { ok: false, message: 'Sign-in needs NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY set in your environment.' };
+    }
+    const { error } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true, message: 'Signed in.' };
   }
 
   async function signOut() {
@@ -57,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ configured: !!supabase, session, loading, initials, signInWithEmail, signOut }}>
+    <AuthContext.Provider value={{ configured: !!supabase, session, loading, initials, signInWithEmail, verifyCode, signOut }}>
       {children}
     </AuthContext.Provider>
   );
