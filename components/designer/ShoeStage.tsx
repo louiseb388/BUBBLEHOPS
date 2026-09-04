@@ -266,7 +266,7 @@ export default function ShoeStage({
               </div>
             )}
 
-            {side.stickers.map((s) => (
+            {!side.blank && side.stickers.map((s) => (
               <div
                 key={s.id}
                 className={styles.sticker}
