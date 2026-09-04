@@ -49,9 +49,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
   }, [lines, ready]);
 
+  // Each hand-painted pair is made to order, so the basket holds one design at a
+  // time — adding a new one replaces whatever was there, keeping checkout to a
+  // single size selection instead of a growing multi-pair order.
   const addLine = useCallback((line: Omit<BagLine, 'id' | 'qty'>) => {
     const id = `bag_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    setLines((prev) => [...prev, { ...line, id, qty: 1 }]);
+    setLines([{ ...line, id, qty: 1 }]);
     return id;
   }, []);
 
