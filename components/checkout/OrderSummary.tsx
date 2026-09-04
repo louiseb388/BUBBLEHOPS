@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { BagLine } from '@/lib/cart-context';
-import { summarizeDesign, paintingLabel } from '@/lib/designer-types';
+import { sideDescriptions, paintingLabel } from '@/lib/designer-types';
 import DesignPreview from '../DesignPreview';
 
 type Props = {
@@ -26,22 +26,24 @@ export default function OrderSummary({ lines, total, deliveryLabel, backHref = '
         Your order
       </p>
 
-      {lines.map((l) => (
-        <div key={l.id} style={{ border: 'var(--border)', marginBottom: 24 }}>
-          <div style={{ padding: 16 }}>
-            <DesignPreview design={l.design} width="100%" showLabels />
+      {lines.map((l) => {
+        const desc = sideDescriptions(l.design);
+        return (
+          <div key={l.id} style={{ border: 'var(--border)', marginBottom: 24 }}>
+            <div style={{ padding: 16 }}>
+              <DesignPreview design={l.design} width="100%" showLabels />
+            </div>
+            <div style={{ borderTop: 'var(--border)', padding: 16 }}>
+              <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 15, textTransform: 'uppercase' }}>{l.baseName}</p>
+              <p className="body-text" style={{ margin: '0 0 6px', fontSize: 13 }}>{desc.left}</p>
+              <p className="body-text" style={{ margin: '0 0 14px', fontSize: 13 }}>{desc.right}</p>
+              <Link href={backHref} className="btn btn-outline btn-sm">
+                ← Back to my design
+              </Link>
+            </div>
           </div>
-          <div style={{ borderTop: 'var(--border)', padding: 16 }}>
-            <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 15, textTransform: 'uppercase' }}>{l.baseName}</p>
-            <p className="body-text" style={{ margin: '0 0 14px', fontSize: 13 }}>
-              {summarizeDesign(l.design)}
-            </p>
-            <Link href={backHref} className="btn btn-outline btn-sm">
-              ← Back to my design
-            </Link>
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
       <div style={{ display: 'grid', gap: 12 }}>
         {lines.map((l) => (

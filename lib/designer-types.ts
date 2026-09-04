@@ -83,6 +83,16 @@ export function summarizeDesign(design: DesignState): string {
   return `Right: ${r}. Left: blank.`;
 }
 
+/** Per-shoe description lines for order summaries, e.g. "Left shoe: ARLO in graffiti letters, teal outlined in lime." */
+export function sideDescriptions(design: DesignState): { left: string; right: string } {
+  const l = sideSummary(design.left);
+  const r = sideSummary(design.right);
+  return {
+    left: l ? `Left shoe: ${l}.` : 'Left shoe: blank.',
+    right: r ? `Right shoe: ${r}.` : 'Right shoe: blank.'
+  };
+}
+
 export function encodeDesign(design: DesignState): string {
   if (typeof window === 'undefined') return '';
   return window.btoa(encodeURIComponent(JSON.stringify(design)));

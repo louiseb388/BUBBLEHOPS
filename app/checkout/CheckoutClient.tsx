@@ -15,7 +15,7 @@ type DeliveryMethod = 'standard' | 'express';
 const DELIVERY_COST: Record<DeliveryMethod, number> = { standard: 0, express: 6 };
 
 const STEP_HEADINGS: Record<CheckoutStep, string> = {
-  bag: 'Your bag',
+  bag: 'Pick the size',
   delivery: 'Delivery details',
   payment: 'Pay and confirm'
 };
@@ -113,7 +113,7 @@ export default function CheckoutClient() {
         <div>
           {step === 'bag' && (
             <div>
-              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Your bag</h2>
+              <h2 className="h-display h3" style={{ marginBottom: 4 }}>Size and quantity</h2>
               <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
                 Kids&rsquo; UK sizes. If they&rsquo;re between sizes, we recommend going up.
               </p>

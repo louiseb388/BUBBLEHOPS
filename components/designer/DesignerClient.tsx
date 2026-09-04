@@ -339,7 +339,6 @@ export default function DesignerClient() {
       <PriceBar
         price={price}
         bothPainted={bothPainted}
-        baseName={base.name}
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
         onShareDesign={shareDesign}

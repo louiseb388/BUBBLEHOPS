@@ -18,22 +18,3 @@
 .price { font-weight: 900; font-size: 20px; }
 .priceNote { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-.popupBackdrop {
-  position: fixed; inset: 0;
-  background: rgba(32,30,29,0.7);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.popup {
-  background: #fff;
-  color: var(--ink);
-  border: var(--border);
-  padding: 36px;
-  max-width: 440px;
-  width: 100%;
-}
-.popupActions { display: flex; flex-direction: column; gap: 10px; }
