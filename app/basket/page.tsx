@@ -34,7 +34,7 @@ export default function BasketPage() {
                 <br />
                 Right: {line.design.right.blank ? 'Blank' : line.design.right.word || '—'}
                 <br />
-                Size: {line.size || 'Not set'}
+                Size: {line.size || 'Choose at checkout'}
               </p>
             </div>
             <div className={styles.priceCol}>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BASES_IN_STOCK, SIZES, getBase, WORD_COLOURS } from '@/lib/data';
+import { BASES_IN_STOCK, getBase, WORD_COLOURS } from '@/lib/data';
 import { useStock, isSoldOut } from '@/lib/inventory';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
@@ -30,7 +30,7 @@ function randomSticker() {
     id: `st_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     x: 30 + Math.random() * 40,
     y: 35 + Math.random() * 30,
-    scale: 0.9 + Math.random() * 0.2, // half of the previous ~100%-bigger baseline
+    scale: 1 + Math.floor(Math.random() * 5) * 0.1, // current size is the smallest; up to 5 sizes, each 10% bigger
     rot: Math.round(Math.random() * 360)
   };
 }
@@ -43,7 +43,6 @@ export default function DesignerClient() {
   const { session } = useAuth();
 
   const [design, setDesign] = useState<DesignState | null>(null);
-  const [size, setSize] = useState<string | null>(null);
   const [activeSide, setActiveSide] = useState<'left' | 'right'>('left');
   const undoStack = useRef<DesignState[]>([]);
   const redoStack = useRef<DesignState[]>([]);
@@ -115,7 +114,6 @@ export default function DesignerClient() {
   function pickBase(id: string) {
     beginChange();
     setDesign((d) => (d ? { ...d, baseId: id } : d));
-    setSize(null);
   }
 
   function surpriseMe() {
@@ -123,7 +121,7 @@ export default function DesignerClient() {
     const inStockBases = BASES_IN_STOCK.filter((b) => !isSoldOut(stock, b.id));
     const pool = inStockBases.length ? inStockBases : BASES_IN_STOCK;
     const randomBase = pool[Math.floor(Math.random() * pool.length)];
-    const colourPool = WORD_COLOURS.filter((c) => c.id !== 'ink' && c.id !== 'grey');
+    const colourPool = WORD_COLOURS.filter((c) => c.id !== 'grey');
     const randomSide = (): Side => ({
       blank: false,
       word: SAMPLE_WORDS[Math.floor(Math.random() * SAMPLE_WORDS.length)],
@@ -137,7 +135,6 @@ export default function DesignerClient() {
       stickers: Math.random() > 0.5 ? [randomSticker()] : []
     });
     setDesign({ baseId: randomBase.id, left: randomSide(), right: randomSide() });
-    setSize(null);
   }
 
   async function shareDesign() {
@@ -158,10 +155,9 @@ export default function DesignerClient() {
   }
 
   function addToBasket() {
-    if (!design || !base || !size) return;
+    if (!design || !base) return;
     const price = priceForDesign(base.price, design);
-    addLine({ baseId: base.id, baseName: base.name, design, price, size });
-    setSize(null);
+    addLine({ baseId: base.id, baseName: base.name, design, price, size: null });
   }
 
   async function saveDesign() {
@@ -187,11 +183,6 @@ export default function DesignerClient() {
 
   const bothPainted = !!design && !design.left.blank && !design.right.blank;
   const price = useMemo(() => (design && base ? priceForDesign(base.price, design) : 0), [design, base]);
-  const sizeOptions = useMemo(
-    () => SIZES.map((s) => ({ size: s, qty: stock[base.id]?.[s] ?? 0 })),
-    [stock, base.id]
-  );
-
   if (!design || !base) {
     return <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>Loading designer…</div>;
   }
@@ -270,7 +261,7 @@ export default function DesignerClient() {
           <button className="btn btn-outline-white btn-sm" onClick={redo} disabled={redoStack.current.length === 0} aria-label="Redo">
             ↻
           </button>
-          <button className="btn btn-outline-white btn-sm" onClick={surpriseMe}>
+          <button className="btn btn-lime btn-sm" onClick={surpriseMe}>
             Surprise me
           </button>
         </div>
@@ -352,9 +343,6 @@ export default function DesignerClient() {
         price={price}
         bothPainted={bothPainted}
         baseName={base.name}
-        size={size}
-        onSizeChange={setSize}
-        sizeOptions={sizeOptions}
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
         onShareDesign={shareDesign}

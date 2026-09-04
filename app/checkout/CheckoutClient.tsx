@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
+import { SIZES } from '@/lib/data';
+import { useStock } from '@/lib/inventory';
 import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import styles from './checkout.module.css';
@@ -19,7 +21,8 @@ const STEP_HEADINGS: Record<CheckoutStep, string> = {
 };
 
 export default function CheckoutClient() {
-  const { lines, setLineQty, total: cartTotal, ready } = useCart();
+  const { lines, setLineSize, setLineQty, total: cartTotal, ready } = useCart();
+  const { stock } = useStock();
   const { session } = useAuth();
   const searchParams = useSearchParams();
   const cancelled = searchParams.get('cancelled') === '1';
@@ -35,8 +38,13 @@ export default function CheckoutClient() {
   const [submitting, setSubmitting] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
+  const allSized = lines.length > 0 && lines.every((l) => !!l.size);
   const total = cartTotal + DELIVERY_COST[deliveryMethod];
   const deliveryLabel = deliveryMethod === 'standard' ? 'Free' : `£${DELIVERY_COST.express}`;
+
+  function stockFor(baseId: string, size: string) {
+    return stock[baseId]?.[size] ?? 0;
+  }
 
   function autofillAddress() {
     setName(name || 'Sam Parker');
@@ -107,15 +115,57 @@ export default function CheckoutClient() {
             <div>
               <h2 className="h-display h3" style={{ marginBottom: 4 }}>Your bag</h2>
               <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 24 }}>
-                Sizes were chosen for each pair in the designer. Adjust quantity or delivery speed below.
+                Kids&rsquo; UK sizes. If they&rsquo;re between sizes, we recommend going up.
               </p>
 
-              {lines.map((l) => (
+              {lines.map((l) => {
+                const inStockCount = SIZES.filter((s) => stockFor(l.baseId, s) > 0).length;
+                return (
                 <div key={l.id} style={{ marginBottom: 24, paddingBottom: 24, borderBottom: '2px solid rgba(32,30,29,0.15)' }}>
                   <p style={{ fontWeight: 800, marginBottom: 6 }}>{l.baseName}</p>
                   <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14, fontWeight: 600 }}>
-                    Size: {l.size ? `UK ${l.size.replace('UK ', '')}` : 'Not set'}
+                    Live stock: {inStockCount} of {SIZES.length} sizes available.
                   </p>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
+                      border: '2px solid var(--ink)',
+                      marginRight: -2,
+                      marginBottom: 20,
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {SIZES.map((size) => {
+                      const qty = stockFor(l.baseId, size);
+                      const soldOut = qty === 0;
+                      const low = qty > 0 && qty <= 2;
+                      const selected = l.size === size;
+                      const statusLabel = soldOut ? 'Sold out' : low ? 'Low stock' : 'In stock';
+                      return (
+                        <button
+                          key={size}
+                          disabled={soldOut}
+                          onClick={() => setLineSize(l.id, size)}
+                          style={{
+                            borderRight: '2px solid var(--ink)',
+                            borderBottom: '2px solid var(--ink)',
+                            padding: '12px 8px',
+                            background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
+                            opacity: soldOut ? 0.55 : 1,
+                            textAlign: 'left',
+                            cursor: soldOut ? 'not-allowed' : 'pointer'
+                          }}
+                        >
+                          <div style={{ fontWeight: 800, fontSize: 13 }}>UK {size.replace('UK ', '')}</div>
+                          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: soldOut ? 'inherit' : low ? '#b3261e' : 'var(--muted)' }}>
+                            {statusLabel}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
 
                   <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
                     Quantity
@@ -140,7 +190,8 @@ export default function CheckoutClient() {
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
 
               <div style={{ marginBottom: 24, maxWidth: 420 }}>
                 <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
@@ -176,7 +227,7 @@ export default function CheckoutClient() {
                 We email you at every stage — painting, drying, sign-off and dispatch.
               </p>
 
-              <button className="btn btn-lime" onClick={() => setStep('delivery')}>
+              <button className="btn btn-lime" disabled={!allSized} onClick={() => setStep('delivery')}>
                 Continue →
               </button>
             </div>
