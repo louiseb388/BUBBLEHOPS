@@ -48,9 +48,9 @@
   transform: rotate(-5deg);
   font-family: 'Maximback', var(--font-archivo), sans-serif;
   color: var(--lime);
-  -webkit-text-stroke: 5px var(--ink);
+  -webkit-text-stroke: 3.5px var(--ink);
   paint-order: stroke fill;
-  font-size: clamp(50px, 5.5vw, 75px);
+  font-size: clamp(35px, 3.85vw, 53px);
   margin: 8px 0 clamp(80px, 15vw, 280px);
 }
 .subOutline {
@@ -58,7 +58,7 @@
   inset: 0;
   z-index: -1;
   color: #fff;
-  -webkit-text-stroke: 10px #fff;
+  -webkit-text-stroke: 7px #fff;
   pointer-events: none;
 }
 
@@ -78,13 +78,13 @@
 .snakeTrack {
   fill: none;
   stroke: rgba(255, 255, 255, 0.3);
-  stroke-width: 4;
+  stroke-width: 2.5;
   vector-effect: non-scaling-stroke;
 }
 .snakeDash {
   fill: none;
   stroke: #fff;
-  stroke-width: 5;
+  stroke-width: 3;
   stroke-linecap: round;
   stroke-dasharray: 18 82;
   vector-effect: non-scaling-stroke;
@@ -102,10 +102,10 @@
   background: var(--lime);
   color: var(--ink);
   font-weight: 700;
-  font-size: 21px;
+  font-size: 13px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 21px 36px;
+  padding: 13px 22px;
   white-space: nowrap;
   transition: background 0.15s ease;
 }
