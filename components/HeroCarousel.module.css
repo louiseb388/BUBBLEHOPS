@@ -37,7 +37,7 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(44px, 7.6vw, 112px);
+  font-size: clamp(57px, 9.9vw, 146px);
   margin: 0;
   color: #fff;
 }

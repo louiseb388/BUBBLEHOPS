@@ -51,17 +51,6 @@ export const BASES_IN_STOCK: BaseTrainer[] = [
     box: { left: '32%', top: '41%', width: '36%' }
   },
   {
-    id: 'borough',
-    img: '/photos/bubblehops-nike-court-borough-kids-trainer-base.jpg',
-    name: 'Nike Court Borough',
-    meta: 'Lace-up low · UK kids’ 13 – 6',
-    price: 88,
-    panel: 'base03',
-    ar: 328 / 162,
-    heel: { x: '13%', y: '79%' },
-    box: { left: '33%', top: '40%', width: '34%' }
-  },
-  {
     id: 'boroughmid',
     img: '/photos/bubblehops-nike-court-borough-mid-2-kids-trainer-base.jpg',
     name: 'Nike Court Borough Mid 2',
@@ -111,17 +100,19 @@ export const WORD_COLOURS: WordColour[] = [
 ];
 
 /** Gloss gradient for the two metallic colours — used both for the picker swatch
- * and, via background-clip:text, for the painted word's fill on the shoe itself. */
+ * and, via background-clip:text, for the painted word's fill on the shoe itself.
+ * Kept low-contrast (tight band around the base tone) so it still reads as
+ * metallic without looking chrome-like or washing out the word. */
 export const METALLIC_SWATCH_GRADIENT: Record<string, string> = {
-  grey: 'linear-gradient(135deg, #d8d8d8 0%, #f8f8f8 30%, #8a8a8a 55%, #e8e8e8 80%, #b0b0b0 100%)',
-  gold: 'linear-gradient(135deg, #d4af37 0%, #fbf3b9 30%, #a4780a 55%, #f3d675 80%, #b8860b 100%)'
+  grey: 'linear-gradient(135deg, #b8b8b8 0%, #e0e0e0 30%, #9c9c9c 55%, #d2d2d2 80%, #b0b0b0 100%)',
+  gold: 'linear-gradient(135deg, #cf9f2a 0%, #ecd583 30%, #a97c0e 55%, #ddbd5f 80%, #c0930f 100%)'
 };
 
 /** A stroke can't take a CSS gradient, so the metallic outline is faked with a darker
  * base tone plus a thinner lighter tone layered on top, reading as a subtle bevel. */
 export const METALLIC_STROKE_TONES: Record<string, { base: string; highlight: string }> = {
-  grey: { base: '#9a9a9a', highlight: '#f2f2f2' },
-  gold: { base: '#a4780a', highlight: '#f6e27a' }
+  grey: { base: '#a0a0a0', highlight: '#dcdcdc' },
+  gold: { base: '#a97c0e', highlight: '#ddbd5f' }
 };
 
 export const SIZES = ['UK 10', 'UK 11', 'UK 12', 'UK 13', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'];
@@ -132,7 +123,6 @@ export const SEED_STOCK: Record<string, Record<string, number>> = {
   lamorra: { 'UK 10': 2, 'UK 11': 3, 'UK 12': 0, 'UK 13': 4, 'UK 1': 2, 'UK 2': 1, 'UK 3': 0, 'UK 4': 3, 'UK 5': 2, 'UK 6': 1 },
   advantage: { 'UK 10': 4, 'UK 11': 2, 'UK 12': 3, 'UK 13': 2, 'UK 1': 5, 'UK 2': 3, 'UK 3': 0, 'UK 4': 0, 'UK 5': 0, 'UK 6': 0 },
   vspace: { 'UK 10': 1, 'UK 11': 0, 'UK 12': 2, 'UK 13': 3, 'UK 1': 2, 'UK 2': 2, 'UK 3': 1, 'UK 4': 0, 'UK 5': 1, 'UK 6': 2 },
-  borough: { 'UK 10': 0, 'UK 11': 0, 'UK 12': 0, 'UK 13': 2, 'UK 1': 3, 'UK 2': 4, 'UK 3': 2, 'UK 4': 2, 'UK 5': 1, 'UK 6': 3 },
   boroughmid: { 'UK 10': 2, 'UK 11': 1, 'UK 12': 1, 'UK 13': 0, 'UK 1': 2, 'UK 2': 2, 'UK 3': 3, 'UK 4': 1, 'UK 5': 0, 'UK 6': 2 },
   airforce: { 'UK 10': 0, 'UK 11': 0, 'UK 12': 0, 'UK 13': 0, 'UK 1': 0, 'UK 2': 0, 'UK 3': 0, 'UK 4': 0, 'UK 5': 0, 'UK 6': 0 }
 };
@@ -158,7 +148,7 @@ export const FAQS: Faq[] = [
   },
   {
     q: 'Best trainers to customise',
-    a: "Smooth leather uppers take paint best, which is why our base range is built around them. The Adidas Advantage and VS Pace are the most forgiving and the cheapest to start with; the Nike Court Borough gives you a bigger side panel for longer names; the Court Borough Mid 2 adds the ankle panel for more artwork. Canvas and knit trainers absorb paint unevenly and we don't recommend them."
+    a: "Smooth leather uppers take paint best, which is why our base range is built around them. The Adidas Advantage and VS Pace are the most forgiving and the cheapest to start with; the Court Borough Mid 2 adds the ankle panel for more artwork. Canvas and knit trainers absorb paint unevenly and we don't recommend them."
   },
   {
     q: 'How long do custom trainers take to make?',
@@ -205,7 +195,7 @@ export type RouteMeta = { path: string; title: string; desc: string; crumb: stri
 export const ROUTES: Record<string, RouteMeta> = {
   home: { path: '/', title: "BUBBLEHOPS | Hand-Painted Custom Kids' Trainers, Made in the UK", desc: "Design hand-painted custom kids' trainers online. Pick a base, add their name in graffiti lettering, and we paint it by hand in the UK. From £78, free UK delivery.", crumb: 'Home' },
   design: { path: '/create-your-own', title: "Create Your Own Custom Kids' Trainers | BUBBLEHOPS", desc: "Design custom kids' trainers in your browser: pick a base, type their name, choose colours and bubble stickers, then we hand-paint the pair in the UK.", crumb: 'Create your own' },
-  shop: { path: '/base-trainers', title: 'Base Trainers for Customising | BUBBLEHOPS', desc: "Every base trainer we hand-paint: Kappa La Morra, Adidas Advantage, Adidas VS Pace, Nike Court Borough and Court Borough Mid 2. UK kids' sizes 10 to 6.", crumb: 'Base trainers' },
+  shop: { path: '/base-trainers', title: 'Base Trainers for Customising | BUBBLEHOPS', desc: "Every base trainer we hand-paint: Kappa La Morra, Adidas Advantage, Adidas VS Pace and Court Borough Mid 2. UK kids' sizes 10 to 6.", crumb: 'Base trainers' },
   gallery: { path: '/gallery', title: 'Custom Trainer Gallery | Hand-Painted Pairs | BUBBLEHOPS', desc: "Hand-painted kids' trainers we have made: names, characters and graffiti lettering. Every pair is one of a kind.", crumb: 'Gallery' },
   about: { path: '/about', title: 'About BUBBLEHOPS | Hand-Painted Trainers Since 2006', desc: "BUBBLEHOPS began in 2006 with a single pair of hand-painted Stan Smiths. Today we work to custom order, painting one-of-a-kind kids' trainers by hand.", crumb: 'About' },
   faq: { path: '/sizing-and-care', title: 'Sizing, Care and FAQs | Custom Trainers | BUBBLEHOPS', desc: "UK kids' sizing, how long custom trainers take, how they are made, and how to look after hand-painted trainers.", crumb: 'Sizing & care' },
