@@ -48,3 +48,10 @@
   .word { font-size: 19px; -webkit-text-stroke: 2.25px var(--ink); }
   .wordOutline { -webkit-text-stroke: 6px var(--lime); }
 }
+
+/* Fixed small size at any viewport width — higher specificity than the media queries
+ * above so it always wins, since the footer's column width isn't tied to those breakpoints. */
+.compact.mark .bubbles { width: 24px; height: 22px; }
+.compact.mark .bubbleBig { width: 22px; height: 22px; left: 1px; top: 0; }
+.compact.mark .word { font-size: 19px; -webkit-text-stroke: 2.25px var(--ink); }
+.compact.mark .wordOutline { -webkit-text-stroke: 6px var(--lime); }

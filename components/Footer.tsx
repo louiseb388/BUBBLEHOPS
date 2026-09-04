@@ -30,7 +30,7 @@ export default function Footer() {
       <footer className={styles.footer}>
         <div className={`container ${styles.grid}`}>
           <div className={styles.col}>
-            <Logo />
+            <Logo compact />
             <p className={styles.tagline}>
               Hand-crafted kicks just for you.
               <br />

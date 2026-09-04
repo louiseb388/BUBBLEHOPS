@@ -129,7 +129,11 @@ export default function ShoeStage({
   const wordFontSize = preview ? shoeWidth * 0.06 : Math.min(128, Math.max(28, shoeWidth * 0.06));
   const strokeThick = preview ? shoeWidth * 0.0154 : Math.min(9.8, Math.max(2.8, shoeWidth * 0.0154));
   const strokeThin = preview ? shoeWidth * 0.0075 : Math.min(4.5, Math.max(1.5, shoeWidth * 0.0075));
-  const stickerSize = Math.max(10, shoeWidth * 0.061);
+  // Derived from wordFontSize (rather than shoeWidth independently) so stickers always stay in the
+  // same proportion to the lettering, including its legibility floor/ceiling — previously stickers
+  // scaled purely off shoeWidth, so at small (mobile) widths they fell out of proportion with the
+  // word, which clamps to a 28px floor there.
+  const stickerSize = wordFontSize;
 
   return (
     <div className={`${styles.stageOuter} ${which === 'right' ? styles.stageOuterRight : ''}`}>
@@ -151,7 +155,7 @@ export default function ShoeStage({
             disabled={atMaxStickers}
             aria-label="Add a BUBBLEHOPS sticker"
           >
-            <BubbleMark size={66} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
+            <BubbleMark size={66} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={20.25} />
           </button>
         )}
         <div
@@ -243,7 +247,7 @@ export default function ShoeStage({
                   onRemoveSticker?.(s.id);
                 }}
               >
-                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={13.5} />
+                <BubbleMark size={stickerSize} ring={outlineColour} fill={wordColour} glyph={stickerGlyph} keylineWidth={20.25} />
               </div>
             ))}
           </div>
