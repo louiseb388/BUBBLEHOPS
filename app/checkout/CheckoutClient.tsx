@@ -162,7 +162,8 @@ export default function CheckoutClient() {
                             background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
                             opacity: soldOut ? 0.55 : 1,
                             textAlign: 'left',
-                            cursor: soldOut ? 'not-allowed' : 'pointer'
+                            cursor: soldOut ? 'not-allowed' : 'pointer',
+                            border: 'none'
                           }}
                         >
                           <div style={{ fontWeight: 800, fontSize: 13 }}>UK {size.replace('UK ', '')}</div>
