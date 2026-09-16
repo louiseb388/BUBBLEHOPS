@@ -52,11 +52,11 @@ export default function HeroCarousel() {
       <div className={styles.overlay} />
 
       <div className={styles.layout}>
+        <div className={styles.spacer} />
+
         <div className={styles.content}>
           <h1 className={styles.headline}>YOUR KICKS</h1>
         </div>
-
-        <div className={styles.spacer} />
 
         <div className={styles.greenBar}>
           <div className={styles.greenBarInner}>

@@ -28,9 +28,11 @@
   color: #fff;
 }
 .content {
-  padding: 56px var(--pad) 0;
+  padding: 0 var(--pad);
+  margin-bottom: 10px;
   max-width: var(--max-w);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
   box-sizing: border-box;
 }
@@ -40,7 +42,7 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(57px, 9.9vw, 146px);
+  font-size: clamp(46px, 7.92vw, 117px);
   margin: 0;
   color: #fff;
 }
@@ -51,7 +53,7 @@
 .greenBar {
   flex: none;
   width: 100%;
-  background: var(--lime);
+  background: rgba(182, 234, 22, 0.9);
 }
 .greenBarInner {
   display: flex;
@@ -70,7 +72,7 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(57px, 9.9vw, 146px);
+  font-size: clamp(46px, 7.92vw, 117px);
   margin: 0;
   color: var(--ink);
 }
@@ -216,7 +218,6 @@
 
 @media (max-width: 640px) {
   .hero { height: 82vh; }
-  .content { padding-top: 96px; }
   .greenBarInner { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px var(--pad); }
   .bottomBar { flex-direction: column; align-items: stretch; gap: 16px; padding-top: 16px; padding-bottom: 20px; }
   .delivery { max-width: none; }
