@@ -118,6 +118,16 @@
   position: relative;
   display: inline-flex;
   text-decoration: none;
+  animation: ctaShake 6s ease-in-out infinite;
+}
+@keyframes ctaShake {
+  0%, 90%, 100% { transform: translateX(0) rotate(0); }
+  91%, 95% { transform: translateX(-4px) rotate(-3deg); }
+  93%, 97% { transform: translateX(4px) rotate(3deg); }
+  99% { transform: translateX(-1px) rotate(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snakeBtn { animation: none; }
 }
 .snakeSvg {
   position: absolute;
