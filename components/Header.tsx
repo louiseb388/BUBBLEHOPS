@@ -8,10 +8,7 @@ import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
 import styles from './Header.module.css';
 
-const NAV = [
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/about', label: 'About' }
-];
+const NAV = [{ href: '/about', label: 'About' }];
 
 export default function Header() {
   const pathname = usePathname();

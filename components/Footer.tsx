@@ -63,7 +63,6 @@ export default function Footer() {
             <h3>Shop</h3>
             <Link href="/create-your-own" className={styles.navLink}>Create your own</Link>
             <Link href="/base-trainers" className={styles.navLink}>Base trainers</Link>
-            <Link href="/gallery" className={styles.navLink}>Gallery</Link>
           </div>
           <div className={styles.col}>
             <h3>Studio</h3>

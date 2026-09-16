@@ -214,7 +214,6 @@ export const ROUTES: Record<string, RouteMeta> = {
   home: { path: '/', title: "BUBBLEHOPS | Hand-Painted Custom Kids' Trainers, Made in the UK", desc: "Design hand-painted custom kids' trainers online. Pick a base, add their name in graffiti lettering, and we paint it by hand in the UK. From £79, free UK delivery.", crumb: 'Home' },
   design: { path: '/create-your-own', title: "Create Your Own Custom Kids' Trainers | BUBBLEHOPS", desc: "Design custom kids' trainers in your browser: pick a base, type their name, choose colours and bubble stickers, then we hand-paint the pair in the UK.", crumb: 'Create your own' },
   shop: { path: '/base-trainers', title: 'Base Trainers for Customising | BUBBLEHOPS', desc: "The Adidas Advantage, hand-painted to order in four colourways: Green, Core Black, Bliss Pink and Grey One. UK kids' sizes 10 to 6.", crumb: 'Base trainers' },
-  gallery: { path: '/gallery', title: 'Custom Trainer Gallery | Hand-Painted Pairs | BUBBLEHOPS', desc: "Hand-painted kids' trainers we have made: names, characters and graffiti lettering. Every pair is one of a kind.", crumb: 'Gallery' },
   about: { path: '/about', title: 'About BUBBLEHOPS | Hand-Painted Trainers Since 2006', desc: "BUBBLEHOPS began in 2006 with a single pair of hand-painted Stan Smiths. Today we work to custom order, painting one-of-a-kind kids' trainers by hand.", crumb: 'About' },
   faq: { path: '/sizing-and-care', title: 'Sizing, Care and FAQs | Custom Trainers | BUBBLEHOPS', desc: "UK kids' sizing, how long custom trainers take, how they are made, and how to look after hand-painted trainers.", crumb: 'Sizing & care' },
   contact: { path: '/contact', title: 'Contact BUBBLEHOPS | Custom Trainer Studio', desc: 'Talk to the studio about a custom pair, an existing order or press. Email studio@bubblehops.com, replies within one working day.', crumb: 'Contact' },
@@ -229,8 +228,7 @@ export const ROUTES: Record<string, RouteMeta> = {
 // connor/anna use dedicated pre-cropped "-hero" variants (see public/photos) rather than
 // the originals: the hero banner's very wide aspect ratio meant object-position alone ran
 // out of range before the design cleared the lime bar, so the source photos are cropped
-// tighter around the design instead. The originals are untouched and still used in the
-// gallery, where the fuller shot is wanted.
+// tighter around the design instead.
 export const HERO_SLIDES = [
   { img: '/photos/bubblehops-hand-painted-kids-trainers-connor-hero.jpg', pos: '50% 50%' },
   { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 35%' },
@@ -239,24 +237,6 @@ export const HERO_SLIDES = [
   { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%' },
   { img: '/photos/bubblehops-hand-painted-kids-trainers-imax-hero.jpg', pos: '50% 50%' },
   { img: '/photos/bubblehops-hand-painted-kids-trainers-nova-hero.jpg', pos: '50% 50%' }
-];
-
-// The old generic /photos/0N.jpg files this array used to also list are the exact same
-// photos as the renamed bubblehops-hand-painted-...-0N.jpg ones below (just a rougher crop),
-// so they've been dropped rather than showing every pair twice. 02 (Scooby-Doo) and 04 (the
-// same pair's close-up) and 08 (Taz) are dropped too — licensed characters, not ours to show.
-export const GALLERY_IMAGES = [
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-01.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-03.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-05.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-06.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-07.jpg',
-  '/photos/bubblehops-hand-painted-custom-kids-trainers-09.jpg',
-  '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg',
-  '/photos/bubblehops-hand-painted-stan-smith-kids-trainers-tomski.jpg',
-  '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg',
-  '/photos/bubblehops-hand-painted-kids-trainers-imax.jpg',
-  '/photos/bubblehops-hand-painted-kids-trainers-nova.jpg'
 ];
 
 export const ABOUT_USES = [

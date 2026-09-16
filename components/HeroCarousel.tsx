@@ -44,7 +44,7 @@ export default function HeroCarousel() {
             src={slide.img}
             alt="Hand-painted custom kids' trainers by BUBBLEHOPS"
             className={styles.slideImg}
-            style={{ objectPosition: slide.pos }}
+            style={{ '--slide-pos': slide.pos } as React.CSSProperties}
             fetchPriority={i === 0 ? 'high' : 'low'}
           />
         </div>

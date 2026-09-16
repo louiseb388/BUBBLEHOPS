@@ -6,7 +6,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     home: 1.0,
     design: 0.9,
     shop: 0.8,
-    gallery: 0.7,
     about: 0.5,
     faq: 0.6,
     contact: 0.5,
