@@ -47,9 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { ok: false, message: 'Sign-in needs NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY set in your environment.' };
     }
     // No emailRedirectTo: this app has the shopper type the code from the email rather than
-    // click a link, so there's no redirect destination to configure. shouldCreateUser
-    // defaults to true, so a first-time email is signed up here too, not just returning ones.
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    // click a link, so there's no redirect destination to configure.
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
     if (error) return { ok: false, message: error.message };
     return { ok: true, message: 'Check your email for a 6-digit code.' };
   }
