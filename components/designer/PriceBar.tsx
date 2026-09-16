@@ -27,7 +27,7 @@ export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesi
           <div className={styles.priceNote}>{bothPainted ? 'Both shoes painted' : 'Single shoe painted'}</div>
         </div>
         <div className={styles.actions}>
-          <button className="btn btn-lime" onClick={handleAdd}>Choose size and checkout →</button>
+          <button className="btn btn-lime" onClick={handleAdd}>Choose size and checkout</button>
           <div className={styles.iconRow}>
             <button className="btn btn-outline-white" onClick={onSaveDesign} aria-label="Save design">
               <SaveIcon />

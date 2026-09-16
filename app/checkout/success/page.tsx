@@ -47,7 +47,7 @@ function SuccessInner() {
           </p>
 
           <div style={{ display: 'flex', gap: 10 }}>
-            <Link href="/create-your-own" className="btn btn-lime">Design another →</Link>
+            <Link href="/create-your-own" className="btn btn-lime">Design another</Link>
             <Link href="/" className="btn btn-outline">Back home</Link>
           </div>
         </div>

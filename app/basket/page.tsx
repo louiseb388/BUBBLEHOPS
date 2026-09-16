@@ -52,7 +52,7 @@ export default function BasketPage() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 0' }}>
         <span style={{ fontWeight: 800, fontSize: 20 }}>Total: £{total}</span>
-        <Link href="/checkout" className="btn btn-lime">Checkout →</Link>
+        <Link href="/checkout" className="btn btn-lime">Checkout</Link>
       </div>
     </div>
   );

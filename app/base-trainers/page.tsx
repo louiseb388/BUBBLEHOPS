@@ -37,7 +37,7 @@ export default function BaseTrainersPage() {
         }}
       >
         <p style={{ margin: 0, fontWeight: 700 }}>Don&apos;t see something? Get in touch.</p>
-        <Link href="/contact" className="btn btn-lime">Contact the studio →</Link>
+        <Link href="/contact" className="btn btn-lime">Contact the studio</Link>
       </div>
     </div>
   );

@@ -163,6 +163,12 @@ export default function ShoeStage({
   const showGuide = !side.blank && (wordOutside || stickerOutside);
 
   useEffect(() => {
+    // Desktop and mobile layouts both mount every ShoeStage at once (CSS display:none
+    // toggles which is shown — see Designer.module.css), so the hidden instance's stage
+    // never gets a real width from its ResizeObserver and its outside-check can go stale
+    // or wrong. Only let a currently-visible instance report into the shared checkout gate,
+    // or the hidden one can block checkout with a boundary warning nothing on screen shows.
+    if (ref.current?.offsetParent === null) return;
     onOutsideChange?.(showGuide);
   }, [showGuide, onOutsideChange]);
 

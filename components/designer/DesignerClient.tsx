@@ -421,7 +421,7 @@ export default function DesignerClient() {
                   setShowRepositionWarning(false);
                 }}
               >
-                Reposition it →
+                Reposition it
               </button>
             </div>
           </div>
