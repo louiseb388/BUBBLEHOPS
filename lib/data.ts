@@ -228,10 +228,10 @@ export const ROUTES: Record<string, RouteMeta> = {
 
 // Hero carousel — real customer photos, per-slide focal position for cover-fit framing.
 export const HERO_SLIDES = [
-  { img: '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg', pos: '50% 9%' },
-  { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 13%' },
+  { img: '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg', pos: '50% 0%' },
+  { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 0%' },
   { img: '/photos/bubblehops-hand-painted-tomski-kids-trainers-box.jpg', pos: '55% 38%' },
-  { img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg', pos: '50% 9%' },
+  { img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg', pos: '50% 0%' },
   { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%' }
 ];
 

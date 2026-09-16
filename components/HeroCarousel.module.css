@@ -150,14 +150,14 @@
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
   background: var(--ink);
   color: #fff;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 19.5px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 13px 22px;
+  padding: 19.5px 33px;
   white-space: nowrap;
   transition: background 0.15s ease;
 }
