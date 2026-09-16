@@ -51,52 +51,59 @@ export default function HeroCarousel() {
       ))}
       <div className={styles.overlay} />
 
-      <div className={styles.content}>
-        <h1 className={styles.headline}>
-          YOUR KICKS
-          <br />
-          YOUR WAY.
-        </h1>
-        <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
-        <div>
-          <Link href="/create-your-own" className={styles.snakeBtn}>
-            <svg className={styles.snakeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeTrack} />
-              <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeDash} />
-            </svg>
-            <span className={styles.snakeBtnInner}>Create your own</span>
-          </Link>
+      <div className={styles.layout}>
+        <div className={styles.content}>
+          <h1 className={styles.headline}>YOUR KICKS</h1>
         </div>
-      </div>
 
-      <div className={styles.bottomBar}>
-        <div className={styles.delivery}>
-          <span className={styles.deliveryLabel}>Free standard delivery</span>
-          <div className={styles.progressTrack}>
-            {HERO_SLIDES.map((slide, i) => (
-              <div key={slide.img} className={styles.progressSeg}>
-                <div
-                  className={styles.progressFill}
-                  style={{ width: i < index ? '100%' : i === index ? `${progress}%` : '0%' }}
-                />
-              </div>
-            ))}
+        <div className={styles.spacer} />
+
+        <div className={styles.greenBar}>
+          <div className={styles.greenBarInner}>
+            <h2 className={styles.headlineWay}>YOUR WAY.</h2>
+            <Link href="/create-your-own" className={styles.snakeBtn}>
+              <svg className={styles.snakeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeTrack} />
+                <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeDash} />
+              </svg>
+              <span className={styles.snakeBtnInner}>Create your own</span>
+            </Link>
           </div>
         </div>
 
-        <div className={styles.controls}>
-          <span className={styles.counter}>
-            {String(index + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
-          </span>
-          <button className={styles.ctrlBtn} onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>
-            {paused ? <PlayIcon /> : <PauseIcon />}
-          </button>
-          <button className={styles.ctrlBtn} onClick={prev} aria-label="Previous slide">
-            <ChevronIcon flip />
-          </button>
-          <button className={`${styles.ctrlBtn} ${styles.ctrlBtnNext}`} onClick={next} aria-label="Next slide">
-            <ChevronIcon />
-          </button>
+        <div className={styles.subWrap}>
+          <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
+        </div>
+
+        <div className={styles.bottomBar}>
+          <div className={styles.delivery}>
+            <span className={styles.deliveryLabel}>Free standard delivery</span>
+            <div className={styles.progressTrack}>
+              {HERO_SLIDES.map((slide, i) => (
+                <div key={slide.img} className={styles.progressSeg}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: i < index ? '100%' : i === index ? `${progress}%` : '0%' }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.controls}>
+            <span className={styles.counter}>
+              {String(index + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
+            </span>
+            <button className={styles.ctrlBtn} onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Play' : 'Pause'}>
+              {paused ? <PlayIcon /> : <PauseIcon />}
+            </button>
+            <button className={styles.ctrlBtn} onClick={prev} aria-label="Previous slide">
+              <ChevronIcon flip />
+            </button>
+            <button className={`${styles.ctrlBtn} ${styles.ctrlBtnNext}`} onClick={next} aria-label="Next slide">
+              <ChevronIcon />
+            </button>
+          </div>
         </div>
       </div>
     </section>
