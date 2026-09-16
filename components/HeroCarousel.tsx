@@ -69,10 +69,9 @@ export default function HeroCarousel() {
               <span className={styles.snakeBtnInner}>Create your own</span>
             </Link>
           </div>
-        </div>
-
-        <div className={styles.subWrap}>
-          <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
+          <div className={styles.subWrap}>
+            <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
+          </div>
         </div>
 
         <div className={styles.bottomBar}>
