@@ -60,7 +60,14 @@ export default function HeroCarousel() {
 
         <div className={styles.greenBar}>
           <div className={styles.greenBarInner}>
-            <h2 className={styles.headlineWay}>YOUR WAY.</h2>
+            <div className={styles.wayCol}>
+              <h2 className={styles.headlineWay}>YOUR WAY.</h2>
+              <p className={styles.sub}>
+                <span className={styles.subOuter} aria-hidden="true">&ldquo;What do yours say?&rdquo;</span>
+                <span className={styles.subInner} aria-hidden="true">&ldquo;What do yours say?&rdquo;</span>
+                <span className={styles.subFill}>&ldquo;What do yours say?&rdquo;</span>
+              </p>
+            </div>
             <Link href="/create-your-own" className={styles.snakeBtn}>
               <svg className={styles.snakeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                 <rect x="1" y="1" width="98" height="98" pathLength="100" className={styles.snakeTrack} />
@@ -68,9 +75,6 @@ export default function HeroCarousel() {
               </svg>
               <span className={styles.snakeBtnInner}>Create your own</span>
             </Link>
-          </div>
-          <div className={styles.subWrap}>
-            <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
           </div>
         </div>
 
