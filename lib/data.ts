@@ -132,10 +132,12 @@ export const SIZES = ['UK 10', 'UK 11', 'UK 12', 'UK 13', 'UK 1', 'UK 2', 'UK 3'
 
 // Seed matching source/inventory.js's FALLBACK_STOCK — used whenever Supabase
 // isn't configured (see lib/inventory.ts), so the designer/checkout always work.
+// Green/black/pink are marked out of stock (all sizes zeroed) — only grey is
+// currently sold. Bump these back up whenever those colourways are restocked.
 export const SEED_STOCK: Record<string, Record<string, number>> = {
-  advgreen: { 'UK 10': 3, 'UK 11': 2, 'UK 12': 4, 'UK 13': 2, 'UK 1': 3, 'UK 2': 2, 'UK 3': 1, 'UK 4': 2, 'UK 5': 1, 'UK 6': 2 },
-  advblack: { 'UK 10': 4, 'UK 11': 3, 'UK 12': 3, 'UK 13': 2, 'UK 1': 4, 'UK 2': 3, 'UK 3': 2, 'UK 4': 1, 'UK 5': 2, 'UK 6': 1 },
-  advpink: { 'UK 10': 2, 'UK 11': 3, 'UK 12': 2, 'UK 13': 1, 'UK 1': 3, 'UK 2': 2, 'UK 3': 1, 'UK 4': 1, 'UK 5': 0, 'UK 6': 2 },
+  advgreen: { 'UK 10': 0, 'UK 11': 0, 'UK 12': 0, 'UK 13': 0, 'UK 1': 0, 'UK 2': 0, 'UK 3': 0, 'UK 4': 0, 'UK 5': 0, 'UK 6': 0 },
+  advblack: { 'UK 10': 0, 'UK 11': 0, 'UK 12': 0, 'UK 13': 0, 'UK 1': 0, 'UK 2': 0, 'UK 3': 0, 'UK 4': 0, 'UK 5': 0, 'UK 6': 0 },
+  advpink: { 'UK 10': 0, 'UK 11': 0, 'UK 12': 0, 'UK 13': 0, 'UK 1': 0, 'UK 2': 0, 'UK 3': 0, 'UK 4': 0, 'UK 5': 0, 'UK 6': 0 },
   advgrey: { 'UK 10': 3, 'UK 11': 2, 'UK 12': 2, 'UK 13': 3, 'UK 1': 2, 'UK 2': 1, 'UK 3': 2, 'UK 4': 0, 'UK 5': 1, 'UK 6': 1 }
 };
 

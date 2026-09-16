@@ -29,7 +29,7 @@
 }
 .content {
   padding: 0 var(--pad);
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   max-width: var(--max-w);
   margin-left: auto;
   margin-right: auto;
@@ -42,7 +42,7 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(46px, 7.92vw, 117px);
+  font-size: clamp(32px, 5.5vw, 82px);
   margin: 0;
   color: #fff;
 }
@@ -60,10 +60,10 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 14px;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 14px var(--pad);
+  padding: 9.8px var(--pad);
   box-sizing: border-box;
 }
 .headlineWay {
@@ -72,7 +72,7 @@
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 0.88;
-  font-size: clamp(46px, 7.92vw, 117px);
+  font-size: clamp(32px, 5.5vw, 82px);
   margin: 0;
   color: var(--ink);
 }
@@ -81,7 +81,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 5.6px;
 }
 
 .sub {
@@ -90,14 +90,14 @@
   display: inline-block;
   transform: rotate(-5deg);
   font-family: 'Maximback', var(--font-archivo), sans-serif;
-  font-size: clamp(35px, 3.85vw, 53px);
+  font-size: clamp(25px, 2.7vw, 37px);
   margin: 0;
 }
 .subOuter {
   position: absolute;
   inset: 0;
   color: #fff;
-  -webkit-text-stroke: 8px #fff;
+  -webkit-text-stroke: 5.6px #fff;
   paint-order: stroke fill;
   pointer-events: none;
 }
@@ -105,7 +105,7 @@
   position: absolute;
   inset: 0;
   color: var(--ink);
-  -webkit-text-stroke: 4px var(--ink);
+  -webkit-text-stroke: 2.8px var(--ink);
   paint-order: stroke fill;
   pointer-events: none;
 }
@@ -150,14 +150,14 @@
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 18px;
+  gap: 12.6px;
   background: var(--ink);
   color: #fff;
   font-weight: 700;
-  font-size: 19.5px;
+  font-size: 13.65px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 19.5px 33px;
+  padding: 13.65px 23.1px;
   white-space: nowrap;
   transition: background 0.15s ease;
 }
@@ -234,7 +234,7 @@
 
 @media (max-width: 640px) {
   .hero { height: 82vh; }
-  .greenBarInner { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px var(--pad); }
+  .greenBarInner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px var(--pad); }
   .bottomBar { flex-direction: column; align-items: stretch; gap: 16px; padding-top: 16px; padding-bottom: 20px; }
   .delivery { max-width: none; }
 }

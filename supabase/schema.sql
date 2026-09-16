@@ -59,16 +59,17 @@ create policy "public read inventory" on inventory
 -- Seed inventory with the same numbers lib/data.ts's SEED_STOCK uses, so switching
 -- NEXT_PUBLIC_SUPABASE_URL/_ANON_KEY on doesn't silently zero out live stock. Adjust
 -- freely afterwards — this table is what the site reads from once configured.
+-- Green/black/pink are zeroed (out of stock) — only grey is currently sold.
 insert into inventory (base_id, size, qty) values
-  ('advgreen', 'UK 10', 3), ('advgreen', 'UK 11', 2), ('advgreen', 'UK 12', 4), ('advgreen', 'UK 13', 2),
-  ('advgreen', 'UK 1', 3), ('advgreen', 'UK 2', 2), ('advgreen', 'UK 3', 1), ('advgreen', 'UK 4', 2),
-  ('advgreen', 'UK 5', 1), ('advgreen', 'UK 6', 2),
-  ('advblack', 'UK 10', 4), ('advblack', 'UK 11', 3), ('advblack', 'UK 12', 3), ('advblack', 'UK 13', 2),
-  ('advblack', 'UK 1', 4), ('advblack', 'UK 2', 3), ('advblack', 'UK 3', 2), ('advblack', 'UK 4', 1),
-  ('advblack', 'UK 5', 2), ('advblack', 'UK 6', 1),
-  ('advpink', 'UK 10', 2), ('advpink', 'UK 11', 3), ('advpink', 'UK 12', 2), ('advpink', 'UK 13', 1),
-  ('advpink', 'UK 1', 3), ('advpink', 'UK 2', 2), ('advpink', 'UK 3', 1), ('advpink', 'UK 4', 1),
-  ('advpink', 'UK 5', 0), ('advpink', 'UK 6', 2),
+  ('advgreen', 'UK 10', 0), ('advgreen', 'UK 11', 0), ('advgreen', 'UK 12', 0), ('advgreen', 'UK 13', 0),
+  ('advgreen', 'UK 1', 0), ('advgreen', 'UK 2', 0), ('advgreen', 'UK 3', 0), ('advgreen', 'UK 4', 0),
+  ('advgreen', 'UK 5', 0), ('advgreen', 'UK 6', 0),
+  ('advblack', 'UK 10', 0), ('advblack', 'UK 11', 0), ('advblack', 'UK 12', 0), ('advblack', 'UK 13', 0),
+  ('advblack', 'UK 1', 0), ('advblack', 'UK 2', 0), ('advblack', 'UK 3', 0), ('advblack', 'UK 4', 0),
+  ('advblack', 'UK 5', 0), ('advblack', 'UK 6', 0),
+  ('advpink', 'UK 10', 0), ('advpink', 'UK 11', 0), ('advpink', 'UK 12', 0), ('advpink', 'UK 13', 0),
+  ('advpink', 'UK 1', 0), ('advpink', 'UK 2', 0), ('advpink', 'UK 3', 0), ('advpink', 'UK 4', 0),
+  ('advpink', 'UK 5', 0), ('advpink', 'UK 6', 0),
   ('advgrey', 'UK 10', 3), ('advgrey', 'UK 11', 2), ('advgrey', 'UK 12', 2), ('advgrey', 'UK 13', 3),
   ('advgrey', 'UK 1', 2), ('advgrey', 'UK 2', 1), ('advgrey', 'UK 3', 2), ('advgrey', 'UK 4', 0),
   ('advgrey', 'UK 5', 1), ('advgrey', 'UK 6', 1)
