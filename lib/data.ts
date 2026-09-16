@@ -73,6 +73,8 @@ export function getBase(id: string): BaseTrainer | undefined {
 
 export type WordColour = { id: string; value: string; label: string };
 
+// Restricted to the colours of the actual Uni Posca-style markers used to paint orders —
+// dropped lilac, orange, yellow and brown since there's no marker for them.
 export const WORD_COLOURS: WordColour[] = [
   { id: 'grey', value: '#c0c0c0', label: 'Silver' },
   { id: 'lime', value: '#b6ea16', label: 'Lime' },
@@ -81,14 +83,10 @@ export const WORD_COLOURS: WordColour[] = [
   { id: 'sky', value: '#4aa8ff', label: 'Sky blue' },
   { id: 'blue', value: '#1f4fd8', label: 'Blue' },
   { id: 'purple', value: 'oklch(0.52 0.22 305)', label: 'Purple' },
-  { id: 'lilac', value: '#b98cf0', label: 'Lilac' },
   { id: 'magenta', value: '#d81b8c', label: 'Magenta' },
   { id: 'pink', value: '#ff7ab8', label: 'Pink' },
   { id: 'red', value: '#e02a1b', label: 'Red' },
-  { id: 'orange', value: '#ff7a1a', label: 'Orange' },
-  { id: 'gold', value: '#e8b400', label: 'Gold' },
-  { id: 'yellow', value: '#f7e733', label: 'Yellow' },
-  { id: 'brown', value: '#7a4a1e', label: 'Brown' }
+  { id: 'gold', value: '#e8b400', label: 'Gold' }
 ];
 
 /** Gloss gradient stops for the two metallic colours — single source of truth for
