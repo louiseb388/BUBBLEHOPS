@@ -239,7 +239,8 @@ export const HERO_SLIDES = [
   { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 35%' },
   { img: '/photos/bubblehops-hand-painted-tomski-kids-trainers-box.jpg', pos: '55% 38%' },
   { img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna-hero.jpg', pos: '50% 50%' },
-  { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%' }
+  { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%' },
+  { img: '/photos/bubblehops-hand-painted-kids-trainers-imax-hero.jpg', pos: '50% 50%' }
 ];
 
 // The old generic /photos/0N.jpg files this array used to also list are the exact same
@@ -255,7 +256,8 @@ export const GALLERY_IMAGES = [
   '/photos/bubblehops-hand-painted-custom-kids-trainers-09.jpg',
   '/photos/bubblehops-hand-painted-kids-trainers-connor.jpg',
   '/photos/bubblehops-hand-painted-stan-smith-kids-trainers-tomski.jpg',
-  '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg'
+  '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna.jpg',
+  '/photos/bubblehops-hand-painted-kids-trainers-imax.jpg'
 ];
 
 export const ABOUT_USES = [
