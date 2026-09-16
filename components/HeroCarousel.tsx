@@ -40,13 +40,16 @@ export default function HeroCarousel() {
     <section className={styles.hero} aria-roledescription="carousel" aria-label="Customer trainer photos">
       {HERO_SLIDES.map((slide, i) => (
         <div key={slide.img} className={`${styles.slide} ${i === index ? styles.active : ''}`} aria-hidden={i !== index}>
-          <img
-            src={slide.img}
-            alt="Hand-painted custom kids' trainers by BUBBLEHOPS"
-            className={styles.slideImg}
-            style={{ '--slide-pos': slide.pos } as React.CSSProperties}
-            fetchPriority={i === 0 ? 'high' : 'low'}
-          />
+          <picture>
+            {slide.mobileImg && <source media="(max-width: 640px)" srcSet={slide.mobileImg} />}
+            <img
+              src={slide.img}
+              alt="Hand-painted custom kids' trainers by BUBBLEHOPS"
+              className={styles.slideImg}
+              style={{ '--slide-pos': slide.pos, '--slide-pos-mobile': slide.mobilePos || slide.pos } as React.CSSProperties}
+              fetchPriority={i === 0 ? 'high' : 'low'}
+            />
+          </picture>
         </div>
       ))}
       <div className={styles.overlay} />

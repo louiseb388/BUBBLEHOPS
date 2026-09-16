@@ -256,8 +256,9 @@
 
   .snakeBtnInner { font-size: 14px; padding: 13px 20px; gap: 10px; }
 
-  /* Cover-cropped for a wide desktop band; on a narrow/tall mobile viewport that same crop
-     would need to lose most of the design's width to fill the frame. contain keeps the whole
-     design visible and centred instead, letterboxed against the hero's own dark background. */
-  .slideImg { object-fit: contain; object-position: 50% 0%; }
+  /* Still cover (fills the frame, no letterboxing) but with its own horizontal focal point:
+     on a portrait mobile viewport, cover-fit shows the source image's full height and crops
+     width instead of height, so the desktop y-position doesn't apply — mobilePos/--slide-pos-mobile
+     (set per slide in lib/data.ts) keeps the design horizontally centred in that crop instead. */
+  .slideImg { object-fit: cover; object-position: var(--slide-pos-mobile, var(--slide-pos, 50% 50%)); }
 }

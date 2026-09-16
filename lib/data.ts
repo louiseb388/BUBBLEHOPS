@@ -225,18 +225,42 @@ export const ROUTES: Record<string, RouteMeta> = {
 };
 
 // Hero carousel — real customer photos, per-slide focal position for cover-fit framing.
-// connor/anna use dedicated pre-cropped "-hero" variants (see public/photos) rather than
-// the originals: the hero banner's very wide aspect ratio meant object-position alone ran
-// out of range before the design cleared the lime bar, so the source photos are cropped
-// tighter around the design instead.
+// connor/anna/imax/nova use dedicated pre-cropped "-hero" variants (see public/photos)
+// rather than the originals: the hero banner's very wide desktop aspect ratio meant
+// object-position alone ran out of range before the design cleared the lime bar, so the
+// source photos are cropped tighter around the design instead.
+// On mobile the banner is portrait, so cover-fit shows the image's full height and crops
+// width instead — mobilePos is the horizontal focal point for that crop. Where the
+// desktop "-hero" crop is too tight to leave enough width to crop from on a narrow
+// screen, mobileImg swaps in the wider, less-cropped original for that breakpoint only.
 export const HERO_SLIDES = [
-  { img: '/photos/bubblehops-hand-painted-kids-trainers-connor-hero.jpg', pos: '50% 50%' },
-  { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 35%' },
-  { img: '/photos/bubblehops-hand-painted-tomski-kids-trainers-box.jpg', pos: '55% 38%' },
-  { img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna-hero.jpg', pos: '50% 50%' },
-  { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%' },
-  { img: '/photos/bubblehops-hand-painted-kids-trainers-imax-hero.jpg', pos: '50% 50%' },
-  { img: '/photos/bubblehops-hand-painted-kids-trainers-nova-hero.jpg', pos: '50% 50%' }
+  {
+    img: '/photos/bubblehops-hand-painted-kids-trainers-connor-hero.jpg',
+    pos: '50% 50%',
+    mobileImg: '/photos/bubblehops-hand-painted-kids-trainers-connor-mobile.jpg',
+    mobilePos: '46% 50%'
+  },
+  { img: '/photos/bubblehops-custom-kids-trainers-hero.jpg', pos: '50% 35%', mobilePos: '46% 50%' },
+  { img: '/photos/bubblehops-hand-painted-tomski-kids-trainers-box.jpg', pos: '55% 38%', mobilePos: '68% 50%' },
+  {
+    img: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna-hero.jpg',
+    pos: '50% 50%',
+    mobileImg: '/photos/bubblehops-hand-painted-velcro-kids-trainers-anna-mobile.jpg',
+    mobilePos: '50% 50%'
+  },
+  { img: '/photos/bubblehops-hand-painted-milo-kids-trainers-box.jpg', pos: '50% 30%', mobilePos: '53% 50%' },
+  {
+    img: '/photos/bubblehops-hand-painted-kids-trainers-imax-hero.jpg',
+    pos: '50% 50%',
+    mobileImg: '/photos/bubblehops-hand-painted-kids-trainers-imax-mobile.jpg',
+    mobilePos: '44% 50%'
+  },
+  {
+    img: '/photos/bubblehops-hand-painted-kids-trainers-nova-hero.jpg',
+    pos: '50% 50%',
+    mobileImg: '/photos/bubblehops-hand-painted-kids-trainers-nova-mobile.jpg',
+    mobilePos: '52% 50%'
+  }
 ];
 
 export const ABOUT_USES = [
