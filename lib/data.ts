@@ -83,7 +83,6 @@ export const WORD_COLOURS: WordColour[] = [
   { id: 'sky', value: '#4aa8ff', label: 'Sky blue' },
   { id: 'blue', value: '#1f4fd8', label: 'Blue' },
   { id: 'purple', value: 'oklch(0.52 0.22 305)', label: 'Purple' },
-  { id: 'magenta', value: '#d81b8c', label: 'Magenta' },
   { id: 'pink', value: '#ff7ab8', label: 'Pink' },
   { id: 'red', value: '#e02a1b', label: 'Red' },
   { id: 'gold', value: '#e8b400', label: 'Gold' }

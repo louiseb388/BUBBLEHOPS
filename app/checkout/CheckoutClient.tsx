@@ -239,7 +239,7 @@ export default function CheckoutClient() {
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <Link href="/create-your-own" className="btn btn-outline">
-                  ← Back to my design
+                  Back to my design
                 </Link>
                 <button className="btn btn-lime" disabled={!allSized} onClick={() => setAdded(true)}>
                   Add to basket
@@ -278,7 +278,7 @@ export default function CheckoutClient() {
               </div>
 
               <div style={{ display: 'flex', gap: 10, marginTop: 28, flexWrap: 'wrap' }}>
-                <button className="btn btn-outline" onClick={() => setStep('bag')}>← Back</button>
+                <button className="btn btn-outline" onClick={() => setStep('bag')}>Back</button>
                 <button
                   className="btn btn-lime"
                   disabled={!name || !email || !address || !city || !postcode}
@@ -318,7 +318,7 @@ export default function CheckoutClient() {
               {payError && <p style={{ color: '#b3261e', marginBottom: 16 }}>{payError}</p>}
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <button className="btn btn-outline" onClick={() => setStep('delivery')}>← Back</button>
+                <button className="btn btn-outline" onClick={() => setStep('delivery')}>Back</button>
                 <button className="btn btn-lime" onClick={submitPayment} disabled={submitting}>
                   {submitting ? 'Redirecting to secure payment…' : 'Continue to secure payment'}
                 </button>

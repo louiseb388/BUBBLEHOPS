@@ -113,7 +113,7 @@ function SignInInner() {
               setError('');
             }}
           >
-            ← Use a different email
+            Use a different email
           </button>
         </form>
       )}
