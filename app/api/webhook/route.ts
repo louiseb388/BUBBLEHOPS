@@ -1,6 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { SITE } from '@/lib/data';
+
+function formatAmount(amount: number | null, currency: string | null): string {
+  if (amount == null || !currency) return 'unknown amount';
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency.toUpperCase() }).format(amount / 100);
+}
+
+/** Emails the studio the same way the contact form does (RESEND_API_KEY) — this is the
+ * only place a paid order actually reaches a human; without it, an order only shows up
+ * in the Stripe dashboard and (if configured) the Supabase orders table. */
+async function notifyStudio(stripe: Stripe, session: Stripe.Checkout.Session) {
+  const resendKey = process.env.RESEND_API_KEY;
+  const lines = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
+  const itemsText = lines.data
+    .map((li) => `- ${li.quantity} x ${li.description} — ${formatAmount(li.amount_total, session.currency)}`)
+    .join('\n');
+  const meta = session.metadata || {};
+  const body = [
+    `New paid order — ${formatAmount(session.amount_total, session.currency)}`,
+    '',
+    `Customer: ${session.customer_details?.email || 'unknown'}`,
+    `Deliver to: ${meta.delivery_name || 'unknown'}`,
+    `Address: ${meta.delivery_address || 'unknown'}`,
+    `Delivery: ${meta.delivery_method || 'standard'}`,
+    '',
+    'Items:',
+    itemsText,
+    '',
+    `Stripe session: ${session.id}`
+  ].join('\n');
+
+  if (!resendKey) {
+    console.log('[stripe webhook] RESEND_API_KEY not set — order not emailed, only logged:\n' + body);
+    return;
+  }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: `BUBBLEHOPS orders <noreply@${new URL(SITE.url).hostname}>`,
+        to: SITE.email,
+        subject: `New order — ${formatAmount(session.amount_total, session.currency)}`,
+        text: body
+      })
+    });
+    if (!res.ok) throw new Error(`Resend responded ${res.status}`);
+  } catch (e) {
+    console.error('Order notification email failed to send', e);
+  }
+}
 
 export async function POST(req: NextRequest) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -44,6 +95,8 @@ export async function POST(req: NextRequest) {
     } else {
       console.log('[stripe webhook] checkout.session.completed', session.id, session.customer_details?.email);
     }
+
+    await notifyStudio(stripe, session);
   }
 
   return NextResponse.json({ received: true });
