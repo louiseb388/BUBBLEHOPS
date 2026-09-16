@@ -63,32 +63,47 @@ export default function DesignerClient() {
   // Load: URL share param > explicit query base param (e.g. clicked from a base-shoe
   // card) > localStorage > first base. An explicit ?base= means the visitor just chose
   // that shoe, so it must win over whatever design happens to be stored from before.
+  // A sold-out base is never used at any step — a shared design, a stale ?base= link, or
+  // a design saved to localStorage before that base sold out all fall back to the first
+  // base still in stock instead.
   useEffect(() => {
+    const firstInStock = BASES_IN_STOCK.find((b) => !isSoldOut(stock, b.id)) || BASES_IN_STOCK[0];
+
     const shared = searchParams.get('d');
     if (shared) {
       const decoded = decodeDesign(shared);
       if (decoded) {
-        setDesign(decoded);
+        setDesign(isSoldOut(stock, decoded.baseId) ? { ...decoded, baseId: firstInStock.id } : decoded);
         return;
       }
     }
     const baseParam = searchParams.get('base');
-    if (baseParam && getBase(baseParam)) {
+    if (baseParam && getBase(baseParam) && !isSoldOut(stock, baseParam)) {
       setDesign(defaultDesign(baseParam));
       return;
     }
     const stored = typeof window !== 'undefined' ? window.localStorage.getItem(STORAGE_KEY) : null;
     if (stored) {
       try {
-        setDesign(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        setDesign(isSoldOut(stock, parsed.baseId) ? { ...parsed, baseId: firstInStock.id } : parsed);
         return;
       } catch {
         /* fall through */
       }
     }
-    setDesign(defaultDesign(BASES_IN_STOCK[0].id));
+    setDesign(defaultDesign(firstInStock.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Safety net for when live stock (Supabase) loads in after the design above was already
+  // picked from seed stock, and reveals the current base is actually sold out.
+  useEffect(() => {
+    if (!design || !isSoldOut(stock, design.baseId)) return;
+    const firstInStock = BASES_IN_STOCK.find((b) => !isSoldOut(stock, b.id));
+    if (firstInStock) setDesign((d) => (d ? { ...d, baseId: firstInStock.id } : d));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stock]);
 
   // Persist to localStorage (debounced via effect + state change).
   useEffect(() => {
@@ -128,6 +143,7 @@ export default function DesignerClient() {
   }
 
   function pickBase(id: string) {
+    if (isSoldOut(stock, id)) return;
     beginChange();
     setDesign((d) => (d ? { ...d, baseId: id } : d));
   }
