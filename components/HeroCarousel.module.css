@@ -53,14 +53,6 @@
   font-size: clamp(35px, 3.85vw, 53px);
   margin: 8px 0 clamp(80px, 15vw, 280px);
 }
-.subOutline {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  color: #fff;
-  -webkit-text-stroke: 7px #fff;
-  pointer-events: none;
-}
 
 .snakeBtn {
   position: relative;

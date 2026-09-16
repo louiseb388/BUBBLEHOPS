@@ -57,10 +57,7 @@ export default function HeroCarousel() {
           <br />
           YOUR WAY.
         </h1>
-        <p className={styles.sub}>
-          <span className={styles.subOutline} aria-hidden="true">&ldquo;What do yours say?&rdquo;</span>
-          &ldquo;What do yours say?&rdquo;
-        </p>
+        <p className={styles.sub}>&ldquo;What do yours say?&rdquo;</p>
         <div>
           <Link href="/create-your-own" className={styles.snakeBtn}>
             <svg className={styles.snakeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
