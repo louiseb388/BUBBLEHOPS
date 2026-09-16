@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Poppins, Archivo } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CookieBanner />
           </CartProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
