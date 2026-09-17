@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
+import { encodeDesign } from '@/lib/designer-types';
 import DesignPreview from '@/components/DesignPreview';
 import styles from './basket.module.css';
 
@@ -44,7 +45,12 @@ export default function BasketPage() {
             </div>
             <div className={styles.priceCol}>
               <p style={{ margin: '0 0 12px', fontWeight: 800, fontSize: 18 }}>£{line.price}</p>
-              <button className="btn btn-outline btn-sm" onClick={() => removeLine(line.id)}>Remove</button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Link href={`/create-your-own?d=${encodeDesign(line.design)}`} className="btn btn-outline btn-sm">
+                  Edit design
+                </Link>
+                <button className="btn btn-outline btn-sm" onClick={() => removeLine(line.id)}>Remove</button>
+              </div>
             </div>
           </div>
         ))}
