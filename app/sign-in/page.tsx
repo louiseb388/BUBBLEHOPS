@@ -43,11 +43,11 @@ function SignInInner() {
 
   return (
     <div className="container" style={{ paddingTop: 56, paddingBottom: 96, maxWidth: 460 }}>
-      <p className="eyebrow">Sign in</p>
-      <h1 className="h-display h1" style={{ marginBottom: 16 }}>Great to meet you.</h1>
+      <p className="eyebrow">Sign in or sign up</p>
+      <h1 className="h-display h1" style={{ marginBottom: 16 }}>Nice to see you.</h1>
       <p className="lede" style={{ marginBottom: 32 }}>
         {step === 'email'
-          ? 'No password — we’ll email you a code to sign in with.'
+          ? 'New here or coming back — pop in your email and we’ll send you a code. No password to remember either way.'
           : <>We&rsquo;ve sent an 8-digit code to <strong>{email}</strong>.</>}
       </p>
 
