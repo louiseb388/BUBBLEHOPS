@@ -13,11 +13,19 @@ type Order = {
   created_at: string;
   amount_total: number;
   status: string;
+  photo_url: string | null;
   stripe_session_id: string;
   metadata: { delivery_name?: string } | null;
 };
 type SavedDesign = { id: string; base_id: string; design: DesignState; created_at: string };
 type Profile = { name: string; phone: string; address: string };
+
+const STATUS_LABELS: Record<string, string> = {
+  paid: 'Paid',
+  painting: 'Painting',
+  photo_sent: 'Photo sent — check below',
+  shipped: 'Shipped'
+};
 
 function firstToken(name: string | null | undefined): string | null {
   return name?.trim().split(/\s+/)[0] || null;
@@ -47,7 +55,7 @@ export default function AccountPage() {
     }
     (async () => {
       const [ordersRes, savedRes, profileRes] = await Promise.all([
-        supabase.from('orders').select('id,created_at,amount_total,status,stripe_session_id,metadata').eq('email', session.user.email ?? '').order('created_at', { ascending: false }),
+        supabase.from('orders').select('id,created_at,amount_total,status,photo_url,stripe_session_id,metadata').eq('email', session.user.email ?? '').order('created_at', { ascending: false }),
         supabase.from('saved_designs').select('id,base_id,design,created_at').eq('user_id', session.user.id).order('created_at', { ascending: false }),
         supabase.from('profiles').select('name,phone,address').eq('id', session.user.id).maybeSingle()
       ]);
@@ -115,13 +123,19 @@ export default function AccountPage() {
             <p className="body-text">No orders yet.</p>
           ) : (
             orders.map((o) => (
-              <div key={o.id} style={{ borderBottom: '2px solid var(--ink)', padding: '16px 0', display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                  <p style={{ margin: 0, fontWeight: 700 }}>{o.stripe_session_id}</p>
-                  <p className="body-text" style={{ margin: 0 }}>{new Date(o.created_at).toLocaleDateString('en-GB')}</p>
+              <div key={o.id} style={{ borderBottom: '2px solid var(--ink)', padding: '16px 0', display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 16 }}>
+                  {o.photo_url && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={o.photo_url} alt="Your finished trainers" style={{ width: 72, height: 72, objectFit: 'cover', border: '2px solid var(--ink)' }} />
+                  )}
+                  <div>
+                    <p style={{ margin: 0, fontWeight: 700 }}>{o.stripe_session_id}</p>
+                    <p className="body-text" style={{ margin: 0 }}>{new Date(o.created_at).toLocaleDateString('en-GB')}</p>
+                  </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <span className="tag tag-lime">{o.status}</span>
+                  <span className="tag tag-lime">{STATUS_LABELS[o.status] || o.status}</span>
                   <p style={{ margin: '6px 0 0', fontWeight: 800 }}>£{(o.amount_total / 100).toFixed(2)}</p>
                 </div>
               </div>

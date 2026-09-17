@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { SITE } from '@/lib/data';
+import { sendEmail } from '@/lib/email';
 
 function formatAmount(amount: number | null, currency: string | null): string {
   if (amount == null || !currency) return 'unknown amount';
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency.toUpperCase() }).format(amount / 100);
 }
 
-/** Emails the studio the same way the contact form does (RESEND_API_KEY) — this is the
- * only place a paid order actually reaches a human; without it, an order only shows up
- * in the Stripe dashboard and (if configured) the Supabase orders table. */
+/** Emails the studio — this is the only place a paid order actually reaches a human;
+ * without it, an order only shows up in the Stripe dashboard and (if configured) the
+ * Supabase orders table. */
 async function notifyStudio(stripe: Stripe, session: Stripe.Checkout.Session) {
-  const resendKey = process.env.RESEND_API_KEY;
   const lines = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
   const itemsText = lines.data
     .map((li) => `- ${li.quantity} x ${li.description} — ${formatAmount(li.amount_total, session.currency)}`)
@@ -32,25 +32,37 @@ async function notifyStudio(stripe: Stripe, session: Stripe.Checkout.Session) {
     `Stripe session: ${session.id}`
   ].join('\n');
 
-  if (!resendKey) {
-    console.log('[stripe webhook] RESEND_API_KEY not set — order not emailed, only logged:\n' + body);
-    return;
-  }
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: `BUBBLEHOPS orders <noreply@${new URL(SITE.url).hostname}>`,
-        to: SITE.email,
-        subject: `New order — ${formatAmount(session.amount_total, session.currency)}`,
-        text: body
-      })
-    });
-    if (!res.ok) throw new Error(`Resend responded ${res.status}`);
-  } catch (e) {
-    console.error('Order notification email failed to send', e);
-  }
+  await sendEmail({ to: SITE.email, subject: `New order — ${formatAmount(session.amount_total, session.currency)}`, text: body });
+}
+
+/** Emails the customer their own order confirmation — separate from notifyStudio above,
+ * which only reaches the shop. Without this, a paying customer got nothing but Stripe's
+ * own receipt (if enabled) and no mention of the painting/photo/shipping process. */
+async function notifyCustomer(stripe: Stripe, session: Stripe.Checkout.Session) {
+  const email = session.customer_details?.email;
+  if (!email) return;
+  const lines = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
+  const itemsText = lines.data
+    .map((li) => `- ${li.quantity} x ${li.description} — ${formatAmount(li.amount_total, session.currency)}`)
+    .join('\n');
+  const meta = session.metadata || {};
+  const body = [
+    `Thanks${meta.delivery_name ? `, ${meta.delivery_name.split(/\s+/)[0]}` : ''} — your order's in!`,
+    '',
+    'Items:',
+    itemsText,
+    '',
+    `Total: ${formatAmount(session.amount_total, session.currency)}`,
+    `Delivering to: ${meta.delivery_address || 'the address you gave at checkout'}`,
+    '',
+    "What happens next: painting takes about three days, then we'll email you a photo of the",
+    "finished pair before it ships — you'll have 24 hours to flag anything. After that it's",
+    `${meta.delivery_method === 'express' ? 'next-day' : 'two to three days'} delivery.`,
+    '',
+    'You can check your order status any time by signing in at ' + SITE.url + '/account.'
+  ].join('\n');
+
+  await sendEmail({ to: email, subject: `Your BUBBLEHOPS order is confirmed — ${formatAmount(session.amount_total, session.currency)}`, text: body });
 }
 
 export async function POST(req: NextRequest) {
@@ -97,6 +109,7 @@ export async function POST(req: NextRequest) {
     }
 
     await notifyStudio(stripe, session);
+    await notifyCustomer(stripe, session);
   }
 
   return NextResponse.json({ received: true });

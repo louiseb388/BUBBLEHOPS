@@ -4,8 +4,13 @@
 -- after creating the project. Covers every table the app code already expects:
 --   - saved_designs: designer "Save design" (components/designer/DesignerClient.tsx)
 --   - orders:        Stripe webhook order log (app/api/webhook/route.ts) + account order history
+--                     + status/photo_url set from /admin (app/admin/page.tsx)
 --   - profiles:      name/phone/address editable on /account's "My details" tab
 --   - inventory:     live stock, optional (lib/inventory.ts) — falls back to SEED_STOCK if unused
+--   - order-photos:  Storage bucket for the "here's your finished pair" photo /admin sends
+--
+-- /admin (the order status/photo page) needs one more env var beyond the usual Supabase
+-- ones: ADMIN_EMAIL, set to whichever email you'll sign in with — see .env.example.
 --
 -- Auth itself needs no schema: passwordless email-code sign-in (like Vercel's — no link to
 -- click, the shopper types the code) uses Supabase's built-in auth.users table. Email auth
@@ -31,6 +36,9 @@ create policy "update own saved designs" on saved_designs
 create policy "delete own saved designs" on saved_designs
   for delete using (auth.uid() = user_id);
 
+-- status moves through 'paid' -> 'painting' -> 'photo_sent' -> 'shipped', set from
+-- /admin (app/admin/page.tsx) — plain text rather than an enum so a stage can be renamed
+-- or added later without a migration.
 create table if not exists orders (
   id               uuid primary key default gen_random_uuid(),
   stripe_session_id text not null unique,
@@ -39,13 +47,23 @@ create table if not exists orders (
   currency         text,
   metadata         jsonb,
   status           text not null default 'paid',
+  photo_url        text,
   created_at       timestamptz not null default now()
 );
+alter table orders add column if not exists photo_url text;
 alter table orders enable row level security;
 -- Written by the webhook using the service-role key, which bypasses RLS entirely — this
 -- policy only governs the browser (anon key + user session) read in app/account/page.tsx.
 create policy "read own orders by email" on orders
   for select using (auth.jwt() ->> 'email' = email);
+
+-- Finished-pair photos, uploaded from /admin. Public bucket — the customer order-photo
+-- email links straight to the file, no signed URL needed — but every write goes through
+-- app/api/admin/orders/[id]/route.ts using the service-role key, which bypasses object
+-- RLS entirely, so no insert/update policy on storage.objects is needed either.
+insert into storage.buckets (id, name, public)
+values ('order-photos', 'order-photos', true)
+on conflict (id) do nothing;
 
 create table if not exists profiles (
   id         uuid primary key references auth.users (id) on delete cascade,
