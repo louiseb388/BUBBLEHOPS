@@ -94,7 +94,6 @@ export async function POST(req: NextRequest) {
       line_items,
       allow_promotion_codes: true,
       customer_email: delivery.email,
-      shipping_address_collection: { allowed_countries: ['GB'] },
       metadata: {
         delivery_name: delivery.name,
         delivery_address: `${delivery.address}, ${delivery.city}, ${delivery.postcode}`.slice(0, 480),
