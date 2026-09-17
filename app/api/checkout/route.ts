@@ -92,6 +92,7 @@ export async function POST(req: NextRequest) {
       mode: 'payment',
       payment_method_types: PAYMENT_METHOD_TYPES,
       line_items,
+      allow_promotion_codes: true,
       customer_email: delivery.email,
       shipping_address_collection: { allowed_countries: ['GB'] },
       metadata: {
