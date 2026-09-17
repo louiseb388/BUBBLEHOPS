@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart, type BagLine } from '@/lib/cart-context';
+import { useAuth } from '@/lib/auth-context';
 import CheckoutProgress from '@/components/checkout/CheckoutProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import styles from '../checkout.module.css';
@@ -16,7 +17,9 @@ function orderRef(sessionId: string) {
 function SuccessInner() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const email = searchParams.get('email') || '';
   const { lines, total, clear, ready } = useCart();
+  const { session, loading: authLoading } = useAuth();
   const [snapshot, setSnapshot] = useState<{ lines: BagLine[]; total: number } | null>(null);
 
   useEffect(() => {
@@ -45,6 +48,21 @@ function SuccessInner() {
             We&apos;ve emailed you a copy. Painting takes about three days, then two to three days for delivery —
             next-day if you picked it. You&apos;ll get a photo before it ships.
           </p>
+
+          {!authLoading && !session && (
+            <div style={{ border: '2px solid var(--ink)', padding: 20, marginBottom: 24, maxWidth: 460 }}>
+              <p style={{ fontWeight: 800, marginBottom: 6 }}>Want to track this order?</p>
+              <p className="body-text" style={{ marginBottom: 16 }}>
+                Create an account with the same email and it&apos;ll show up under your orders automatically — no need to re-enter anything.
+              </p>
+              <Link
+                href={`/sign-in?next=/account${email ? `&email=${encodeURIComponent(email)}` : ''}`}
+                className="btn btn-lime btn-sm"
+              >
+                Create an account
+              </Link>
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: 10 }}>
             <Link href="/create-your-own" className="btn btn-lime">Design another</Link>

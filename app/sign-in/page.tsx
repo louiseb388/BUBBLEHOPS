@@ -10,7 +10,7 @@ function SignInInner() {
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/account';
   const [step, setStep] = useState<'email' | 'code'>('email');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(searchParams.get('email') || '');
   const [code, setCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');

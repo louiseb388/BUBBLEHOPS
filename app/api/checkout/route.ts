@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
         delivery_method: deliveryMethod,
         line_count: String(lines.length)
       },
-      success_url: `${SITE.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${SITE.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}&email=${encodeURIComponent(delivery.email)}`,
       cancel_url: `${SITE.url}/checkout?cancelled=1`
     });
 
