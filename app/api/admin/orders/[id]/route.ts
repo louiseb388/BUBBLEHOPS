@@ -17,6 +17,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: 'Missing status.' }, { status: 400 });
   }
 
+  const { data: before } = await admin.from('orders').select('status').eq('id', params.id).single();
+
   const update: { status: string; photo_url?: string } = { status };
   let photoBuffer: Buffer | null = null;
   let photoExt = 'jpg';
@@ -40,6 +42,29 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Only email on the transition into "painting", not every save while it's already there —
+  // status can be nudged back and forth (e.g. correcting a mistake) without re-sending.
+  if (status === 'painting' && before?.status !== 'painting' && order?.email) {
+    const meta = (order.metadata || {}) as { delivery_name?: string };
+    const firstName = meta.delivery_name?.trim().split(/\s+/)[0];
+    await sendEmail({
+      to: order.email,
+      subject: 'Your BUBBLEHOPS pair is being painted',
+      text: [
+        `Hey${firstName ? ` ${firstName}` : ''} — good news, we've started painting your pair.`,
+        '',
+        "It usually takes about three days from here. We'll email you a photo of the finished pair before it ships.",
+        '',
+        `Check on it any time at ${SITE.url}/account.`
+      ].join('\n'),
+      html: `
+        <p>Hey${firstName ? ` ${firstName}` : ''} — good news, we've started painting your pair.</p>
+        <p>It usually takes about three days from here. We'll email you a photo of the finished pair before it ships.</p>
+        <p>Check on it any time at <a href="${SITE.url}/account">${SITE.url}/account</a>.</p>
+      `
+    });
+  }
 
   // Only email the customer when a new photo actually came in with this request — status
   // can otherwise be nudged back and forth (e.g. correcting a mistake) without re-sending.
