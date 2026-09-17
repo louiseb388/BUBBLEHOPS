@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Poppins, Archivo } from 'next/font/google';
+import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Header from '@/components/Header';
@@ -109,6 +110,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </CartProvider>
         </AuthProvider>
         <Analytics />
+        <Script id="brevo-conversations" strategy="lazyOnload">
+          {`
+            (function(d, w, c) {
+                w.BrevoConversationsID = '6aabb1d5462b25580c06b6fe';
+                w[c] = w[c] || function() {
+                    (w[c].q = w[c].q || []).push(arguments);
+                };
+                var s = d.createElement('script');
+                s.async = true;
+                s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+                if (d.head) d.head.appendChild(s);
+            })(document, window, 'BrevoConversations');
+          `}
+        </Script>
       </body>
     </html>
   );
