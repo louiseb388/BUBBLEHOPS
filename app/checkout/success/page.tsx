@@ -46,7 +46,8 @@ function SuccessInner() {
           </h2>
           <p className="body-text" style={{ marginBottom: 24, maxWidth: 460 }}>
             We&apos;ve emailed you a copy. Painting takes about three days, then two to three days for delivery —
-            next-day if you picked it. You&apos;ll get a photo before it ships.
+            next-day if you picked it. You&apos;ll get a photo before it ships — keep an eye on{' '}
+            <Link href="/account" style={{ textDecoration: 'underline' }}>your account</Link> for updates along the way.
           </p>
 
           {!authLoading && !session && (
