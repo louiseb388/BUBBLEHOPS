@@ -41,10 +41,15 @@ export default function BasketPage() {
                 Right: {line.design.right.blank ? 'Blank' : line.design.right.word || '—'}
                 <br />
                 Size: {line.size}
+                <br />
+                Quantity: {line.qty}
               </p>
             </div>
             <div className={styles.priceCol}>
-              <p style={{ margin: '0 0 12px', fontWeight: 800, fontSize: 18 }}>£{line.price}</p>
+              <p style={{ margin: '0 0 12px', fontWeight: 800, fontSize: 18 }}>
+                £{line.price}
+                {line.qty > 1 && <span className="body-text"> × {line.qty} = £{line.price * line.qty}</span>}
+              </p>
               <div style={{ display: 'flex', gap: 8 }}>
                 <Link href={`/create-your-own?d=${encodeDesign(line.design)}`} className="btn btn-outline btn-sm">
                   Edit design
