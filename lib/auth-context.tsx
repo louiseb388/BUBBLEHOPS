@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // click a link, so there's no redirect destination to configure.
     const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
     if (error) return { ok: false, message: error.message };
-    return { ok: true, message: 'Check your email for a 6-digit code.' };
+    return { ok: true, message: 'Check your email for an 8-digit code.' };
   }
 
   async function verifyCode(email: string, code: string) {
