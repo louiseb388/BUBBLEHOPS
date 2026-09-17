@@ -78,14 +78,14 @@ function SignInInner() {
       ) : (
         <form onSubmit={onSubmitCode} style={{ display: 'grid', gap: 16 }}>
           <label style={{ display: 'grid', gap: 6 }}>
-            <span style={{ fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}>6-digit code</span>
+            <span style={{ fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Verification code</span>
             <input
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
               required
               autoFocus
-              maxLength={6}
+              maxLength={10}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
               style={{
@@ -101,7 +101,10 @@ function SignInInner() {
             />
           </label>
           {error && <p style={{ color: '#b3261e', margin: 0 }}>{error}</p>}
-          <button className="btn btn-lime" type="submit" disabled={submitting || code.length !== 6}>
+          {/* Supabase's OTP length isn't fixed at 6 — it's whatever the project's
+              email OTP setting produces (this project's is 8), so only require
+              some digits rather than an exact count. */}
+          <button className="btn btn-lime" type="submit" disabled={submitting || code.length < 6}>
             {submitting ? 'Checking…' : 'Sign in'}
           </button>
           <button
