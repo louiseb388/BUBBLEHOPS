@@ -22,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = useMemo(() => getSupabase(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileName, setProfileName] = useState<string | null>(null);
 
   useEffect(() => {
     if (!supabase) {
@@ -36,11 +37,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
 
+  useEffect(() => {
+    if (!supabase || !session) {
+      setProfileName(null);
+      return;
+    }
+    supabase
+      .from('profiles')
+      .select('name')
+      .eq('id', session.user.id)
+      .maybeSingle()
+      .then(({ data }) => setProfileName(data?.name ?? null));
+  }, [supabase, session]);
+
   const initials = useMemo(() => {
+    // First + last initial from the saved profile name, once there's a first AND last
+    // name on record — otherwise fall back to the first two letters of the email.
+    const parts = profileName?.trim().split(/\s+/) ?? [];
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     const email = session?.user?.email;
     if (!email) return '';
     return email.slice(0, 2).toUpperCase();
-  }, [session]);
+  }, [session, profileName]);
 
   async function signInWithEmail(email: string) {
     if (!supabase) {

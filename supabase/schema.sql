@@ -4,6 +4,7 @@
 -- after creating the project. Covers every table the app code already expects:
 --   - saved_designs: designer "Save design" (components/designer/DesignerClient.tsx)
 --   - orders:        Stripe webhook order log (app/api/webhook/route.ts) + account order history
+--   - profiles:      name/phone/address editable on /account's "My details" tab
 --   - inventory:     live stock, optional (lib/inventory.ts) — falls back to SEED_STOCK if unused
 --
 -- Auth itself needs no schema: passwordless email-code sign-in (like Vercel's — no link to
@@ -45,6 +46,21 @@ alter table orders enable row level security;
 -- policy only governs the browser (anon key + user session) read in app/account/page.tsx.
 create policy "read own orders by email" on orders
   for select using (auth.jwt() ->> 'email' = email);
+
+create table if not exists profiles (
+  id         uuid primary key references auth.users (id) on delete cascade,
+  name       text,
+  phone      text,
+  address    text,
+  updated_at timestamptz not null default now()
+);
+alter table profiles enable row level security;
+create policy "read own profile" on profiles
+  for select using (auth.uid() = id);
+create policy "insert own profile" on profiles
+  for insert with check (auth.uid() = id);
+create policy "update own profile" on profiles
+  for update using (auth.uid() = id);
 
 create table if not exists inventory (
   base_id text not null,
