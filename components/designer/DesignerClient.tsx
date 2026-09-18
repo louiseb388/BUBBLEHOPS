@@ -1,8 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BASES_IN_STOCK, getBase, WORD_COLOURS } from '@/lib/data';
+import { BASES_IN_STOCK, getBase, SIZES, WORD_COLOURS } from '@/lib/data';
 import { useStock, isSoldOut } from '@/lib/inventory';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
@@ -16,6 +17,7 @@ import {
   type Side
 } from '@/lib/designer-types';
 import { renderDesignJpeg } from '@/lib/export-design';
+import FlowProgress from '@/components/FlowProgress';
 import ShoeStage, { MAX_STICKERS } from './ShoeStage';
 import ShoeControls from './ShoeControls';
 import Toolbar from './Toolbar';
@@ -40,8 +42,18 @@ export default function DesignerClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { stock } = useStock();
-  const { addLine } = useCart();
+  const { addLine, setLineQty } = useCart();
   const { session } = useAuth();
+
+  // Size and quantity, chosen one step earlier on /size (step 2 of the trainer → size →
+  // design → delivery → payment flow) and carried through in the URL — null when this page
+  // was reached another way (a shared design link, "Edit design" without them, the "Create
+  // your own" nav CTA before it existed). Read once; the size/qty step never revisits this
+  // page with different values without a fresh navigation.
+  const flowSize = searchParams.get('size');
+  const flowQty = Number(searchParams.get('qty'));
+  const size = flowSize && SIZES.includes(flowSize) ? flowSize : null;
+  const qty = flowQty > 0 ? Math.min(9, Math.round(flowQty)) : 1;
 
   const [design, setDesign] = useState<DesignState | null>(null);
   const [activeSide, setActiveSide] = useState<'left' | 'right'>('left');
@@ -226,7 +238,8 @@ export default function DesignerClient() {
       return false;
     }
     const price = priceForDesign(base.price, design);
-    addLine({ baseId: base.id, baseName: base.name, design, price, size: null });
+    const id = addLine({ baseId: base.id, baseName: base.name, design, price, size });
+    if (qty > 1) setLineQty(id, qty);
     return true;
   }
 
@@ -350,6 +363,13 @@ export default function DesignerClient() {
 
   return (
     <div>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 4 }}>
+        <FlowProgress step="design" />
+        <Link href={`/size?base=${base.id}${size ? `&size=${size}` : ''}&qty=${qty}`} className="btn btn-outline btn-sm">
+          Back
+        </Link>
+      </div>
+
       <Toolbar
         base={base}
         stock={stock}
@@ -414,6 +434,7 @@ export default function DesignerClient() {
         onAddToBasket={addToBasket}
         onSaveDesign={saveDesign}
         onShareDesign={shareDesign}
+        ctaLabel={size ? 'Continue to checkout' : 'Choose size and checkout'}
       />
 
       {saveMsg && (

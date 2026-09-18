@@ -14,9 +14,8 @@ export default function NotFound() {
           That page doesn&apos;t exist — but here&apos;s where you probably meant to go.
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12 }}>
-          <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
+          <Link href="/base-trainers" className="btn btn-lime">Create your own</Link>
           <Link href="/" className="btn btn-outline-white">Home</Link>
-          <Link href="/base-trainers" className="btn btn-outline-white">Base trainers</Link>
           <Link href="/sizing-and-care" className="btn btn-outline-white">Sizing & care</Link>
           <Link href="/contact" className="btn btn-outline-white">Contact</Link>
         </div>

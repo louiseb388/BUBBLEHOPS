@@ -8,7 +8,7 @@ import styles from './BaseTrainerCard.module.css';
 export default function BaseTrainerCard({ base, stock }: { base: BaseTrainer; stock: Stock }) {
   const inStock = sizesInStock(stock, base.id);
   const soldOut = inStock.length === 0;
-  const href = soldOut ? '/contact' : `/create-your-own?base=${base.id}`;
+  const href = soldOut ? '/contact' : `/size?base=${base.id}`;
 
   return (
     <Link href={href} className={`${styles.card} ${soldOut ? styles.soldOut : ''}`}>

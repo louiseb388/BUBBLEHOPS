@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCart, type BagLine } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
-import CheckoutProgress from '@/components/checkout/CheckoutProgress';
+import FlowProgress from '@/components/FlowProgress';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import styles from '../checkout.module.css';
 
@@ -37,7 +37,7 @@ function SuccessInner() {
       <p className="eyebrow">Checkout</p>
       <h1 className="h-display h1" style={{ marginBottom: 40 }}>Thanks — that&rsquo;s ordered</h1>
 
-      <CheckoutProgress step="payment" complete />
+      <FlowProgress step="payment" complete />
 
       <div className={styles.grid}>
         <div>
@@ -66,7 +66,7 @@ function SuccessInner() {
           )}
 
           <div style={{ display: 'flex', gap: 10 }}>
-            <Link href="/create-your-own" className="btn btn-lime">Design another</Link>
+            <Link href="/base-trainers" className="btn btn-lime">Design another</Link>
             <Link href="/" className="btn btn-outline">Back home</Link>
           </div>
         </div>

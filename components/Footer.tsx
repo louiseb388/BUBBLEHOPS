@@ -20,7 +20,7 @@ export default function Footer() {
               <br />
               Just for you.
             </h2>
-            <Link href="/create-your-own" className="btn">
+            <Link href="/base-trainers" className="btn">
               Create your own
             </Link>
           </div>
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
           <div className={styles.col}>
             <h3>Shop</h3>
-            <Link href="/create-your-own" className={styles.navLink}>Create your own</Link>
+            <Link href="/base-trainers" className={styles.navLink}>Create your own</Link>
             <Link href="/base-trainers" className={styles.navLink}>Base trainers</Link>
           </div>
           <div className={styles.col}>

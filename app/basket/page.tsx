@@ -20,7 +20,7 @@ export default function BasketPage() {
     return (
       <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
         <h1 className="h-display h1" style={{ marginBottom: 20 }}>Your basket&apos;s empty.</h1>
-        <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
+        <Link href="/base-trainers" className="btn btn-lime">Create your own</Link>
       </div>
     );
   }
@@ -51,7 +51,10 @@ export default function BasketPage() {
                 {line.qty > 1 && <span className="body-text"> × {line.qty} = £{line.price * line.qty}</span>}
               </p>
               <div style={{ display: 'flex', gap: 8 }}>
-                <Link href={`/create-your-own?d=${encodeDesign(line.design)}`} className="btn btn-outline btn-sm">
+                <Link
+                  href={`/create-your-own?d=${encodeDesign(line.design)}&size=${encodeURIComponent(line.size || '')}&qty=${line.qty}`}
+                  className="btn btn-outline btn-sm"
+                >
                   Edit design
                 </Link>
                 <button className="btn btn-outline btn-sm" onClick={() => removeLine(line.id)}>Remove</button>

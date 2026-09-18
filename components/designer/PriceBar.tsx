@@ -10,9 +10,10 @@ type Props = {
   onAddToBasket: () => boolean;
   onSaveDesign: () => void;
   onShareDesign: () => void;
+  ctaLabel?: string;
 };
 
-export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesign, onShareDesign }: Props) {
+export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesign, onShareDesign, ctaLabel = 'Choose size and checkout' }: Props) {
   const router = useRouter();
 
   function handleAdd() {
@@ -27,7 +28,7 @@ export default function PriceBar({ price, bothPainted, onAddToBasket, onSaveDesi
           <div className={styles.priceNote}>{bothPainted ? 'Both shoes painted' : 'Single shoe painted'}</div>
         </div>
         <div className={styles.actions}>
-          <button className="btn btn-lime" onClick={handleAdd}>Choose size and checkout</button>
+          <button className="btn btn-lime" onClick={handleAdd}>{ctaLabel}</button>
           <div className={styles.iconRow}>
             <button className="btn btn-outline-white" onClick={onSaveDesign} aria-label="Save design">
               <SaveIcon />

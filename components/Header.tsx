@@ -44,7 +44,7 @@ export default function Header() {
         <div className={styles.right}>
           {!onCreatePage && (
             <div className={`${styles.ctaWrap} ${scrolled ? styles.show : ''}`}>
-              <Link href="/create-your-own" className="btn btn-lime btn-sm">
+              <Link href="/base-trainers" className="btn btn-lime btn-sm">
                 Create your own
               </Link>
             </div>
@@ -98,7 +98,7 @@ export default function Header() {
           </Link>
         ))}
         {!onCreatePage && (
-          <Link href="/create-your-own" onClick={() => setMobileOpen(false)}>
+          <Link href="/base-trainers" onClick={() => setMobileOpen(false)}>
             Create your own
           </Link>
         )}

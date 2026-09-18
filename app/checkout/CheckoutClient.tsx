@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cart-context';
 import { useAuth } from '@/lib/auth-context';
-import { SIZES, DELIVERY_COST, type DeliveryMethod } from '@/lib/data';
-import { useStock } from '@/lib/inventory';
-import CheckoutProgress, { type CheckoutStep } from '@/components/checkout/CheckoutProgress';
+import { DELIVERY_COST, type DeliveryMethod } from '@/lib/data';
+import type { CheckoutStep } from '@/components/checkout/CheckoutProgress';
+import FlowProgress, { type FlowStep } from '@/components/FlowProgress';
+import SizeQtyPicker from '@/components/SizeQtyPicker';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import styles from './checkout.module.css';
 
@@ -17,9 +18,13 @@ const STEP_HEADINGS: Record<CheckoutStep, string> = {
   payment: 'Pay and confirm'
 };
 
+// Checkout's own step machine keeps the historical 'bag'/'delivery'/'payment' names (still
+// used by the auto-skip logic below), but the shared step rail shows all five stages of the
+// real flow — map onto that here.
+const FLOW_STEP: Record<CheckoutStep, FlowStep> = { bag: 'size', delivery: 'delivery', payment: 'payment' };
+
 export default function CheckoutClient() {
   const { lines, setLineSize, setLineQty, total: cartTotal, ready } = useCart();
-  const { stock } = useStock();
   const { session } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -49,10 +54,6 @@ export default function CheckoutClient() {
     if (allSized) setStep('delivery');
     setInitialStepResolved(true);
   }, [ready, initialStepResolved, allSized]);
-
-  function stockFor(baseId: string, size: string) {
-    return stock[baseId]?.[size] ?? 0;
-  }
 
   function autofillAddress() {
     setName(name || 'Sam Parker');
@@ -104,7 +105,7 @@ export default function CheckoutClient() {
     return (
       <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
         <h1 className="h-display h1" style={{ marginBottom: 20 }}>Nothing to check out yet.</h1>
-        <Link href="/create-your-own" className="btn btn-lime">Create your own</Link>
+        <Link href="/base-trainers" className="btn btn-lime">Create your own</Link>
       </div>
     );
   }
@@ -120,7 +121,7 @@ export default function CheckoutClient() {
         </p>
       )}
 
-      <CheckoutProgress step={step} />
+      <FlowProgress step={FLOW_STEP[step]} />
 
       <div className={styles.grid}>
         <div style={{ minWidth: 0 }}>
@@ -131,107 +132,18 @@ export default function CheckoutClient() {
                 Kids&rsquo; UK sizes. If they&rsquo;re between sizes, we recommend going up.
               </p>
 
-              {lines.map((l) => {
-                const inStockCount = SIZES.filter((s) => stockFor(l.baseId, s) > 0).length;
-                return (
+              {lines.map((l) => (
                 <div key={l.id} style={{ marginBottom: 24, paddingBottom: 24, borderBottom: '2px solid rgba(32,30,29,0.15)' }}>
                   <p style={{ fontWeight: 800, marginBottom: 6 }}>{l.baseName}</p>
-                  <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14, fontWeight: 600 }}>
-                    Live stock: {inStockCount} of {SIZES.length} sizes available.
-                  </p>
-
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(104px, 1fr))',
-                      gap: 8,
-                      marginBottom: 20
-                    }}
-                  >
-                    {SIZES.map((size) => {
-                      const qty = stockFor(l.baseId, size);
-                      const soldOut = qty === 0;
-                      const low = qty > 0 && qty <= 2;
-                      const selected = l.size === size;
-                      const statusLabel = soldOut ? 'Sold out' : low ? 'Low stock' : 'In stock';
-                      return (
-                        <button
-                          key={size}
-                          disabled={soldOut}
-                          onClick={() => setLineSize(l.id, size)}
-                          style={{
-                            padding: '12px 8px',
-                            background: selected ? 'var(--lime)' : soldOut ? 'rgba(32,30,29,0.08)' : '#fff',
-                            opacity: soldOut ? 0.55 : 1,
-                            textAlign: 'left',
-                            cursor: soldOut ? 'not-allowed' : 'pointer',
-                            border: 'none'
-                          }}
-                        >
-                          <div style={{ fontWeight: 800, fontSize: 13 }}>UK {size.replace('UK ', '')}</div>
-                          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: soldOut ? 'inherit' : low ? '#b3261e' : 'var(--muted)' }}>
-                            {statusLabel}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
-                    Quantity
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', background: '#fff', width: 'fit-content' }}>
-                    <button
-                      type="button"
-                      onClick={() => setLineQty(l.id, l.qty - 1)}
-                      disabled={l.qty <= 1}
-                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16 }}
-                    >
-                      −
-                    </button>
-                    <span style={{ width: 44, textAlign: 'center', fontWeight: 800 }}>{l.qty}</span>
-                    <button
-                      type="button"
-                      onClick={() => setLineQty(l.id, l.qty + 1)}
-                      disabled={l.qty >= 9}
-                      style={{ width: 40, height: 40, fontWeight: 800, fontSize: 16 }}
-                    >
-                      +
-                    </button>
-                  </div>
+                  <SizeQtyPicker
+                    baseId={l.baseId}
+                    size={l.size}
+                    qty={l.qty}
+                    onSizeChange={(s) => setLineSize(l.id, s)}
+                    onQtyChange={(q) => setLineQty(l.id, q)}
+                  />
                 </div>
-                );
-              })}
-
-              <div style={{ marginBottom: 24, maxWidth: 420 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
-                  Delivery
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                  {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
-                    const active = deliveryMethod === m;
-                    return (
-                      <button
-                        key={m}
-                        type="button"
-                        onClick={() => setDeliveryMethod(m)}
-                        style={{
-                          textAlign: 'left',
-                          padding: '12px 14px',
-                          background: active ? 'var(--ink)' : '#fff',
-                          color: active ? '#fff' : 'var(--ink)',
-                          border: 'none'
-                        }}
-                      >
-                        <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
-                        <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>
-                          {m === 'standard' ? '3–5 days after painting · Free' : `Next day after painting · £${DELIVERY_COST.express}`}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              ))}
 
               <p className="body-text" style={{ fontSize: 13, marginBottom: 24 }}>
                 We email you at every stage — painting, drying, sign-off and dispatch.
@@ -274,6 +186,36 @@ export default function CheckoutClient() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <Field label="Postcode" value={postcode} onChange={setPostcode} />
                   <div />
+                </div>
+              </div>
+
+              <div style={{ margin: '24px 0', maxWidth: 420 }}>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 8 }}>
+                  Delivery speed
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {(['standard', 'express'] as DeliveryMethod[]).map((m) => {
+                    const active = deliveryMethod === m;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setDeliveryMethod(m)}
+                        style={{
+                          textAlign: 'left',
+                          padding: '12px 14px',
+                          background: active ? 'var(--ink)' : '#fff',
+                          color: active ? '#fff' : 'var(--ink)',
+                          border: 'none'
+                        }}
+                      >
+                        <div style={{ fontWeight: 800, fontSize: 13, textTransform: 'uppercase' }}>{m}</div>
+                        <div style={{ fontSize: 11, opacity: 0.75, marginTop: 2 }}>
+                          {m === 'standard' ? '3–5 days after painting · Free' : `Next day after painting · £${DELIVERY_COST.express}`}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

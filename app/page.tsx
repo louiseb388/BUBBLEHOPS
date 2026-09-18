@@ -22,7 +22,7 @@ export default function HomePage() {
             <p className="eyebrow">The range</p>
             <h2 className={`h-display h2 ${styles.sectionTitle}`}>You pick. We paint.</h2>
           </div>
-          <Link href="/create-your-own" className={`btn btn-lime ${styles.noBorder}`}>
+          <Link href="/base-trainers" className={`btn btn-lime ${styles.noBorder}`}>
             Create your own
           </Link>
         </div>
