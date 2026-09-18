@@ -65,6 +65,23 @@ async function notifyCustomer(stripe: Stripe, session: Stripe.Checkout.Session) 
   await sendEmail({ to: email, subject: `Your BUBBLEHOPS order is confirmed — ${formatAmount(session.amount_total, session.currency)}`, text: body });
 }
 
+/** Refunds and disputes fire on `charge.*`/`charge.dispute.*` events, which are keyed by
+ * payment intent, not by the checkout session id our `orders` rows are keyed on — so every
+ * order also stores its payment_intent_id (set below on checkout.session.completed) purely
+ * so these handlers can find their way back to the right row. */
+async function markOrderByPaymentIntent(paymentIntentId: string | null | undefined, status: string) {
+  if (!paymentIntentId) return;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) {
+    console.log('[stripe webhook] Supabase not configured — order status not updated:', paymentIntentId, status);
+    return;
+  }
+  const admin = createClient(url, serviceKey);
+  const { error } = await admin.from('orders').update({ status }).eq('payment_intent_id', paymentIntentId);
+  if (error) console.error('Failed to update order status', paymentIntentId, status, error);
+}
+
 export async function POST(req: NextRequest) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -97,6 +114,7 @@ export async function POST(req: NextRequest) {
       const admin = createClient(url, serviceKey);
       const { error } = await admin.from('orders').insert({
         stripe_session_id: session.id,
+        payment_intent_id: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
         email: session.customer_details?.email,
         amount_total: session.amount_total,
         currency: session.currency,
@@ -110,6 +128,29 @@ export async function POST(req: NextRequest) {
 
     await notifyStudio(stripe, session);
     await notifyCustomer(stripe, session);
+  }
+
+  // Refunds and disputes — surfaced on /admin so a cancelled/refunded/disputed order doesn't
+  // sit there looking like a normal one still waiting to be painted and shipped. These event
+  // types need enabling on the Stripe webhook endpoint itself (Stripe dashboard → Webhooks →
+  // your endpoint → the same place checkout.session.completed is ticked).
+  if (event.type === 'charge.refunded') {
+    const charge = event.data.object as Stripe.Charge;
+    const paymentIntentId = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id;
+    const fullyRefunded = charge.amount_refunded >= charge.amount;
+    await markOrderByPaymentIntent(paymentIntentId, fullyRefunded ? 'refunded' : 'partially_refunded');
+  }
+
+  if (event.type === 'charge.dispute.created') {
+    const dispute = event.data.object as Stripe.Dispute;
+    const paymentIntentId = typeof dispute.payment_intent === 'string' ? dispute.payment_intent : dispute.payment_intent?.id;
+    await markOrderByPaymentIntent(paymentIntentId, 'disputed');
+  }
+
+  if (event.type === 'charge.dispute.closed') {
+    const dispute = event.data.object as Stripe.Dispute;
+    const paymentIntentId = typeof dispute.payment_intent === 'string' ? dispute.payment_intent : dispute.payment_intent?.id;
+    await markOrderByPaymentIntent(paymentIntentId, dispute.status === 'won' ? 'dispute_won' : 'dispute_lost');
   }
 
   return NextResponse.json({ received: true });

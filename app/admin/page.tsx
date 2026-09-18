@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { getSupabase } from '@/lib/supabase';
@@ -21,8 +21,37 @@ const STATUSES = [
   { value: 'paid', label: 'Paid' },
   { value: 'painting', label: 'Painting' },
   { value: 'photo_sent', label: 'Photo sent' },
-  { value: 'shipped', label: 'Shipped' }
+  { value: 'shipped', label: 'Shipped' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'refunded', label: 'Refunded' },
+  { value: 'partially_refunded', label: 'Partially refunded' },
+  { value: 'disputed', label: 'Disputed' },
+  { value: 'dispute_won', label: 'Dispute won' },
+  { value: 'dispute_lost', label: 'Dispute lost' }
 ];
+
+// Which statuses count as "needs attention" for the filter below, and how each badge is
+// coloured — 'refunded'/'disputed'/etc. are set automatically by the Stripe webhook
+// (app/api/webhook/route.ts) when Stripe reports a refund or dispute; 'cancelled' is
+// manual-only, for orders called off before Stripe involvement (e.g. customer emailed in).
+const ATTENTION_STATUSES = new Set(['cancelled', 'refunded', 'partially_refunded', 'disputed', 'dispute_lost']);
+const STATUS_LABEL: Record<string, string> = Object.fromEntries(STATUSES.map((s) => [s.value, s.label]));
+
+function statusBadgeStyle(status: string): CSSProperties {
+  const attention = ATTENTION_STATUSES.has(status);
+  const won = status === 'dispute_won';
+  return {
+    display: 'inline-block',
+    padding: '4px 10px',
+    fontSize: 12,
+    fontWeight: 800,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+    border: '2px solid var(--ink)',
+    background: attention ? 'var(--danger, #b3261e)' : won ? '#fff' : 'var(--lime)',
+    color: attention ? '#fff' : 'var(--ink)'
+  };
+}
 
 function formatAmount(amount: number, currency: string) {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency.toUpperCase() }).format(amount / 100);
@@ -36,6 +65,7 @@ export default function AdminPage() {
   const [drafts, setDrafts] = useState<Record<string, { status: string; photo: File | null }>>({});
   const [saving, setSaving] = useState<string | null>(null);
   const [saved, setSaved] = useState<{ id: string; emailed: boolean } | null>(null);
+  const [filter, setFilter] = useState<'all' | 'attention'>('all');
 
   const loadOrders = useCallback(async () => {
     const supabase = getSupabase();
@@ -101,6 +131,9 @@ export default function AdminPage() {
 
   if (loading || !session) return null;
 
+  const attentionCount = orders?.filter((o) => ATTENTION_STATUSES.has(o.status)).length ?? 0;
+  const visibleOrders = filter === 'attention' ? orders?.filter((o) => ATTENTION_STATUSES.has(o.status)) : orders;
+
   return (
     <div className="container" style={{ paddingTop: 56, paddingBottom: 96 }}>
       <p className="eyebrow">Admin</p>
@@ -111,8 +144,29 @@ export default function AdminPage() {
       {!authError && orders === null && <p className="body-text">Loading…</p>}
       {!authError && orders?.length === 0 && <p className="body-text">No orders yet.</p>}
 
+      {!authError && orders && orders.length > 0 && (
+        <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
+          <button
+            className={filter === 'all' ? 'btn btn-lime btn-sm' : 'btn btn-outline btn-sm'}
+            onClick={() => setFilter('all')}
+          >
+            All ({orders.length})
+          </button>
+          <button
+            className={filter === 'attention' ? 'btn btn-lime btn-sm' : 'btn btn-outline btn-sm'}
+            onClick={() => setFilter('attention')}
+          >
+            Needs attention ({attentionCount})
+          </button>
+        </div>
+      )}
+
+      {!authError && orders && orders.length > 0 && visibleOrders?.length === 0 && (
+        <p className="body-text">Nothing needs attention right now.</p>
+      )}
+
       {!authError &&
-        orders?.map((o) => {
+        visibleOrders?.map((o) => {
           const draft = drafts[o.id] || { status: o.status, photo: null };
           const meta = o.metadata || {};
           return (
@@ -124,7 +178,10 @@ export default function AdminPage() {
                   <p className="body-text" style={{ margin: 0 }}>{meta.delivery_address}</p>
                   <p className="body-text" style={{ margin: 0 }}>{new Date(o.created_at).toLocaleDateString('en-GB')} · {o.stripe_session_id}</p>
                 </div>
-                <p style={{ margin: 0, fontWeight: 800, fontSize: 20 }}>{formatAmount(o.amount_total, o.currency)}</p>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ margin: '0 0 8px', fontWeight: 800, fontSize: 20 }}>{formatAmount(o.amount_total, o.currency)}</p>
+                  <span style={statusBadgeStyle(o.status)}>{STATUS_LABEL[o.status] || o.status}</span>
+                </div>
               </div>
 
               {o.photo_url && (
